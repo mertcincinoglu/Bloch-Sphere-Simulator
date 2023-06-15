@@ -2,22 +2,23 @@ from qutip import *
 import numpy as np
 
 b = Bloch3d()
-yellow = "#969632"
-blue = "#323296"
-#b3d.sphere_color = "#808080"
-b.sphere_alpha = 0.5
+b.view = [45, 45]
+b.bgcolor = 'black'
+b.frame_num = 22
+b.frame_color = 'white'
+b.frame_radius = 0.005
+b.sphere_alpha = 0.8
+b.axes_alpha = 0
+b.xlabel = ['X', '']
+b.xlpos = [1.27, -1.27]
+b.ylabel = ['Y', '']
+b.ylpos = [1.27, -1.27]
+b.zlabel = ['Z', '']
+b.zlpos = [1.27, -1.27]
+b.font_color = 'white'
 
-b.clear()
-
-vectors = [[np.sqrt(1), 0, 0], [0, np.sqrt(1), 0], [0, 0, np.sqrt(1)]]
-b.add_vectors(vectors, 0.2)
-
-th = np.linspace(0, 2*np.pi, 20)
-xp = np.cos(th)
-yp = np.sin(th)
-zp = np.zeros(20)
-
-pnts = [xp, yp, zp]
-b.add_points(pnts)
+v_len = np.sqrt(1.5)
+vectors = [[v_len, 0, 0], [0, v_len, 0], [0, 0, v_len]]
+b.add_vectors(vectors, 0.6)
 
 b.show()
