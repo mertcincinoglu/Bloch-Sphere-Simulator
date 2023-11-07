@@ -12,6 +12,11 @@ import {
     BlochSphere
 } from "./bloch_sphere.js";
 
+import {
+    ToolboxEventsNamespace
+} from "./tools.js";
+
+
 var GlobalContext = {
     canvas: null,
 
@@ -23,6 +28,11 @@ var GlobalContext = {
     blochSphereStateProperties: {
         theta: "0.0000",
         phi: "90.0000"
+    },
+
+    lambdaGatesProperties: {
+        tethaAngle: "0",
+        phiAngle: "0"
     },
 
     init: function () {
@@ -77,9 +87,12 @@ var GlobalContext = {
             color: new THREE.Color(0x808080),
             axesLength: (diameter / 2) + ((diameter / 2) * 0.2),
             axesWidth: 2
-        });        
+        });
 
         GlobalContext.scene.add(GlobalContext.blochSphere);
+
+        // start all events listeners
+        GlobalContext.startAllEventListeners();
     },
 
     onload: function () {
@@ -100,6 +113,10 @@ var GlobalContext = {
         // update renderer and label renderer
         GlobalContext.renderer.setSize(canvasWidth, canvasHeight);
         GlobalContext.labelRenderer.setSize(canvasWidth, canvasHeight);
+    },
+
+    startAllEventListeners: function () {
+        ToolboxEventsNamespace.startToolboxEventListeners();
     },
 
     animate: function () {

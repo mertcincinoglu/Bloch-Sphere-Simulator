@@ -1,5 +1,6 @@
 import * as THREE from "../node_modules/three/build/three.module.js";
 
+
 class BaseMesh extends THREE.Mesh {
     constructor(geometry, meterial, properties) {
         if (!properties) properties = {};

@@ -8,6 +8,7 @@ import {
     BaseMesh
 } from "./bases.js";
 
+
 class Label {
     constructor(text, properties) {
         if (!properties) properties = {};

@@ -16,6 +16,7 @@ import {
     BlochSphereState
 } from "./bloch_sphere_state.js";
 
+
 class BlochSphere extends BaseGroup {
     constructor(radius, properties) {
         if (!properties) properties = {};
@@ -65,8 +66,8 @@ class BlochSphere extends BaseGroup {
         this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(properties.phi));
 
         // update blochsphere state
-        this.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(-45));
-        this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(-45));
+        //this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(90)); // 0 - 180 derece arası değerler
+        //this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(45)); // 0 - 360 derece arası değerler
     }
 
     updateBlochSphereState(axis, angle) {
