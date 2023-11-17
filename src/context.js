@@ -27,12 +27,7 @@ var GlobalContext = {
 
     blochSphereStateProperties: {
         theta: "0.0000",
-        phi: "90.0000"
-    },
-
-    lambdaGatesProperties: {
-        tethaAngle: "0",
-        phiAngle: "0"
+        phi: "0.0000"
     },
 
     init: function () {
