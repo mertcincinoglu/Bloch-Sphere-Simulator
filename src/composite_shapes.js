@@ -47,6 +47,9 @@ class CartesianAxes extends BaseGroup {
         if (!properties.xAxisColor) properties.xAxisColor = new THREE.Color(0xFF0000);
         if (!properties.yAxisColor) properties.yAxisColor = new THREE.Color(0x00FF00);
         if (!properties.zAxisColor) properties.zAxisColor = new THREE.Color(0x0000FF);
+        if (!properties.nxAxisColor) properties.xAxisColor = new THREE.Color(0xFF0000);
+        if (!properties.nyAxisColor) properties.yAxisColor = new THREE.Color(0x00FF00);
+        if (!properties.nzAxisColor) properties.zAxisColor = new THREE.Color(0x0000FF);
 
         super(properties);
 
@@ -56,7 +59,7 @@ class CartesianAxes extends BaseGroup {
             rotation: new THREE.Vector3(THREE.MathUtils.degToRad(90), 0, 0)
         });
 
-        this.xAxisLabel = new Label("X", {
+        this.xAxisLabel = new Label("+X", {
             color: properties.xAxisColor,
             position: new THREE.Vector3(0, length / 2, 0),
         });
@@ -67,7 +70,7 @@ class CartesianAxes extends BaseGroup {
             rotation: new THREE.Vector3(0, 0, -1 * THREE.MathUtils.degToRad(90))
         });
 
-        this.yAxisLabel = new Label("Y", {
+        this.yAxisLabel = new Label("+Y", {
             color: properties.yAxisColor,
             position: new THREE.Vector3(0, length / 2, 0),
         });
@@ -77,18 +80,59 @@ class CartesianAxes extends BaseGroup {
             position: new THREE.Vector3(0, length / 2, 0)
         });
 
-        this.zAxisLabel = new Label("Z", {
+        this.zAxisLabel = new Label("+Z", {
             color: properties.zAxisColor,
             position: new THREE.Vector3(0, length / 2, 0)
+        });
+
+        this.nxAxis = new Axis(length, width, {
+            color: properties.xAxisColor,
+            position: new THREE.Vector3(0, 0, -length / 2),
+            rotation: new THREE.Vector3(THREE.MathUtils.degToRad(-90), 0, 0)
+        });
+
+        this.nxAxisLabel = new Label("-X", {
+            color: properties.xAxisColor,
+            position: new THREE.Vector3(0, length / 2, 0),
+        });
+
+        this.nyAxis = new Axis(length, width, {
+            color: properties.yAxisColor,
+            position: new THREE.Vector3(-length / 2, 0, 0),
+            rotation: new THREE.Vector3(0, 0, -1 * THREE.MathUtils.degToRad(-90))
+        });
+
+        this.nyAxisLabel = new Label("-Y", {
+            color: properties.yAxisColor,
+            position: new THREE.Vector3(0, length / 2, 0),
+        });
+
+        this.nzAxis = new Axis(length, width, {
+            color: properties.zAxisColor,
+            position: new THREE.Vector3(0, -length / 2, 0),
+            rotation: new THREE.Vector3(THREE.MathUtils.degToRad(180), 0, 0)
+        });
+
+        this.nzAxisLabel = new Label("-Z", {
+            color: properties.zAxisColor,
+            position: new THREE.Vector3(0, length / 1.5, 0)
         });
 
         this.xAxisLabel.setParent(this.xAxis);
         this.yAxisLabel.setParent(this.yAxis);
         this.zAxisLabel.setParent(this.zAxis);
 
+        this.nxAxisLabel.setParent(this.nxAxis);
+        this.nyAxisLabel.setParent(this.nyAxis);
+        this.nzAxisLabel.setParent(this.nzAxis);
+
         this.add(this.xAxis);
         this.add(this.yAxis);
         this.add(this.zAxis);
+
+        this.add(this.nxAxis);
+        this.add(this.nyAxis);
+        this.add(this.nzAxis);
     };
 
     static get XAxis() {
@@ -103,12 +147,28 @@ class CartesianAxes extends BaseGroup {
         return new THREE.Vector3(0, 1, 0);
     }
 
+    static get nXAxis() {
+        return new THREE.Vector3(0, 0, -1);
+    }
+
+    static get nYAxis() {
+        return new THREE.Vector3(-1, 0, 0);
+    }
+
+    static get nZAxis() {
+        return new THREE.Vector3(0, -1, 0);
+    }
+
     static Vector3(x, y, z) {
         let transformedAxis = new THREE.Vector3();
 
         transformedAxis.add(CartesianAxes.XAxis.multiplyScalar(x));
         transformedAxis.add(CartesianAxes.YAxis.multiplyScalar(y));
         transformedAxis.add(CartesianAxes.ZAxis.multiplyScalar(z));
+
+        transformedAxis.add(CartesianAxes.nXAxis.multiplyScalar(x));
+        transformedAxis.add(CartesianAxes.nYAxis.multiplyScalar(y));
+        transformedAxis.add(CartesianAxes.nZAxis.multiplyScalar(z));
 
         return transformedAxis;
     }

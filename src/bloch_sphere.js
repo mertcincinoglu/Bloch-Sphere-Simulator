@@ -59,13 +59,14 @@ class BlochSphere extends BaseGroup {
 
         this.createSP(radius, properties.theta, properties.phi, 60, 30);
 
-        /*
+        
+        
         // Adding Meridian
         const geometry = new THREE.TorusGeometry( radius - 40, 1, 16, 64 ).translate(0,0,200); 
         const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
         this.torus = new THREE.Mesh( geometry, material ); 
         this.add( this.torus );
-        */
+        
     }
 
     updateBlochSphereState(axis, angle) {

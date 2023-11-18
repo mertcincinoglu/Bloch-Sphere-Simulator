@@ -30,7 +30,7 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, phiAngle);
     },
 
-    upOnClickEvent: function() {
+    positiveZOnClickEvent: function() {
         let thetaAngle = 0;
         let phiAngle = 0;
 
@@ -42,9 +42,57 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    downOnClickEvent: function() {
+    negativeZOnClickEvent: function() {
         let thetaAngle = 180;
         let phiAngle = 0;
+
+        GlobalContext.blochSphereStateProperties.theta = thetaAngle;
+        GlobalContext.blochSphereStateProperties.phi = phiAngle;
+
+        GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+
+        this.valuesOnChange();
+    },
+
+    positiveXOnClickEvent: function() {
+        let thetaAngle = 90;
+        let phiAngle = 0;
+
+        GlobalContext.blochSphereStateProperties.theta = thetaAngle;
+        GlobalContext.blochSphereStateProperties.phi = phiAngle;
+
+        GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+
+        this.valuesOnChange();
+    },
+
+    negativeXOnClickEvent: function() {
+        let thetaAngle = 270;
+        let phiAngle = 0;
+
+        GlobalContext.blochSphereStateProperties.theta = thetaAngle;
+        GlobalContext.blochSphereStateProperties.phi = phiAngle;
+
+        GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+
+        this.valuesOnChange();
+    },
+
+    positiveYOnClickEvent: function() {
+        let thetaAngle = 90;
+        let phiAngle = 90;
+
+        GlobalContext.blochSphereStateProperties.theta = thetaAngle;
+        GlobalContext.blochSphereStateProperties.phi = phiAngle;
+
+        GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+
+        this.valuesOnChange();
+    },
+
+    negativeYOnClickEvent: function() {
+        let thetaAngle = 270;
+        let phiAngle = 90;
 
         GlobalContext.blochSphereStateProperties.theta = thetaAngle;
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
@@ -73,12 +121,28 @@ var ToolboxEventsNamespace = {
             ToolboxEventsNamespace.phiAngleOnInputChangeEvent();
         });
 
-        $("#up").click(function () {
-            ToolboxEventsNamespace.upOnClickEvent();
+        $("#positive-z").click(function () {
+            ToolboxEventsNamespace.positiveZOnClickEvent();
         });
 
-        $("#down").click(function () {
-            ToolboxEventsNamespace.downOnClickEvent();
+        $("#negative-z").click(function () {
+            ToolboxEventsNamespace.negativeZOnClickEvent();
+        });
+
+        $("#positive-x").click(function () {
+            ToolboxEventsNamespace.positiveXOnClickEvent();
+        });
+
+        $("#negative-x").click(function () {
+            ToolboxEventsNamespace.negativeXOnClickEvent();
+        });
+
+        $("#positive-y").click(function () {
+            ToolboxEventsNamespace.positiveYOnClickEvent();
+        });
+
+        $("#negative-y").click(function () {
+            ToolboxEventsNamespace.negativeYOnClickEvent();
         });
     },
 }
