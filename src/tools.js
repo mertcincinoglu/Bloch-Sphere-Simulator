@@ -1,44 +1,36 @@
-import { MathUtils } from "three";
 import * as THREE from "../node_modules/three/build/three.module.js";
 
-import { GlobalContext } from "./context.js";
+import {
+    GlobalContext
+} from "./context.js";
 
-var ToolboxEventsNamespace = {
-    thetaAngleOnInputChangeEvent: function () {
+
+var ToolboxEventsNamespace = {  
+    thetaAngleOnInputChangeEvent: function() {
         let thetaAngle = $("#theta-angle").val();
-
+    
         // update html content
         $("#theta-angle-value").html(`${thetaAngle}<span>&#176;</span>`);
+    
+        // save tetha angle
+        GlobalContext.blochSphereStateProperties.theta = thetaAngle;
 
-        // save theta angle
-        GlobalContext.blochSphereStateProperties.theta = parseInt(thetaAngle);
-
-        GlobalContext.blochSphere.reset(
-            GlobalContext.blochSphereStateProperties.theta,
-            GlobalContext.blochSphereStateProperties.phi
-        );
-
-        this.valuesOnChange();
+        GlobalContext.blochSphere.reset(thetaAngle, GlobalContext.blochSphereStateProperties.phi);
     },
 
-    phiAngleOnInputChangeEvent: function () {
+    phiAngleOnInputChangeEvent: function() {
         let phiAngle = $("#phi-angle").val();
-
+    
         // update html content
         $("#phi-angle-value").html(`${phiAngle}<span>&#176;</span>`);
-
+    
         // save phi angle
-        GlobalContext.blochSphereStateProperties.phi = parseInt(phiAngle);
+        GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
-        GlobalContext.blochSphere.reset(
-            GlobalContext.blochSphereStateProperties.theta,
-            GlobalContext.blochSphereStateProperties.phi
-        );
-
-        this.valuesOnChange();
+        GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, phiAngle);
     },
 
-    positiveZOnClickEvent: function () {
+    positiveZOnClickEvent: function() {
         let thetaAngle = 0;
         let phiAngle = 0;
 
@@ -50,7 +42,7 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    negativeZOnClickEvent: function () {
+    negativeZOnClickEvent: function() {
         let thetaAngle = 180;
         let phiAngle = 0;
 
@@ -62,7 +54,7 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    positiveXOnClickEvent: function () {
+    positiveXOnClickEvent: function() {
         let thetaAngle = 90;
         let phiAngle = 0;
 
@@ -74,7 +66,7 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    negativeXOnClickEvent: function () {
+    negativeXOnClickEvent: function() {
         let thetaAngle = 270;
         let phiAngle = 0;
 
@@ -86,7 +78,7 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    positiveYOnClickEvent: function () {
+    positiveYOnClickEvent: function() {
         let thetaAngle = 90;
         let phiAngle = 90;
 
@@ -98,7 +90,7 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    negativeYOnClickEvent: function () {
+    negativeYOnClickEvent: function() {
         let thetaAngle = 270;
         let phiAngle = 90;
 
@@ -110,7 +102,7 @@ var ToolboxEventsNamespace = {
         this.valuesOnChange();
     },
 
-    valuesOnChange: function () {
+    valuesOnChange: function() {
         let thetaAngle = GlobalContext.blochSphereStateProperties.theta;
         $("#theta-angle-value").html(`${thetaAngle}<span>&#176;</span>`);
         $("#theta-angle").val(thetaAngle);
@@ -118,7 +110,7 @@ var ToolboxEventsNamespace = {
         let phiAngle = GlobalContext.blochSphereStateProperties.phi;
         $("#phi-angle-value").html(`${phiAngle}<span>&#176;</span>`);
         $("#phi-angle").val(phiAngle);
-
+   
         this.updateBlochSphereStateExpressions();
     },
 
@@ -144,7 +136,7 @@ var ToolboxEventsNamespace = {
         $("#bloch-sphere-state-1").text(`${squaredReal.toFixed(4)} + i * ${squaredImaginary.toFixed(4)}`);
     },
 
-    startToolboxEventListeners: function () {
+    startToolboxEventListeners: function() {
         $("#theta-angle").on("input change", function () {
             ToolboxEventsNamespace.thetaAngleOnInputChangeEvent();
         });
@@ -177,6 +169,8 @@ var ToolboxEventsNamespace = {
             ToolboxEventsNamespace.negativeYOnClickEvent();
         });
     },
-};
+}
 
-export { ToolboxEventsNamespace };
+export {
+    ToolboxEventsNamespace
+};
