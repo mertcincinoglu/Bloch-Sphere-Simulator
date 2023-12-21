@@ -23,6 +23,7 @@ import {
 import {
     GlobalContext 
 } from "./context.js";
+import { MathUtils } from "three";
 
 
 class BlochSphere extends BaseGroup {
@@ -57,16 +58,10 @@ class BlochSphere extends BaseGroup {
         // Add CartesianAxes to BaseGroup
         this.add(this.cartesianAxes);
 
-        this.createSP(radius, properties.theta, properties.phi, 60, 30);
+        this.createSP(radius, properties.theta, properties.phi, 0, 0);
 
-        
-        
-        // Adding Meridian
-        const geometry = new THREE.TorusGeometry( radius - 40, 1, 16, 64 ).translate(0,0,200); 
-        const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
-        this.torus = new THREE.Mesh( geometry, material ); 
-        this.add( this.torus );
-        
+        this.createPphi(radius, 0);
+        this.createPtheta(radius, 0, 0);
     }
 
     updateBlochSphereState(axis, angle) {
@@ -116,6 +111,60 @@ class BlochSphere extends BaseGroup {
         // update blochsphere state
         this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(theta)); // 0 - 180 derece arası değerler
         this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(phi)); // 0 - 360 derece arası değerler
+
+    }
+
+    resetPtheta(theta) {
+        this.remove(this.parallel);
+
+        // get canvas
+        let canvas = document.getElementById("bloch-sphere");
+        let canvasWidth = canvas.offsetWidth;
+        let canvasHeight = canvas.offsetHeight;
+
+        // set diameter to 80% of canvas size
+        let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
+
+        //let radius = diameter / 2;
+        let radius = diameter / 2;
+
+        //let x = Math.abs(Math.cos(MathUtils.degToRad(theta)) * radius);
+        let x = Math.abs(Math.sin(MathUtils.degToRad(theta)) * radius);
+        this.createPtheta(x, theta);
+    }
+
+    createPtheta(radius, theta) {
+        let geometryp = new THREE.TorusGeometry( radius, 1, 16, 64 ).translate(0, 0, 0); 
+        let materialp = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        this.parallel = new THREE.Mesh( geometryp, materialp ); 
+        this.add( this.parallel );
+        this.parallel.rotateX(MathUtils.degToRad(90));
+        this.parallel.translateZ(-Math.cos(MathUtils.degToRad(theta)) * radius);
+    }
+
+    resetPphi(phi) {
+        this.remove(this.meridian);
+
+        // get canvas
+        let canvas = document.getElementById("bloch-sphere");
+        let canvasWidth = canvas.offsetWidth;
+        let canvasHeight = canvas.offsetHeight;
+
+        // set diameter to 80% of canvas size
+        let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
+        let radius = diameter / 2;
+
+        this.createPphi(radius, phi);
+    }
+
+    createPphi(radius, phi) {
+        // Adding Meridian
+        let geometrym = new THREE.TorusGeometry( radius, 1, 16, 64 ).translate(0,0,0); 
+        let materialm = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        this.meridian = new THREE.Mesh( geometrym, materialm ); 
+        this.add( this.meridian );
+        this.meridian.rotateY(MathUtils.degToRad(90));
+        this.meridian.rotateY(MathUtils.degToRad(phi));
     }
 }
 

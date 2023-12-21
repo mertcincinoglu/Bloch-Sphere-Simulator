@@ -1,3 +1,4 @@
+import { MathUtils } from "three";
 import * as THREE from "../node_modules/three/build/three.module.js";
 
 import {
@@ -16,6 +17,9 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.theta = thetaAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, GlobalContext.blochSphereStateProperties.phi);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+       
+        this.valuesOnChange();
     },
 
     phiAngleOnInputChangeEvent: function() {
@@ -28,6 +32,9 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, phiAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
+        
+        this.valuesOnChange();
     },
 
     positiveZOnClickEvent: function() {
