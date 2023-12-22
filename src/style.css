@@ -80,3 +80,8 @@ cursor: pointer; /* Cursor on hover */
     cursor: pointer;
     background-color: #04AA6D;
 }
+
+.button:disabled
+{
+  background-color: #005a39;
+}

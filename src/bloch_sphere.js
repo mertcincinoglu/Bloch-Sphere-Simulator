@@ -30,8 +30,8 @@ class BlochSphere extends BaseGroup {
     constructor(radius, properties) {
         if (!properties) properties = {};
 
-        if (!properties.theta) properties.theta = "0.0000";
-        if (!properties.phi) properties.phi = "0.0000";
+        if (!properties.theta) properties.theta = 0;
+        if (!properties.phi) properties.phi = 0;
 
         if (!properties.color) properties.color = new THREE.Color(0xFFFFFF);
         if (!properties.opacity) properties.opacity = 0.8;
@@ -116,30 +116,34 @@ class BlochSphere extends BaseGroup {
 
     resetPtheta(theta) {
         this.remove(this.parallel);
-
+    
         // get canvas
         let canvas = document.getElementById("bloch-sphere");
         let canvasWidth = canvas.offsetWidth;
         let canvasHeight = canvas.offsetHeight;
-
+    
         // set diameter to 80% of canvas size
         let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
-
-        //let radius = diameter / 2;
+    
         let radius = diameter / 2;
-
-        //let x = Math.abs(Math.cos(MathUtils.degToRad(theta)) * radius);
-        let x = Math.abs(Math.sin(MathUtils.degToRad(theta)) * radius);
-        this.createPtheta(x, theta);
+    
+        // Hesapla: Başlangıçta 90 derecede başlayıp, ardından 0 dereceye inip tekrar -90 dereceye inip tekrar 90 dereceye dönmesi
+        let adjustedTheta = ((theta - 90 ) % 360);
+    
+        let x = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * radius);
+        let scaledRadius = radius * Math.abs(Math.cos(MathUtils.degToRad(adjustedTheta)));
+        let direction = (adjustedTheta >= 0) ? -1 : 1;
+    
+        this.createPtheta(x, scaledRadius, direction);
     }
-
-    createPtheta(radius, theta) {
-        let geometryp = new THREE.TorusGeometry( radius, 1, 16, 64 ).translate(0, 0, 0); 
-        let materialp = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-        this.parallel = new THREE.Mesh( geometryp, materialp ); 
-        this.add( this.parallel );
+    
+    createPtheta(radius, scaledRadius, direction) {
+        let geometryp = new THREE.TorusGeometry(scaledRadius, 1, 16, 64).translate(0, 0, 0);
+        let materialp = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        this.parallel = new THREE.Mesh(geometryp, materialp);
+        this.add(this.parallel);
         this.parallel.rotateX(MathUtils.degToRad(90));
-        this.parallel.translateZ(-Math.cos(MathUtils.degToRad(theta)) * radius);
+        this.parallel.translateZ(-radius * direction);
     }
 
     resetPphi(phi) {

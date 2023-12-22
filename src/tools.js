@@ -2,37 +2,44 @@ import { MathUtils } from "three";
 import * as THREE from "../node_modules/three/build/three.module.js";
 
 import {
+    CartesianAxes, StatePointer
+} from "./composite_shapes.js";
+
+import {
     GlobalContext
 } from "./context.js";
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 var ToolboxEventsNamespace = {  
     thetaAngleOnInputChangeEvent: function() {
         let thetaAngle = $("#theta-angle").val();
+        let angle = parseInt(thetaAngle);
     
         // update html content
-        $("#theta-angle-value").html(`${thetaAngle}<span>&#176;</span>`);
+        $("#theta-angle-value").html(`${angle}<span>&#176;</span>`);
     
         // save tetha angle
-        GlobalContext.blochSphereStateProperties.theta = thetaAngle;
+        GlobalContext.blochSphereStateProperties.theta = angle;
 
-        GlobalContext.blochSphere.reset(thetaAngle, GlobalContext.blochSphereStateProperties.phi);
-        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.phi);
+        GlobalContext.blochSphere.resetPtheta(angle);
        
         this.valuesOnChange();
     },
 
     phiAngleOnInputChangeEvent: function() {
         let phiAngle = $("#phi-angle").val();
+        let angle = parseInt(phiAngle);
     
         // update html content
-        $("#phi-angle-value").html(`${phiAngle}<span>&#176;</span>`);
+        $("#phi-angle-value").html(`${angle}<span>&#176;</span>`);
     
         // save phi angle
-        GlobalContext.blochSphereStateProperties.phi = phiAngle;
+        GlobalContext.blochSphereStateProperties.phi = angle;
 
-        GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, phiAngle);
-        GlobalContext.blochSphere.resetPphi(phiAngle);
+        GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, angle);
+        GlobalContext.blochSphere.resetPphi(angle);
         
         this.valuesOnChange();
     },
@@ -45,6 +52,8 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
 
         this.valuesOnChange();
     },
@@ -57,6 +66,8 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
 
         this.valuesOnChange();
     },
@@ -69,6 +80,8 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
 
         this.valuesOnChange();
     },
@@ -81,6 +94,8 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
 
         this.valuesOnChange();
     },
@@ -93,6 +108,8 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
 
         this.valuesOnChange();
     },
@@ -105,8 +122,30 @@ var ToolboxEventsNamespace = {
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
 
         GlobalContext.blochSphere.reset(thetaAngle, phiAngle);
+        GlobalContext.blochSphere.resetPtheta(thetaAngle);
+        GlobalContext.blochSphere.resetPphi(phiAngle);
 
         this.valuesOnChange();
+    },
+
+    gate1OnClickEvent: async function () {
+        $("#gate-1").prop('disabled', true);
+
+        let angle = 90;
+        
+        for (let i = 0; i < angle; i++)
+        {
+            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(1));
+            GlobalContext.blochSphereStateProperties.theta += 1;
+            GlobalContext.blochSphereStateProperties.phi += 0;
+            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
+            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
+            this.valuesOnChange();
+            
+            await delay(20);
+        }
+
+        $("#gate-1").prop('disabled', false);
     },
 
     valuesOnChange: function() {
@@ -174,6 +213,10 @@ var ToolboxEventsNamespace = {
 
         $("#negative-y").click(function () {
             ToolboxEventsNamespace.negativeYOnClickEvent();
+        });
+
+        $("#gate-1").click(function () {
+            ToolboxEventsNamespace.gate1OnClickEvent();
         });
     },
 }
