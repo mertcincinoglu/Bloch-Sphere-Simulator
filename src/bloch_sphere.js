@@ -132,14 +132,22 @@ class BlochSphere extends BaseGroup {
     
         let x = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * radius);
         let scaledRadius = radius * Math.abs(Math.cos(MathUtils.degToRad(adjustedTheta)));
-        let direction = (adjustedTheta >= 0) ? -1 : 1;
+        let direction = 1;
+        if (0 <= theta % 360 & theta % 360 <= 90)
+            direction = 1;
+        if (90 <= theta % 360 & theta % 360 <= 180)
+            direction = -1;
+        if (180 <= theta % 360 & theta % 360 <= 270)
+            direction = -1;
+        if (270 <= theta % 360 & theta % 360 <= 360)
+            direction = 1;
     
         this.createPtheta(x, scaledRadius, direction);
     }
     
     createPtheta(radius, scaledRadius, direction) {
         let geometryp = new THREE.TorusGeometry(scaledRadius, 1, 16, 64).translate(0, 0, 0);
-        let materialp = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        let materialp = new THREE.MeshBasicMaterial({ color: 0xcea2fd });
         this.parallel = new THREE.Mesh(geometryp, materialp);
         this.add(this.parallel);
         this.parallel.rotateX(MathUtils.degToRad(90));
