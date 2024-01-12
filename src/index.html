@@ -19,11 +19,26 @@
 <body>
     <div class="container-fluid h-100">
         <div class="row h-100">
-            <div class="col-8 h-100">
+            <div class="col-3 h-100">
+                <form>
+                    <div class="statement-group">
+                        <h2>BLOCH SPHERE SIMULATOR</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, 
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, 
+                            sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <div class="col-6 h-100">
                 <div id="bloch-sphere" class="col-12"></div>
                 <div id="bloch-sphere-state" class="col-12">
 					<div class="row pt-3">
-						<div class="col-3">
+						<div class="col-2">
 							<div class="row">
 								<span class="col-2 text-right">Theta:</span>
 								<span id="bloch-sphere-state-theta" class="col-10 text-left">0</span>
@@ -33,7 +48,7 @@
 								<span id="bloch-sphere-state-phi" class="col-10 text-left">0</span>
 							</div>
 						</div>
-						<div class="col-3">
+						<div class="col-2">
 							<div class="row">
 								<span class="col-2 text-right">Alpha:</span>
 								<span id="bloch-sphere-state-alpha" class="col-10 text-left">1.0000</span>
@@ -43,7 +58,7 @@
 								<span id="bloch-sphere-state-beta" class="col-10 text-left">0.0000 + i * 0.0000</span>
 							</div>
 						</div>
-						<div class="col-6">
+						<div class="col-8">
 							<div class="row">
 								<span class="col-2 text-right">0 Olasılığı:</span>
 								<span id="bloch-sphere-state-0" class="col-10 text-left">1.0000</span>
@@ -56,7 +71,7 @@
 					</div>
 				</div>
             </div>
-            <div class="col-4 h-100">
+            <div class="col-3 h-100">
                 <form>
                     <div class="form-group">
                         <label for="theta-angle-label">
@@ -75,28 +90,38 @@
                         <button type="button" id="negative-x" class="button">I-></button>
                         <button type="button" id="positive-y" class="button">I+i></button>
                         <button type="button" id="negative-y" class="button">I-i></button>
-                    </div>
-                </form>
-                <form>
-                    <div class="form-group">
                         <hr>
                         <button type="button" id="gate-px" class="button">P<sub>x</sub></button>
                         <button type="button" id="gate-py" class="button">P<sub>y</sub></button>
                         <button type="button" id="gate-pz" class="button">P<sub>z</sub></button>
                         <hr>
-                        <button type="button" id="gate-px90" class="button">P<sub>x</sub><sup>1/2</sup></button>
-                        <button type="button" id="gate-py90" class="button">P<sub>y</sub><sup>1/2</sup></button>
-                        <button type="button" id="gate-pz90" class="button">P<sub>z</sub><sup>1/2</sup></button>
-                        <button type="button" id="gate-px90n" class="button">P<sub>x</sub><sup>-1/2</sup></button>
-                        <button type="button" id="gate-py90n" class="button">P<sub>y</sub><sup>-1/2</sup></button>
-                        <button type="button" id="gate-pz90n" class="button">P<sub>z</sub><sup>-1/2</sup></button>
-                        <hr>
-                        <button type="button" id="gate-px45" class="button">P<sub>x</sub><sup>1/4</sup></button>
-                        <button type="button" id="gate-py45" class="button">P<sub>y</sub><sup>1/4</sup></button>
-                        <button type="button" id="gate-pz45" class="button">P<sub>z</sub><sup>1/4</sup></button>
-                        <button type="button" id="gate-px45n" class="button">P<sub>x</sub><sup>-1/4</sup></button>
-                        <button type="button" id="gate-py45n" class="button">P<sub>y</sub><sup>-1/4</sup></button>
-                        <button type="button" id="gate-pz45n" class="button">P<sub>z</sub><sup>-1/4</sup></button>
+                        <label>
+                            X Rotasyon:
+                            <div class="input-group col-2">
+                                <input type="text" class="form-control" id="x-rot-input" placeholder="x [-180, 180]">
+                                <span>
+                                    <button type="button" class="btn btn-primary" id="x-rot-submit">Dönder</button>
+                                </span>
+                            </div>
+                        </label>
+                        <label>
+                            Y Rotasyon:
+                            <div class="input-group col-2">
+                                <input type="text" class="form-control" id="y-rot-input" placeholder="y [-180, 180]">
+                                <span>
+                                    <button type="button" class="btn btn-primary" id="y-rot-submit">Dönder</button>
+                                </span>
+                            </div>
+                        </label>
+                        <label>
+                            Z Rotasyon:
+                            <div class="input-group col-2">
+                                <input type="text" class="form-control" id="z-rot-input" placeholder="z [-180, 180]">
+                                <span>
+                                    <button type="button" class="btn btn-primary" id="z-rot-submit">Dönder</button>
+                                </span>
+                            </div>
+                        </label>
                     </div>
                 </form>
             </div>

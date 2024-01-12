@@ -115,8 +115,8 @@ var ToolboxEventsNamespace = {
     },
 
     negativeYOnClickEvent: function() {
-        let thetaAngle = 180;
-        let phiAngle = 90;
+        let thetaAngle = 90;
+        let phiAngle = 270;
 
         GlobalContext.blochSphereStateProperties.theta = thetaAngle;
         GlobalContext.blochSphereStateProperties.phi = phiAngle;
@@ -188,15 +188,16 @@ var ToolboxEventsNamespace = {
         $("#gate-pz").prop('disabled', false);
     },
 
-    gatepx90OnClickEvent: async function () {
-        $("#gate-px90").prop('disabled', true);
+    xRotOnClickEvent: async function () {
+        $("#x-rot-submit").prop('disabled', true);
 
-        let angle = 90;
-        
-        for (let i = 0; i < angle; i++)
+        let angle = $("#x-rot-input").val();
+        let direction = angle >= 0 ? 1 : -1;
+
+        for (let i = 0; i < Math.abs(angle); i++)
         {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(1));
-            GlobalContext.blochSphereStateProperties.theta += 1;
+            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(direction));
+            GlobalContext.blochSphereStateProperties.theta += direction;
             GlobalContext.blochSphereStateProperties.phi += 0;
             GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
             GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
@@ -205,18 +206,19 @@ var ToolboxEventsNamespace = {
             await delay(20);
         }
 
-        $("#gate-px90").prop('disabled', false);
+        $("#x-rot-submit").prop('disabled', false);
     },
 
-    gatepy90OnClickEvent: async function () {
-        $("#gate-py90").prop('disabled', true);
+    yRotOnClickEvent: async function () {
+        $("#y-rot-submit").prop('disabled', true);
 
-        let angle = 90;
-        
-        for (let i = 0; i < angle; i++)
+        let angle = $("#y-rot-input").val();
+        let direction = angle >= 0 ? 1 : -1;
+
+        for (let i = 0; i < Math.abs(angle); i++)
         {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(1));
-            GlobalContext.blochSphereStateProperties.theta += 1;
+            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(direction));
+            GlobalContext.blochSphereStateProperties.theta += direction;
             GlobalContext.blochSphereStateProperties.phi += 0;
             GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
             GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
@@ -225,19 +227,20 @@ var ToolboxEventsNamespace = {
             await delay(20);
         }
 
-        $("#gate-py90").prop('disabled', false);
+        $("#y-rot-submit").prop('disabled', false);
     },
 
-    gatepz90OnClickEvent: async function () {
-        $("#gate-pz90").prop('disabled', true);
+    zRotOnClickEvent: async function () {
+        $("#z-rot-submit").prop('disabled', true);
 
-        let angle = 90;
-        
-        for (let i = 0; i < angle; i++)
+        let angle = $("#z-rot-input").val();
+        let direction = angle >= 0 ? 1 : -1;
+
+        for (let i = 0; i < Math.abs(angle); i++)
         {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(1));
+            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(direction));
             GlobalContext.blochSphereStateProperties.theta += 0;
-            GlobalContext.blochSphereStateProperties.phi += 1;
+            GlobalContext.blochSphereStateProperties.phi += direction;
             GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
             GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
             this.valuesOnChange();
@@ -245,187 +248,7 @@ var ToolboxEventsNamespace = {
             await delay(20);
         }
 
-        $("#gate-pz90").prop('disabled', false);
-    },
-
-    gatepx90nOnClickEvent: async function () {
-        $("#gate-px90n").prop('disabled', true);
-
-        let angle = 90;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(-1));
-            GlobalContext.blochSphereStateProperties.theta -= 1;
-            GlobalContext.blochSphereStateProperties.phi -= 0;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-px90n").prop('disabled', false);
-    },
-
-    gatepy90nOnClickEvent: async function () {
-        $("#gate-py90n").prop('disabled', true);
-
-        let angle = 90;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(-1));
-            GlobalContext.blochSphereStateProperties.theta -= 1;
-            GlobalContext.blochSphereStateProperties.phi -= 0;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-py90n").prop('disabled', false);
-    },
-
-    gatepz90nOnClickEvent: async function () {
-        $("#gate-pz90n").prop('disabled', true);
-
-        let angle = 90;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(-1));
-            GlobalContext.blochSphereStateProperties.theta -= 0;
-            GlobalContext.blochSphereStateProperties.phi -= 1;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-pz90n").prop('disabled', false);
-    },
-
-    gatepx45OnClickEvent: async function () {
-        $("#gate-px45").prop('disabled', true);
-
-        let angle = 45;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(1));
-            GlobalContext.blochSphereStateProperties.theta += 1;
-            GlobalContext.blochSphereStateProperties.phi += 0;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-px45").prop('disabled', false);
-    },
-
-    gatepy45OnClickEvent: async function () {
-        $("#gate-py45").prop('disabled', true);
-
-        let angle = 45;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(1));
-            GlobalContext.blochSphereStateProperties.theta += 1;
-            GlobalContext.blochSphereStateProperties.phi += 0;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-py45").prop('disabled', false);
-    },
-
-    gatepz45OnClickEvent: async function () {
-        $("#gate-pz45").prop('disabled', true);
-
-        let angle = 45;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(1));
-            GlobalContext.blochSphereStateProperties.theta += 0;
-            GlobalContext.blochSphereStateProperties.phi += 1;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-pz45").prop('disabled', false);
-    },
-
-    gatepx45nOnClickEvent: async function () {
-        $("#gate-px45n").prop('disabled', true);
-
-        let angle = 45;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(-1));
-            GlobalContext.blochSphereStateProperties.theta -= 1;
-            GlobalContext.blochSphereStateProperties.phi -= 0;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-px45n").prop('disabled', false);
-    },
-
-    gatepy45nOnClickEvent: async function () {
-        $("#gate-py45n").prop('disabled', true);
-
-        let angle = 45;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(-1));
-            GlobalContext.blochSphereStateProperties.theta -= 1;
-            GlobalContext.blochSphereStateProperties.phi -= 0;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-py45n").prop('disabled', false);
-    },
-
-    gatepz45nOnClickEvent: async function () {
-        $("#gate-pz45n").prop('disabled', true);
-
-        let angle = 45;
-        
-        for (let i = 0; i < angle; i++)
-        {
-            GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(-1));
-            GlobalContext.blochSphereStateProperties.theta -= 0;
-            GlobalContext.blochSphereStateProperties.phi -= 1;
-            GlobalContext.blochSphere.resetPtheta(GlobalContext.blochSphereStateProperties.theta);
-            GlobalContext.blochSphere.resetPphi(GlobalContext.blochSphereStateProperties.phi);
-            this.valuesOnChange();
-            
-            await delay(20);
-        }
-
-        $("#gate-pz45n").prop('disabled', false);
+        $("#z-rot-submit").prop('disabled', false);
     },
 
     valuesOnChange: function() {
@@ -507,52 +330,16 @@ var ToolboxEventsNamespace = {
             ToolboxEventsNamespace.gatepzOnClickEvent();
         });
 
-        $("#gate-px90").click(function () {
-            ToolboxEventsNamespace.gatepx90OnClickEvent();
+        $("#x-rot-submit").click(function () {
+            ToolboxEventsNamespace.xRotOnClickEvent();
         });
 
-        $("#gate-py90").click(function () {
-            ToolboxEventsNamespace.gatepy90OnClickEvent();
+        $("#y-rot-submit").click(function () {
+            ToolboxEventsNamespace.yRotOnClickEvent();
         });
 
-        $("#gate-pz90").click(function () {
-            ToolboxEventsNamespace.gatepz90OnClickEvent();
-        });
-
-        $("#gate-px90n").click(function () {
-            ToolboxEventsNamespace.gatepx90nOnClickEvent();
-        });
-
-        $("#gate-py90n").click(function () {
-            ToolboxEventsNamespace.gatepy90nOnClickEvent();
-        });
-
-        $("#gate-pz90n").click(function () {
-            ToolboxEventsNamespace.gatepz90nOnClickEvent();
-        });
-
-        $("#gate-px45").click(function () {
-            ToolboxEventsNamespace.gatepx45OnClickEvent();
-        });
-
-        $("#gate-py45").click(function () {
-            ToolboxEventsNamespace.gatepy45OnClickEvent();
-        });
-
-        $("#gate-pz45").click(function () {
-            ToolboxEventsNamespace.gatepz45OnClickEvent();
-        });
-
-        $("#gate-px45n").click(function () {
-            ToolboxEventsNamespace.gatepx45nOnClickEvent();
-        });
-
-        $("#gate-py45n").click(function () {
-            ToolboxEventsNamespace.gatepy45nOnClickEvent();
-        });
-
-        $("#gate-pz45n").click(function () {
-            ToolboxEventsNamespace.gatepz45nOnClickEvent();
+        $("#z-rot-submit").click(function () {
+            ToolboxEventsNamespace.zRotOnClickEvent();
         });
     },
 }
