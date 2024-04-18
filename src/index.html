@@ -38,9 +38,9 @@
                 <div id="bloch-sphere" class="col-12"></div>
                 <div id="bloch-sphere-state" class="col-12">
 					<div class="row pt-3">
-						<div class="col-2">
+						<div class="col-6">
 							<div class="row">
-								<span class="col-2 text-right">Theta:</span>
+								<span class="col-6 text-right">Theta:</span>
 								<span id="bloch-sphere-state-theta" class="col-10 text-left">0</span>
 							</div>
 							<div class="row">
@@ -48,7 +48,7 @@
 								<span id="bloch-sphere-state-phi" class="col-10 text-left">0</span>
 							</div>
 						</div>
-						<div class="col-2">
+						<div class="col-6">
 							<div class="row">
 								<span class="col-2 text-right">Alpha:</span>
 								<span id="bloch-sphere-state-alpha" class="col-10 text-left">1.0000</span>
@@ -58,14 +58,30 @@
 								<span id="bloch-sphere-state-beta" class="col-10 text-left">0.0000 + i * 0.0000</span>
 							</div>
 						</div>
-						<div class="col-8">
+					</div>
+                    <div class="row pt-3">
+						<div class="col-6">
 							<div class="row">
 								<span class="col-2 text-right">0 Olasılığı:</span>
 								<span id="bloch-sphere-state-0" class="col-10 text-left">1.0000</span>
 							</div>
 							<div class="row">
 								<span class="col-2 text-right">1 Olasılığı:</span>
-								<span id="bloch-sphere-state-1" class="col-10 text-left">0.0000 + i * 0.0000</span>
+								<span id="bloch-sphere-state-1" class="col-10 text-left">0.0000</span>
+							</div>
+						</div>
+                        <div class="col-6">
+							<div class="row">
+								<span class="col-2 text-right">X:</span>
+								<span id="bloch-sphere-state-x" class="col-10 text-left">0.0000</span>
+							</div>
+							<div class="row">
+								<span class="col-2 text-right">Y:</span>
+								<span id="bloch-sphere-state-y" class="col-10 text-left">0.0000</span>
+							</div>
+							<div class="row">
+								<span class="col-2 text-right">Z:</span>
+								<span id="bloch-sphere-state-z" class="col-10 text-left">0.0000</span>
 							</div>
 						</div>
 					</div>
@@ -75,12 +91,12 @@
                 <form>
                     <div class="form-group">
                         <label for="theta-angle-label">
-                            Theta:
+                            Polar:
                             <span id="theta-angle-value">0<span>°</span></span>
                         </label>
                         <input type="range" id="theta-angle" class="slider" min="0" max="180" step="1" value="0">
                         <label for="phi-angle-label">
-                            Phi:
+                            Azimuth:
                             <span id="phi-angle-value">0<span>°</span></span>
                         </label>
                         <input type="range" id="phi-angle" class="slider" min="0" max="360" step="1" value="0">
@@ -91,9 +107,9 @@
                         <button type="button" id="positive-y" class="button">I+i></button>
                         <button type="button" id="negative-y" class="button">I-i></button>
                         <hr>
-                        <button type="button" id="gate-px" class="button">P<sub>x</sub></button>
-                        <button type="button" id="gate-py" class="button">P<sub>y</sub></button>
-                        <button type="button" id="gate-pz" class="button">P<sub>z</sub></button>
+                        <button type="button" id="gate-px" class="button">X</button>
+                        <button type="button" id="gate-py" class="button">Y</button>
+                        <button type="button" id="gate-pz" class="button">Z</button>
                         <hr>
                         <label>
                             X Rotasyon:

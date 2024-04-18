@@ -1,7 +1,5 @@
-import {
-    PRECISION
-} from "./constants.js";
 
+const PRECISION = 4;
 
 class Float {
     // returns floating point number with given precision
@@ -44,7 +42,6 @@ class Float {
         return result;
     }
 }
-
 
 export {
     Float

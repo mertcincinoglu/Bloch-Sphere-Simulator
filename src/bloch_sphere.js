@@ -24,6 +24,7 @@ import {
     GlobalContext 
 } from "./context.js";
 import { MathUtils } from "three";
+import { Float } from "./float.js";
 
 
 class BlochSphere extends BaseGroup {
@@ -58,7 +59,7 @@ class BlochSphere extends BaseGroup {
         // Add CartesianAxes to BaseGroup
         this.add(this.cartesianAxes);
 
-        this.createSP(radius, properties.theta, properties.phi, 0, 0);
+        this.createSP(radius, properties.theta, properties.phi, 0, 90);
 
         this.createPphi(radius, 0);
         this.createPtheta(radius, 0, 0);
@@ -66,9 +67,12 @@ class BlochSphere extends BaseGroup {
 
     updateBlochSphereState(axis, angle) {
         this.statePointer.rotate(axis, new THREE.Vector3(), angle);
-        
-        // Update BlochSphereState
         this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
+
+        GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
+        GlobalContext.blochSphereStateProperties.phi = this.statePointer.phi();
+
+        ToolboxEventsNamespace.valuesOnChange();
     }
 
     reset(thetaAngle, phiAngle) {
@@ -109,9 +113,8 @@ class BlochSphere extends BaseGroup {
         this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(phiStart));
 
         // update blochsphere state
-        this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(theta)); // 0 - 180 derece arası değerler
-        this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(phi)); // 0 - 360 derece arası değerler
-
+        this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(theta));
+        this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(phi));
     }
 
     resetPtheta(theta) {
@@ -124,34 +127,84 @@ class BlochSphere extends BaseGroup {
     
         // set diameter to 80% of canvas size
         let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
-    
         let radius = diameter / 2;
     
         // Hesapla: Başlangıçta 90 derecede başlayıp, ardından 0 dereceye inip tekrar -90 dereceye inip tekrar 90 dereceye dönmesi
-        let adjustedTheta = ((theta - 90 ) % 360);
+        let adjustedTheta = theta - 90;
     
-        let x = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * radius);
-        let scaledRadius = radius * Math.abs(Math.cos(MathUtils.degToRad(adjustedTheta)));
+        let x = Math.pow(BlochSphereState.getInstance().x, 2);
+        let y = Math.pow(BlochSphereState.getInstance().y, 2);
+        let z = Math.pow(BlochSphereState.getInstance().z, 2);
+        let rad = Math.sqrt(x + y + z);
+        
+        x /= rad;
+        y /= rad;
+        z /= rad;
+
+        let normalVector = new THREE.Vector3(x, y, z);
+
+        let horizontalPlaneNormal = new THREE.Vector3(0, 0, 1); // Assuming the z-axis is up
+        let projectionVector = normalVector.projectOnPlane(horizontalPlaneNormal);
+
+        let scaledRadius = radius * projectionVector.length();
+
+
         let direction = 1;
-        if (0 <= theta % 360 & theta % 360 <= 90)
-            direction = 1;
-        if (90 <= theta % 360 & theta % 360 <= 180)
+        if (0 <= theta & theta <= 90)
             direction = -1;
-        if (180 <= theta % 360 & theta % 360 <= 270)
+        else if (90 <= theta & theta <= 180)
             direction = -1;
-        if (270 <= theta % 360 & theta % 360 <= 360)
+        else if (180 <= theta & theta <= 270)
             direction = 1;
-    
-        this.createPtheta(x, scaledRadius, direction);
+        else if (270 <= theta & theta <= 360)
+            direction = 1;
+
+        // console.log(verticalOffset);
+
+        let r = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * scaledRadius);
+        this.createPtheta(r, scaledRadius, direction, -radius);
     }
+
+    // resetPtheta(theta) {
+    //     this.remove(this.parallel);
+    
+    //     // get canvas
+    //     let canvas = document.getElementById("bloch-sphere");
+    //     let canvasWidth = canvas.offsetWidth;
+    //     let canvasHeight = canvas.offsetHeight;
+    
+    //     // set diameter to 80% of canvas size
+    //     let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
+    
+    //     let radius = diameter / 2;
+    
+    //     // Hesapla: Başlangıçta 90 derecede başlayıp, ardından 0 dereceye inip tekrar -90 dereceye inip tekrar 90 dereceye dönmesi
+    //     let adjustedTheta = ((theta - 90 ) % 360);
+    
+    //     let x = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * radius);
+    //     let scaledRadius = radius * Math.abs(Math.cos(MathUtils.degToRad(adjustedTheta)));
+    //     let direction = 1;
+    //     if (0 <= theta % 360 & theta % 360 <= 90)
+    //         direction = 1;
+    //     else if (90 <= theta % 360 & theta % 360 <= 180)
+    //         direction = -1;
+    //     else if (180 <= theta % 360 & theta % 360 <= 270)
+    //         direction = -1;
+    //     else if (270 <= theta % 360 & theta % 360 <= 360)
+    //         direction = 1;
+    
+    //     this.createPtheta(x, scaledRadius, direction);
+    // }
     
     createPtheta(radius, scaledRadius, direction) {
-        let geometryp = new THREE.TorusGeometry(scaledRadius, 1, 16, 64).translate(0, 0, 0);
+        // let geometryp = new THREE.TorusGeometry(scaledRadius, 1, 16, 64).translate(0, 0, 0);
+        let geometryp = new THREE.TorusGeometry(50, 1, 16, 64);
         let materialp = new THREE.MeshBasicMaterial({ color: 0xcea2fd });
         this.parallel = new THREE.Mesh(geometryp, materialp);
         this.add(this.parallel);
         this.parallel.rotateX(MathUtils.degToRad(90));
         this.parallel.translateZ(-radius * direction);
+        // this.parallel.translateZ(-radius * direction);
     }
 
     resetPphi(phi) {
