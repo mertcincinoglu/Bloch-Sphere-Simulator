@@ -42,7 +42,7 @@ class BlochSphereState {
         this.z = Float.round(Math.cos(THREE.MathUtils.degToRad(this.theta)));
 
         this.prob0 = Float.round(Math.pow(this.alpha, 2));
-        this.prob1 = Float.round(1 - this.alpha);
+        this.prob1 = Float.round(1 - this.prob0);
     }
 
     update(theta, phi) {

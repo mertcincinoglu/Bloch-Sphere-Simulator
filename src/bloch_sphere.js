@@ -32,7 +32,7 @@ class BlochSphere extends BaseGroup {
         if (!properties) properties = {};
 
         if (!properties.theta) properties.theta = 0;
-        if (!properties.phi) properties.phi = 0;
+        if (!properties.phi) properties.phi = 90;
 
         if (!properties.color) properties.color = new THREE.Color(0xFFFFFF);
         if (!properties.opacity) properties.opacity = 0.8;
@@ -87,15 +87,13 @@ class BlochSphere extends BaseGroup {
         let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
         let radius = diameter / 2;
 
-        let thetaStart = 0;
-        let phiStart = 0;
         let theta = thetaAngle;
         let phi = phiAngle;
 
-        this.createSP(radius, thetaStart, phiStart, theta, phi);
+        this.createSP(radius, theta, phi);
     }
     
-    createSP(radius, thetaStart, phiStart, theta, phi) {
+    createSP(radius, theta, phi) {
         // Create StatePointer
         this.statePointer = new StatePointer(radius, 3, {
             color: new THREE.Color(0xFFFFFF),
@@ -107,10 +105,6 @@ class BlochSphere extends BaseGroup {
 
         // Create BlochSphereState
         this.blochSphereState = new BlochSphereState(this.statePointer.theta(), this.statePointer.phi());
-
-        // Set StatePointer
-        this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(thetaStart));
-        this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(phiStart));
 
         // update blochsphere state
         this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(theta));

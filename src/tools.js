@@ -14,36 +14,40 @@ import {
 
 var ToolboxEventsNamespace = {  
     thetaAngleOnInputChangeEvent: function() {
-        let thetaAngle = $("#theta-angle").val();
-        let angle = parseInt(thetaAngle);
+        let angle = parseInt($("#polar-angle").val());
     
         // update html content
-        $("#theta-angle-value").html(`${angle}<span>&#176;</span>`);
+        $("#polar-angle-value").html(`${angle}<span>&#176;</span>`);
     
         // save tetha angle
-        GlobalContext.blochSphereStateProperties.theta = angle;
+        // GlobalContext.blochSphereStateProperties.theta = angle;
 
         GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.phi);
-        GlobalContext.blochSphere.resetPtheta(angle);
+        // GlobalContext.blochSphere.resetPtheta(angle);
     },
 
     phiAngleOnInputChangeEvent: function() {
-        let phiAngle = $("#phi-angle").val();
-        let angle = parseInt(phiAngle);
+        let angle = parseInt($("#azimuth-angle").val());
     
         // update html content
-        $("#phi-angle-value").html(`${angle}<span>&#176;</span>`);
+        $("#azimuth-angle-value").html(`${angle}<span>&#176;</span>`);
     
         // save phi angle
-        GlobalContext.blochSphereStateProperties.phi = angle;
+        // GlobalContext.blochSphereStateProperties.phi = angle;
 
         GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, angle);
-        GlobalContext.blochSphere.resetPphi(angle);
+        // GlobalContext.blochSphere.resetPphi(angle);
     },
 
     GateOnClickEvent: function(theta, phi) {
         GlobalContext.blochSphereStateProperties.theta = theta;
         GlobalContext.blochSphereStateProperties.phi = phi;
+
+        $("#polar-angle-value").html(`${theta}<span>&#176;</span>`);
+        $("#polar-angle").val(theta);
+
+        $("#azimuth-angle-value").html(`${phi}<span>&#176;</span>`);
+        $("#azimuth-angle").val(phi);
 
         GlobalContext.blochSphere.reset(theta, phi);
         GlobalContext.blochSphere.resetPtheta(theta);
@@ -85,25 +89,14 @@ var ToolboxEventsNamespace = {
     },
 
     valuesOnChange: function() {
-
-        // console.log((GlobalContext.blochSphereStateProperties.theta));
-
-        // let thetaAngle = GlobalContext.blochSphereStateProperties.theta;
-        // $("#theta-angle-value").html(`${thetaAngle}<span>&#176;</span>`);
-        // $("#theta-angle").val(thetaAngle);
-
-        // let phiAngle = GlobalContext.blochSphereStateProperties.phi;
-        // $("#phi-angle-value").html(`${phiAngle}<span>&#176;</span>`);
-        // $("#phi-angle").val(phiAngle);
-   
-        this.updateBlochSphereStateExpressions();
-
-        // console.log(GlobalContext.blochSphereStateProperties.theta);
-    },
-
-    updateBlochSphereStateExpressions: function () {
         const state = BlochSphereState.getInstance();
 
+        // $("#polar-angle-value").html(`${parseInt(state.theta)}<span>&#176;</span>`);
+        // $("#polar-angle").val(parseInt(state.theta));
+
+        // $("#azimuth-angle-value").html(`${state.phi}<span>&#176;</span>`);
+        // $("#azimuth-angle").val(state.phi);
+   
         //Updates added
         $("#bloch-sphere-state-theta").text(state.theta);
         $("#bloch-sphere-state-phi").text(state.phi);
@@ -120,11 +113,11 @@ var ToolboxEventsNamespace = {
     },
 
     startToolboxEventListeners: function() {
-        $("#theta-angle").on("input change", function () {
+        $("#polar-angle").on("input change", function () {
             ToolboxEventsNamespace.thetaAngleOnInputChangeEvent();
         });
 
-        $("#phi-angle").on("input change", function () {
+        $("#azimuth-angle").on("input change", function () {
             ToolboxEventsNamespace.phiAngleOnInputChangeEvent();
         });
 

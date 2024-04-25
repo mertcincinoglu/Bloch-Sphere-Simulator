@@ -90,16 +90,16 @@
             <div class="col-3 h-100">
                 <form>
                     <div class="form-group">
-                        <label for="theta-angle-label">
+                        <label for="polar-angle-label">
                             Polar:
-                            <span id="theta-angle-value">0<span>°</span></span>
+                            <span id="polar-angle-value">0<span>°</span></span>
                         </label>
-                        <input type="range" id="theta-angle" class="slider" min="0" max="180" step="1" value="0">
-                        <label for="phi-angle-label">
+                        <input type="range" id="polar-angle" class="slider" min="0" max="180" step="1" value="0">
+                        <label for="azimuth-angle-label">
                             Azimuth:
-                            <span id="phi-angle-value">0<span>°</span></span>
+                            <span id="azimuth-angle-value">90<span>°</span></span>
                         </label>
-                        <input type="range" id="phi-angle" class="slider" min="0" max="360" step="1" value="0">
+                        <input type="range" id="azimuth-angle" class="slider" min="0" max="360" step="1" value="90">
                         <button type="button" id="positive-z" class="button">I0></button>
                         <button type="button" id="negative-z" class="button">I1></button>
                         <button type="button" id="positive-x" class="button">I+></button>
@@ -134,7 +134,7 @@
                             <div class="input-group col-2">
                                 <input type="text" class="form-control" id="z-rot-input" placeholder="z [-180, 180]">
                                 <span>
-                                    <button type="button" class="btn btn-primary" id="z-rot-submit">Dönüer</button>
+                                    <button type="button" class="btn btn-primary" id="z-rot-submit">Döndür</button>
                                 </span>
                             </div>
                         </label>
