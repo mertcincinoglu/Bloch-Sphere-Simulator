@@ -24,7 +24,6 @@ import {
     GlobalContext 
 } from "./context.js";
 import { MathUtils } from "three";
-import { Float } from "./float.js";
 
 
 class BlochSphere extends BaseGroup {
@@ -32,7 +31,7 @@ class BlochSphere extends BaseGroup {
         if (!properties) properties = {};
 
         if (!properties.theta) properties.theta = 0;
-        if (!properties.phi) properties.phi = 90;
+        if (!properties.phi) properties.phi = 0;
 
         if (!properties.color) properties.color = new THREE.Color(0xFFFFFF);
         if (!properties.opacity) properties.opacity = 0.8;
@@ -59,14 +58,46 @@ class BlochSphere extends BaseGroup {
         // Add CartesianAxes to BaseGroup
         this.add(this.cartesianAxes);
 
-        this.createSP(radius, properties.theta, properties.phi, 0, 90);
+        // this.createSP(radius, 0, 90);
 
-        this.createPphi(radius, 0);
-        this.createPtheta(radius, 0, 0);
+        // this.createPphi(radius, 0);
+        // this.createPtheta(radius, 0, 0);
+
+
+
+
+
+
+
+        // Create StatePointer
+         this.statePointer = new StatePointer(radius, 3, {
+            color: new THREE.Color(0xFFFFFF),
+            position: new THREE.Vector3(0, radius / 2, 0)
+        });
+
+        // Add StatePointer to BaseGroup
+        this.add(this.statePointer);
+
+        // Create BlochSphereState
+        this.blochSphereState = new BlochSphereState(this.statePointer.theta(), this.statePointer.phi());
+
+        // // update blochsphere state
+        this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(0));
+        this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(0));
     }
 
     updateBlochSphereState(axis, angle) {
         this.statePointer.rotate(axis, new THREE.Vector3(), angle);
+        this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
+
+        GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
+        GlobalContext.blochSphereStateProperties.phi = this.statePointer.phi();
+
+        ToolboxEventsNamespace.valuesOnChange();
+    }
+
+    updateBlochSphereState2(polar, azimuth) {
+        this.statePointer.set(polar, azimuth);
         this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
 
         GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
@@ -107,7 +138,7 @@ class BlochSphere extends BaseGroup {
         this.blochSphereState = new BlochSphereState(this.statePointer.theta(), this.statePointer.phi());
 
         // update blochsphere state
-        this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(theta));
+        this.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(theta));
         this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(phi));
     }
 

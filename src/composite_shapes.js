@@ -209,6 +209,47 @@ class StatePointer extends BaseGroup {
         this.parent.worldToLocal(this.position);
     }
 
+    set(polar, azimuth) {
+        const sphereCenter = this.parent.position.clone(); // get the center of the sphere
+        const cylinderCenter = this.position.clone(); // get the center of the sphere
+
+        // Convert polar and azimuth angles to radians
+        const polarRad = THREE.MathUtils.degToRad(polar);
+        const azimuthRad = THREE.MathUtils.degToRad(azimuth);
+
+        const offset = new THREE.Vector3()
+            .subVectors(cylinderCenter, sphereCenter);
+
+        const off = new THREE.Vector3(
+            Math.abs(offset.x),
+            Math.abs(offset.y),
+            Math.abs(offset.z)
+        );
+
+        this.position.copy(sphereCenter);
+        if (polar === 0)
+            this.position.copy(sphereCenter).add(off);
+        else if (polar === 180)
+            this.position.copy(sphereCenter).sub(off);
+        else {
+            const radius = 103;
+            const x = radius * Math.sin(polarRad) * Math.cos(azimuthRad);
+            const y = radius * Math.sin(polarRad) * Math.sin(azimuthRad);
+            const z = radius * Math.cos(polarRad);
+            this.position.set(x, -z, y);
+        }
+
+        // Calculate the quaternion that represents the desired rotation
+        const qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), azimuthRad);
+        const qz = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), polarRad);
+        const q = new THREE.Quaternion().multiplyQuaternions(qz, qx);
+
+        // Apply the rotation to the cylinder object
+        this.quaternion.copy(q);
+
+        this.parent.worldToLocal(this.position);
+    }
+
     theta() {
         return Float.round(Vector3Helpers.angleBetweenVectors(CartesianAxes.ZAxis, this.position, CartesianAxes.ZAxis));
     }

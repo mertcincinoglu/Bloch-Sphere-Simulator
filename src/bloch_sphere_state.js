@@ -14,10 +14,12 @@ let _instance = null;
 class BlochSphereState {
     constructor(theta, phi) {
         if (_instance)
+        {
+            this.update(theta, phi);
             return;
+        }
             
         _instance = this;
-        this.update(theta, phi);
     }
 
     static getInstance() {

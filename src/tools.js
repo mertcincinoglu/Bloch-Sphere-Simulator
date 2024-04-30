@@ -18,40 +18,32 @@ var ToolboxEventsNamespace = {
     
         // update html content
         $("#polar-angle-value").html(`${angle}<span>&#176;</span>`);
-    
-        // save tetha angle
-        // GlobalContext.blochSphereStateProperties.theta = angle;
 
-        GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.phi);
+        GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(angle));
+
+        // GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.phi);
         // GlobalContext.blochSphere.resetPtheta(angle);
     },
 
     phiAngleOnInputChangeEvent: function() {
         let angle = parseInt($("#azimuth-angle").val());
-    
+
         // update html content
         $("#azimuth-angle-value").html(`${angle}<span>&#176;</span>`);
-    
-        // save phi angle
-        // GlobalContext.blochSphereStateProperties.phi = angle;
 
-        GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.theta, angle);
+        GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(angle));
         // GlobalContext.blochSphere.resetPphi(angle);
     },
 
-    GateOnClickEvent: function(theta, phi) {
-        GlobalContext.blochSphereStateProperties.theta = theta;
-        GlobalContext.blochSphereStateProperties.phi = phi;
+    GateOnClickEvent: function(polar, azimuth) {
+        $("#polar-angle-value").html(`${polar}<span>&#176; - disabled</span>`);
+        $("#azimuth-angle-value").html(`${azimuth}<span>&#176; - disabled</span>`);
 
-        $("#polar-angle-value").html(`${theta}<span>&#176;</span>`);
-        $("#polar-angle").val(theta);
+        GlobalContext.blochSphere.updateBlochSphereState2(polar, azimuth);
 
-        $("#azimuth-angle-value").html(`${phi}<span>&#176;</span>`);
-        $("#azimuth-angle").val(phi);
-
-        GlobalContext.blochSphere.reset(theta, phi);
-        GlobalContext.blochSphere.resetPtheta(theta);
-        GlobalContext.blochSphere.resetPphi(phi);
+        // GlobalContext.blochSphere.reset(polar, azimuth);
+        // GlobalContext.blochSphere.resetPtheta(theta);
+        // GlobalContext.blochSphere.resetPphi(phi);   
     },
 
     RotateOnClickEvent: function (axis, angle) {
@@ -73,6 +65,7 @@ var ToolboxEventsNamespace = {
             if (currentAngle === angle * direction) return;
 
             GlobalContext.blochSphere.updateBlochSphereState(ax, THREE.MathUtils.degToRad(direction));
+            // GlobalContext.blochSphere.reset(BlochSphereState.getInstance().theta, BlochSphereState.getInstance().phi);
             
             // let a = 
             GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().z);

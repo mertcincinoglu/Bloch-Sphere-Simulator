@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <!-- Encoding -->
     <meta charset="UTF-8">
@@ -12,50 +12,50 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="container-fluid h-100">
-        <div class="row h-100">
-            <div class="col-3 h-100">
+    <div class="container-fluid mt-3">
+        <div class="row h-auto d-flex">
+            <div class="col-3">
                 <form>
                     <div class="statement-group">
                         <h2>BLOCH SPHERE SIMULATOR</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, 
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, 
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident,
                             sunt in culpa qui officia deserunt mollit anim id est laborum.
                         </p>
                     </div>
                 </form>
             </div>
-            <div class="col-6 h-100">
+            <div class="col-6">
                 <div id="bloch-sphere" class="col-12"></div>
                 <div id="bloch-sphere-state" class="col-12">
 					<div class="row pt-3">
 						<div class="col-6">
 							<div class="row">
 								<span class="col-6 text-right">Theta:</span>
-								<span id="bloch-sphere-state-theta" class="col-10 text-left">0</span>
+								<span id="bloch-sphere-state-theta" class="col-10 text-left">+0.0000</span>
 							</div>
 							<div class="row">
 								<span class="col-2 text-right">Phi:</span>
-								<span id="bloch-sphere-state-phi" class="col-10 text-left">0</span>
+								<span id="bloch-sphere-state-phi" class="col-10 text-left">+90.0000</span>
 							</div>
 						</div>
 						<div class="col-6">
 							<div class="row">
 								<span class="col-2 text-right">Alpha:</span>
-								<span id="bloch-sphere-state-alpha" class="col-10 text-left">1.0000</span>
+								<span id="bloch-sphere-state-alpha" class="col-10 text-left">+1.0000</span>
 							</div>
 							<div class="row">
 								<span class="col-2 text-right">Beta:</span>
-								<span id="bloch-sphere-state-beta" class="col-10 text-left">0.0000 + i * 0.0000</span>
+								<span id="bloch-sphere-state-beta" class="col-10 text-left">+0.0000 + i * 0.0000</span>
 							</div>
 						</div>
 					</div>
@@ -63,43 +63,43 @@
 						<div class="col-6">
 							<div class="row">
 								<span class="col-2 text-right">0 Olasılığı:</span>
-								<span id="bloch-sphere-state-0" class="col-10 text-left">1.0000</span>
+								<span id="bloch-sphere-state-0" class="col-10 text-left">+1.0000</span>
 							</div>
 							<div class="row">
 								<span class="col-2 text-right">1 Olasılığı:</span>
-								<span id="bloch-sphere-state-1" class="col-10 text-left">0.0000</span>
+								<span id="bloch-sphere-state-1" class="col-10 text-left">+0.0000</span>
 							</div>
 						</div>
                         <div class="col-6">
 							<div class="row">
 								<span class="col-2 text-right">X:</span>
-								<span id="bloch-sphere-state-x" class="col-10 text-left">0.0000</span>
+								<span id="bloch-sphere-state-x" class="col-10 text-left">+0.0000</span>
 							</div>
 							<div class="row">
 								<span class="col-2 text-right">Y:</span>
-								<span id="bloch-sphere-state-y" class="col-10 text-left">0.0000</span>
+								<span id="bloch-sphere-state-y" class="col-10 text-left">+0.0000</span>
 							</div>
 							<div class="row">
 								<span class="col-2 text-right">Z:</span>
-								<span id="bloch-sphere-state-z" class="col-10 text-left">0.0000</span>
+								<span id="bloch-sphere-state-z" class="col-10 text-left">+1.0000</span>
 							</div>
 						</div>
 					</div>
 				</div>
             </div>
-            <div class="col-3 h-100">
+            <div class="col-3">
                 <form>
                     <div class="form-group">
-                        <label for="polar-angle-label">
+                        <label id="polar-angle-label">
                             Polar:
-                            <span id="polar-angle-value">0<span>°</span></span>
+                            <span id="polar-angle-value">0<span>° - disabled</span></span>
                         </label>
-                        <input type="range" id="polar-angle" class="slider" min="0" max="180" step="1" value="0">
-                        <label for="azimuth-angle-label">
+                        <input type="range" id="polar-angle" class="slider" min="0" max="180" step="1" value="0" disabled="true">
+                        <label id="azimuth-angle-label">
                             Azimuth:
-                            <span id="azimuth-angle-value">90<span>°</span></span>
+                            <span id="azimuth-angle-value">0<span>° - disabled</span></span>
                         </label>
-                        <input type="range" id="azimuth-angle" class="slider" min="0" max="360" step="1" value="90">
+                        <input type="range" id="azimuth-angle" class="slider" min="0" max="360" step="1" value="0" disabled="true">
                         <button type="button" id="positive-z" class="button">I0></button>
                         <button type="button" id="negative-z" class="button">I1></button>
                         <button type="button" id="positive-x" class="button">I+></button>
