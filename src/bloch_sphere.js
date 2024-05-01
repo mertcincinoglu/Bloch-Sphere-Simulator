@@ -63,12 +63,6 @@ class BlochSphere extends BaseGroup {
         // this.createPphi(radius, 0);
         // this.createPtheta(radius, 0, 0);
 
-
-
-
-
-
-
         // Create StatePointer
          this.statePointer = new StatePointer(radius, 3, {
             color: new THREE.Color(0xFFFFFF),
@@ -88,16 +82,17 @@ class BlochSphere extends BaseGroup {
 
     updateBlochSphereState(axis, angle) {
         this.statePointer.rotate(axis, new THREE.Vector3(), angle);
-        this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
 
-        GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
-        GlobalContext.blochSphereStateProperties.phi = this.statePointer.phi();
-
-        ToolboxEventsNamespace.valuesOnChange();
+        this.updateStates();
     }
 
-    updateBlochSphereState2(polar, azimuth) {
+    setBlochSphereState(polar, azimuth) {
         this.statePointer.set(polar, azimuth);
+
+        this.updateStates();
+    }
+
+    updateStates() {
         this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
 
         GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();

@@ -15,11 +15,9 @@ import {
 var ToolboxEventsNamespace = {  
     thetaAngleOnInputChangeEvent: function() {
         let angle = parseInt($("#polar-angle").val());
-    
-        // update html content
         $("#polar-angle-value").html(`${angle}<span>&#176;</span>`);
 
-        GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.XAxis, THREE.MathUtils.degToRad(angle));
+        GlobalContext.blochSphere.setBlochSphereState(angle, 90);
 
         // GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.phi);
         // GlobalContext.blochSphere.resetPtheta(angle);
@@ -27,11 +25,11 @@ var ToolboxEventsNamespace = {
 
     phiAngleOnInputChangeEvent: function() {
         let angle = parseInt($("#azimuth-angle").val());
-
-        // update html content
         $("#azimuth-angle-value").html(`${angle}<span>&#176;</span>`);
 
-        GlobalContext.blochSphere.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(angle));
+        GlobalContext.blochSphere.setBlochSphereState(BlochSphereState.getInstance().theta, angle);
+
+        // GlobalContext.blochSphere.reset(90, angle);
         // GlobalContext.blochSphere.resetPphi(angle);
     },
 
@@ -39,7 +37,7 @@ var ToolboxEventsNamespace = {
         $("#polar-angle-value").html(`${polar}<span>&#176; - disabled</span>`);
         $("#azimuth-angle-value").html(`${azimuth}<span>&#176; - disabled</span>`);
 
-        GlobalContext.blochSphere.updateBlochSphereState2(polar, azimuth);
+        GlobalContext.blochSphere.setBlochSphereState(polar, azimuth);
 
         // GlobalContext.blochSphere.reset(polar, azimuth);
         // GlobalContext.blochSphere.resetPtheta(theta);
@@ -65,9 +63,7 @@ var ToolboxEventsNamespace = {
             if (currentAngle === angle * direction) return;
 
             GlobalContext.blochSphere.updateBlochSphereState(ax, THREE.MathUtils.degToRad(direction));
-            // GlobalContext.blochSphere.reset(BlochSphereState.getInstance().theta, BlochSphereState.getInstance().phi);
-            
-            // let a = 
+
             GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().z);
             // GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().theta);
             // GlobalContext.blochSphere.resetPphi(BlochSphereState.getInstance().phi);

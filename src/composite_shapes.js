@@ -210,42 +210,35 @@ class StatePointer extends BaseGroup {
     }
 
     set(polar, azimuth) {
+        this.parent.localToWorld(this.position);
+
         const sphereCenter = this.parent.position.clone(); // get the center of the sphere
         const cylinderCenter = this.position.clone(); // get the center of the sphere
 
-        // Convert polar and azimuth angles to radians
         const polarRad = THREE.MathUtils.degToRad(polar);
-        const azimuthRad = THREE.MathUtils.degToRad(azimuth);
+        const azimuthRad= THREE.MathUtils.degToRad(azimuth);
 
-        const offset = new THREE.Vector3()
-            .subVectors(cylinderCenter, sphereCenter);
+        const r = sphereCenter.distanceTo(cylinderCenter);
+        const x = Float.round(r * Math.sin(polarRad) * Math.cos(azimuthRad));
+        const y = Float.round(r * Math.sin(polarRad) * Math.sin(azimuthRad));
+        const z = Float.round(r * Math.cos(polarRad));
+        const pos = new THREE.Vector3(x, z, y);
+        this.position.copy(pos);
 
-        const off = new THREE.Vector3(
-            Math.abs(offset.x),
-            Math.abs(offset.y),
-            Math.abs(offset.z)
-        );
-
-        this.position.copy(sphereCenter);
         if (polar === 0)
-            this.position.copy(sphereCenter).add(off);
+            this.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(0));
         else if (polar === 180)
-            this.position.copy(sphereCenter).sub(off);
+            this.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(180));
         else {
-            const radius = 103;
-            const x = radius * Math.sin(polarRad) * Math.cos(azimuthRad);
-            const y = radius * Math.sin(polarRad) * Math.sin(azimuthRad);
-            const z = radius * Math.cos(polarRad);
-            this.position.set(x, -z, y);
+            if (azimuth === 0)
+                this.setRotationFromAxisAngle(new THREE.Vector3(0, 0, 1), THREE.MathUtils.degToRad(270));
+            else if (azimuth === 90)
+                this.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(90));
+            else if (azimuth === 180)
+                this.setRotationFromAxisAngle(new THREE.Vector3(0, 0, 1), THREE.MathUtils.degToRad(90));
+            else if (azimuth === 270)
+                this.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(270));
         }
-
-        // Calculate the quaternion that represents the desired rotation
-        const qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), azimuthRad);
-        const qz = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), polarRad);
-        const q = new THREE.Quaternion().multiplyQuaternions(qz, qx);
-
-        // Apply the rotation to the cylinder object
-        this.quaternion.copy(q);
 
         this.parent.worldToLocal(this.position);
     }
