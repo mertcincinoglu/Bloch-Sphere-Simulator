@@ -11,15 +11,18 @@ import {
 import {
     BlochSphereState
 } from "./bloch_sphere_state.js";
+import {Float} from "./float.js";
+import {float} from "three/nodes";
+
+var buttondanmi = false;
 
 var ToolboxEventsNamespace = {  
     thetaAngleOnInputChangeEvent: function() {
         let angle = parseInt($("#polar-angle").val());
         $("#polar-angle-value").html(`${angle}<span>&#176;</span>`);
 
-        GlobalContext.blochSphere.setBlochSphereState(angle, 90);
-
-        // GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.phi);
+        GlobalContext.blochSphere.reset(angle, BlochSphereState.getInstance().phi);
+        GlobalContext.blochSphere.setParallelState(angle);
         // GlobalContext.blochSphere.resetPtheta(angle);
     },
 
@@ -27,15 +30,15 @@ var ToolboxEventsNamespace = {
         let angle = parseInt($("#azimuth-angle").val());
         $("#azimuth-angle-value").html(`${angle}<span>&#176;</span>`);
 
-        GlobalContext.blochSphere.setBlochSphereState(BlochSphereState.getInstance().theta, angle);
-
-        // GlobalContext.blochSphere.reset(90, angle);
+        GlobalContext.blochSphere.reset(BlochSphereState.getInstance().theta, angle);
         // GlobalContext.blochSphere.resetPphi(angle);
     },
 
     GateOnClickEvent: function(polar, azimuth) {
-        $("#polar-angle-value").html(`${polar}<span>&#176; - disabled</span>`);
-        $("#azimuth-angle-value").html(`${azimuth}<span>&#176; - disabled</span>`);
+        $("#polar-angle-value").html(`${polar}<span>&#176;</span>`);
+        $("#azimuth-angle-value").html(`${azimuth}<span>&#176;</span>`);
+        $("#polar-angle").val(polar);
+        $("#azimuth-angle").val(azimuth);
 
         GlobalContext.blochSphere.setBlochSphereState(polar, azimuth);
 
@@ -47,34 +50,46 @@ var ToolboxEventsNamespace = {
     RotateOnClickEvent: function (axis, angle) {
         $(":button").prop('disabled', true);
 
-        let ax = axis == "x" ? CartesianAxes.XAxis : axis == "y" ? CartesianAxes.YAxis : CartesianAxes.ZAxis; 
+        let ax = axis === "x" ? CartesianAxes.XAxis : axis === "y" ? CartesianAxes.YAxis : CartesianAxes.ZAxis;
 
         if (angle == null)
             angle = parseInt($("#" + axis + "-rot-input").val());
 
-        let direction = angle >= 0 ? 1 : -1;
+        let direction = angle >= 0 ? -1 : 1;
 
-        let currentAngle = 0; // TODO: BURAYA THETA VEYA PHİ AÇISI DEĞERİ GELMELİ
         let intervalTime = 10;
         let totalTime = angle * direction * intervalTime;
 
         // FIXME: SEKMEYİ ALT+TAB YAPINCA İŞLEM DEVAM ETMİYOR
+
         let timer = setInterval(function() {
-            if (currentAngle === angle * direction) return;
+            let currentAngleTheta = parseInt(BlochSphereState.getInstance().theta);
+            let currentAnglePhi = Math.abs(parseInt(BlochSphereState.getInstance().phi));
 
             GlobalContext.blochSphere.updateBlochSphereState(ax, THREE.MathUtils.degToRad(direction));
 
-            GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().z);
+            $("#polar-angle-value").html(`${currentAngleTheta}<span>&#176;</span>`);
+            $("#azimuth-angle-value").html(`${currentAnglePhi}<span>&#176;</span>`);
+            $("#polar-angle").val(currentAngleTheta);
+            $("#azimuth-angle").val(currentAnglePhi);
+
+            // GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().z);
             // GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().theta);
             // GlobalContext.blochSphere.resetPphi(BlochSphereState.getInstance().phi);
-            // currentAngle += direction;
 
         }, intervalTime);
 
         setTimeout(function() {
             clearInterval(timer);
             $(":button").prop('disabled', false);
-        }, totalTime);
+
+            let currentAngleTheta = parseInt(BlochSphereState.getInstance().theta);
+            let currentAnglePhi = Math.abs(parseInt(BlochSphereState.getInstance().phi));
+            $("#polar-angle-value").html(`${currentAngleTheta}<span>&#176;</span>`);
+            $("#azimuth-angle-value").html(`${currentAnglePhi}<span>&#176;</span>`);
+            $("#polar-angle").val(currentAngleTheta);
+            $("#azimuth-angle").val(currentAnglePhi);
+        }, Math.abs(totalTime));
     },
 
     valuesOnChange: function() {
@@ -111,11 +126,11 @@ var ToolboxEventsNamespace = {
         });
 
         $("#positive-z").click(function () {
-            ToolboxEventsNamespace.GateOnClickEvent(0, 0);
+            ToolboxEventsNamespace.GateOnClickEvent(0, 90);
         });
 
         $("#negative-z").click(function () {
-            ToolboxEventsNamespace.GateOnClickEvent(180, 0);
+            ToolboxEventsNamespace.GateOnClickEvent(180, 90);
         });
 
         $("#positive-x").click(function () {

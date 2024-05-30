@@ -15,6 +15,8 @@ import {
 import {
     Vector3Helpers
 } from "./vector3_helpers.js";
+import {MathUtils} from "three";
+import {BlochSphereState} from "./bloch_sphere_state.js";
 
 
 class Axis extends BaseGroup {
@@ -47,9 +49,9 @@ class CartesianAxes extends BaseGroup {
         if (!properties.xAxisColor) properties.xAxisColor = new THREE.Color(0xFF0000);
         if (!properties.yAxisColor) properties.yAxisColor = new THREE.Color(0x00FF00);
         if (!properties.zAxisColor) properties.zAxisColor = new THREE.Color(0x0000FF);
-        if (!properties.nxAxisColor) properties.xAxisColor = new THREE.Color(0xFF0000);
-        if (!properties.nyAxisColor) properties.yAxisColor = new THREE.Color(0x00FF00);
-        if (!properties.nzAxisColor) properties.zAxisColor = new THREE.Color(0x0000FF);
+        if (!properties.nxAxisColor) properties.nxAxisColor = new THREE.Color(0xFF0000);
+        if (!properties.nyAxisColor) properties.nyAxisColor = new THREE.Color(0x00FF00);
+        if (!properties.nzAxisColor) properties.nzAxisColor = new THREE.Color(0x0000FF);
 
         super(properties);
 
@@ -252,7 +254,91 @@ class StatePointer extends BaseGroup {
     }
 }
 
+class Parallel extends BaseGroup {
+    constructor(radius, properties) {
+        if (!properties) properties = {};
+
+        if (!properties.color) properties.color = new THREE.Color(0xFFFFFF);
+
+        super(properties);
+
+        this.geometry = new THREE.TorusGeometry( radius, 1, 16, 64 );
+        this.material = new THREE.MeshBasicMaterial( { color: properties.color } );
+        this.parallel = new THREE.Mesh( this.geometry, this.material );
+
+        this.add(this.parallel);
+    }
+
+    rotate(radius, axis, point, angle) {
+        // this.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(angle), 0));
+
+        // const xPos = BlochSphereState.getInstance().x;
+        // const yPos = BlochSphereState.getInstance().y;
+        // const zPos = BlochSphereState.getInstance().z;
+        // const pos = new THREE.Vector3(0, zPos, 0).multiplyScalar(radius);
+        //
+        // console.log(pos);
+        //
+        //
+        // this.position.copy(pos);
+
+
+        // this.parent.localToWorld(this.position);
+        // console.log("a0a");
+        //
+        // this.position.sub(point);
+        // this.position.applyAxisAngle(axis, angle);
+        // this.position.add(point);
+        // this.rotateOnWorldAxis(axis, angle);
+        //
+        // this.parent.worldToLocal(this.position);
+
+        // set(radius, angle);
+    }
+
+    set(radius, angle) {
+        // const scale = 1 - Math.abs(Math.sin(THREE.MathUtils.degToRad(((angle - 90 ) % 360))));
+        // this.parallel.scale.set(scale, scale, this.parallel.scale.z);
+
+        const d = Math.sin(THREE.MathUtils.degToRad(angle));
+        const r = Math.sqrt(1 - Math.pow(Math.sin(THREE.MathUtils.degToRad(angle)), 2));
+        this.parallel.scale.set(r, r, this.parallel.scale.z);
+
+        // let pos = new THREE.Vector3();
+        // if (0 <= angle && angle < 90) {
+        //     pos = new THREE.Vector3(0, 0, radius * (d));
+        // }
+        // else if (90 <= angle && angle < 180) {
+        //     pos = new THREE.Vector3(0, 0, radius * (1 - r) + radius);
+        // }
+        // this.parallel.position.copy(pos);
+
+        // this.parallel.position.copy(new THREE.Vector3(0, 0, 0 - radius * (1 - r)));
+
+
+
+        
+        // const r = 1 - Math.sqrt(1 - Math.pow(Math.sin(THREE.MathUtils.degToRad(angle)), 2));
+        // this.parallel.scale.set(r, r, this.parallel.scale.z);
+        //
+        // let pos = new THREE.Vector3();
+        // if (0 <= angle && angle < 90) {
+        //     pos = new THREE.Vector3(0, 0, radius * -r + radius);
+        // }
+        // else if (90 <= angle && angle < 180) {
+        //     pos = new THREE.Vector3(0, 0, 0 - radius * (1 - r));
+        // }
+        // this.parallel.position.copy(pos);
+
+        // this.parallel.position.copy(new THREE.Vector3(0, 0, 0 - radius * (1 - r)));
+    }
+
+    set2(polar) {
+        console.log(polar);
+    }
+}
+
 export {
     Axis, CartesianAxes,
-    StatePointer
+    StatePointer, Parallel
 };
