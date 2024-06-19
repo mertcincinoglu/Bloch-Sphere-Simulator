@@ -17,6 +17,7 @@ import {
 } from "./vector3_helpers.js";
 import {MathUtils} from "three";
 import {BlochSphereState} from "./bloch_sphere_state.js";
+import {GlobalContext} from "./context.js";
 
 
 class Axis extends BaseGroup {
@@ -246,11 +247,13 @@ class StatePointer extends BaseGroup {
     }
 
     theta() {
-        return Float.round(Vector3Helpers.angleBetweenVectors(CartesianAxes.ZAxis, this.position, CartesianAxes.ZAxis));
+        return Float.round(GlobalContext.blochSphereStateProperties.polar);
+        //return Float.round(Vector3Helpers.angleBetweenVectors(CartesianAxes.ZAxis, this.position, CartesianAxes.ZAxis));
     }
 
     phi() {
-        return Float.round(Vector3Helpers.angleBetweenVectors(CartesianAxes.XAxis, this.position, CartesianAxes.ZAxis));
+        return Float.round(GlobalContext.blochSphereStateProperties.azimuth);
+        //return Float.round(Vector3Helpers.angleBetweenVectors(CartesianAxes.XAxis, this.position, CartesianAxes.ZAxis));
     }
 }
 
@@ -267,74 +270,6 @@ class Parallel extends BaseGroup {
         this.parallel = new THREE.Mesh( this.geometry, this.material );
 
         this.add(this.parallel);
-    }
-
-    rotate(radius, axis, point, angle) {
-        // this.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(angle), 0));
-
-        // const xPos = BlochSphereState.getInstance().x;
-        // const yPos = BlochSphereState.getInstance().y;
-        // const zPos = BlochSphereState.getInstance().z;
-        // const pos = new THREE.Vector3(0, zPos, 0).multiplyScalar(radius);
-        //
-        // console.log(pos);
-        //
-        //
-        // this.position.copy(pos);
-
-
-        // this.parent.localToWorld(this.position);
-        // console.log("a0a");
-        //
-        // this.position.sub(point);
-        // this.position.applyAxisAngle(axis, angle);
-        // this.position.add(point);
-        // this.rotateOnWorldAxis(axis, angle);
-        //
-        // this.parent.worldToLocal(this.position);
-
-        // set(radius, angle);
-    }
-
-    set(radius, angle) {
-        // const scale = 1 - Math.abs(Math.sin(THREE.MathUtils.degToRad(((angle - 90 ) % 360))));
-        // this.parallel.scale.set(scale, scale, this.parallel.scale.z);
-
-        const d = Math.sin(THREE.MathUtils.degToRad(angle));
-        const r = Math.sqrt(1 - Math.pow(Math.sin(THREE.MathUtils.degToRad(angle)), 2));
-        this.parallel.scale.set(r, r, this.parallel.scale.z);
-
-        // let pos = new THREE.Vector3();
-        // if (0 <= angle && angle < 90) {
-        //     pos = new THREE.Vector3(0, 0, radius * (d));
-        // }
-        // else if (90 <= angle && angle < 180) {
-        //     pos = new THREE.Vector3(0, 0, radius * (1 - r) + radius);
-        // }
-        // this.parallel.position.copy(pos);
-
-        // this.parallel.position.copy(new THREE.Vector3(0, 0, 0 - radius * (1 - r)));
-
-
-
-        
-        // const r = 1 - Math.sqrt(1 - Math.pow(Math.sin(THREE.MathUtils.degToRad(angle)), 2));
-        // this.parallel.scale.set(r, r, this.parallel.scale.z);
-        //
-        // let pos = new THREE.Vector3();
-        // if (0 <= angle && angle < 90) {
-        //     pos = new THREE.Vector3(0, 0, radius * -r + radius);
-        // }
-        // else if (90 <= angle && angle < 180) {
-        //     pos = new THREE.Vector3(0, 0, 0 - radius * (1 - r));
-        // }
-        // this.parallel.position.copy(pos);
-
-        // this.parallel.position.copy(new THREE.Vector3(0, 0, 0 - radius * (1 - r)));
-    }
-
-    set2(polar) {
-        console.log(polar);
     }
 }
 

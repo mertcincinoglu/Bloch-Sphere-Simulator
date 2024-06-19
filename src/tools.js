@@ -12,26 +12,22 @@ import {
     BlochSphereState
 } from "./bloch_sphere_state.js";
 import {Float} from "./float.js";
-import {float} from "three/nodes";
 
-var buttondanmi = false;
-
-var ToolboxEventsNamespace = {  
+var ToolboxEventsNamespace = {
     thetaAngleOnInputChangeEvent: function() {
         let angle = parseInt($("#polar-angle").val());
         $("#polar-angle-value").html(`${angle}<span>&#176;</span>`);
-
-        GlobalContext.blochSphere.reset(angle, BlochSphereState.getInstance().phi);
-        GlobalContext.blochSphere.setParallelState(angle);
-        // GlobalContext.blochSphere.resetPtheta(angle);
+        GlobalContext.blochSphereStateProperties.polar = angle;
+        GlobalContext.blochSphere.reset(angle, GlobalContext.blochSphereStateProperties.azimuth);
+        GlobalContext.blochSphere.resetPtheta(angle);
     },
 
     phiAngleOnInputChangeEvent: function() {
         let angle = parseInt($("#azimuth-angle").val());
         $("#azimuth-angle-value").html(`${angle}<span>&#176;</span>`);
-
-        GlobalContext.blochSphere.reset(BlochSphereState.getInstance().theta, angle);
-        // GlobalContext.blochSphere.resetPphi(angle);
+        GlobalContext.blochSphereStateProperties.azimuth = angle;
+        GlobalContext.blochSphere.reset(GlobalContext.blochSphereStateProperties.polar, angle);
+        GlobalContext.blochSphere.resetPphi(angle);
     },
 
     GateOnClickEvent: function(polar, azimuth) {
@@ -40,67 +36,96 @@ var ToolboxEventsNamespace = {
         $("#polar-angle").val(polar);
         $("#azimuth-angle").val(azimuth);
 
-        GlobalContext.blochSphere.setBlochSphereState(polar, azimuth);
+        GlobalContext.blochSphere.reset(polar, azimuth);
+        GlobalContext.blochSphereStateProperties.polar = polar;
+        GlobalContext.blochSphereStateProperties.azimuth = azimuth;
 
-        // GlobalContext.blochSphere.reset(polar, azimuth);
-        // GlobalContext.blochSphere.resetPtheta(theta);
-        // GlobalContext.blochSphere.resetPphi(phi);   
+        GlobalContext.blochSphere.resetPtheta(polar);
+        GlobalContext.blochSphere.resetPphi(azimuth);
     },
 
-    RotateOnClickEvent: function (axis, angle) {
-        $(":button").prop('disabled', true);
-
-        let ax = axis === "x" ? CartesianAxes.XAxis : axis === "y" ? CartesianAxes.YAxis : CartesianAxes.ZAxis;
-
+    RotateOnClickEvent: function(axis, angle) {
         if (angle == null)
             angle = parseInt($("#" + axis + "-rot-input").val());
 
-        let direction = angle >= 0 ? -1 : 1;
+        // Mevcut polar ve azimuth açılarını radian cinsine çevir
+        let theta_rad = THREE.MathUtils.degToRad(GlobalContext.blochSphereStateProperties.polar);
+        let phi_rad = THREE.MathUtils.degToRad(GlobalContext.blochSphereStateProperties.azimuth);
+        let alpha_rad = THREE.MathUtils.degToRad(Math.abs(angle));
 
-        let intervalTime = 10;
-        let totalTime = angle * direction * intervalTime;
+        // Başlangıçtaki Kartezyen koordinatlar
+        let x = Math.sin(theta_rad) * Math.cos(phi_rad);
+        let y = Math.sin(theta_rad) * Math.sin(phi_rad);
+        let z = Math.cos(theta_rad);
 
-        // FIXME: SEKMEYİ ALT+TAB YAPINCA İŞLEM DEVAM ETMİYOR
+        // Yeni polar ve azimuth açılarını hesaplamak için dönüşüm matrisleri
+        let Rx = [
+            [1, 0, 0],
+            [0, Math.cos(alpha_rad), -Math.sin(alpha_rad)],
+            [0, Math.sin(alpha_rad), Math.cos(alpha_rad)]
+        ];
 
-        let timer = setInterval(function() {
-            let currentAngleTheta = parseInt(BlochSphereState.getInstance().theta);
-            let currentAnglePhi = Math.abs(parseInt(BlochSphereState.getInstance().phi));
+        let Ry = [
+            [Math.cos(alpha_rad), 0, Math.sin(alpha_rad)],
+            [0, 1, 0],
+            [-Math.sin(alpha_rad), 0, Math.cos(alpha_rad)]
+        ];
 
-            GlobalContext.blochSphere.updateBlochSphereState(ax, THREE.MathUtils.degToRad(direction));
+        let Rz = [
+            [Math.cos(alpha_rad), -Math.sin(alpha_rad), 0],
+            [Math.sin(alpha_rad), Math.cos(alpha_rad), 0],
+            [0, 0, 1]
+        ];
 
-            $("#polar-angle-value").html(`${currentAngleTheta}<span>&#176;</span>`);
-            $("#azimuth-angle-value").html(`${currentAnglePhi}<span>&#176;</span>`);
-            $("#polar-angle").val(currentAngleTheta);
-            $("#azimuth-angle").val(currentAnglePhi);
+        // Doğru dönüşüm matrisini seç
+        let rax = axis === "x" ? Rx : axis === "y" ? Ry : Rz;
 
-            // GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().z);
-            // GlobalContext.blochSphere.resetPtheta(BlochSphereState.getInstance().theta);
-            // GlobalContext.blochSphere.resetPphi(BlochSphereState.getInstance().phi);
+        // Orijinal koordinat vektörü
+        let originalCoords = [x, y, z];
 
-        }, intervalTime);
+        // Matris çarpımı fonksiyonu
+        function multiplyMatrixAndPoint(matrix, point) {
+            let result = [0, 0, 0];
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    result[i] += matrix[i][j] * point[j];
+                }
+            }
+            return result;
+        }
 
-        setTimeout(function() {
-            clearInterval(timer);
-            $(":button").prop('disabled', false);
+        // Yeni koordinatları hesapla
+        let [x_new, y_new, z_new] = multiplyMatrixAndPoint(rax, originalCoords);
 
-            let currentAngleTheta = parseInt(BlochSphereState.getInstance().theta);
-            let currentAnglePhi = Math.abs(parseInt(BlochSphereState.getInstance().phi));
-            $("#polar-angle-value").html(`${currentAngleTheta}<span>&#176;</span>`);
-            $("#azimuth-angle-value").html(`${currentAnglePhi}<span>&#176;</span>`);
-            $("#polar-angle").val(currentAngleTheta);
-            $("#azimuth-angle").val(currentAnglePhi);
-        }, Math.abs(totalTime));
+        let r = Math.sqrt(x_new**2 + y_new**2 + z_new**2);
+        let theta_new_rad = Math.acos(z_new / r);
+        let phi_new_rad = Math.atan2(y_new, x_new);
+
+        // Yeni açılar (derece cinsinden)
+        let theta_new_deg = (Math.round(THREE.MathUtils.radToDeg(theta_new_rad)) + 360) % 360;
+        let phi_new_deg = (Math.round(THREE.MathUtils.radToDeg(phi_new_rad)) + 360) % 360;
+
+        // Güncellenmiş açılar
+        GlobalContext.blochSphereStateProperties.polar = theta_new_deg;
+        GlobalContext.blochSphereStateProperties.azimuth = phi_new_deg;
+
+        $("#polar-angle-value").html(`${theta_new_deg}<span>&#176;</span>`);
+        $("#azimuth-angle-value").html(`${phi_new_deg}<span>&#176;</span>`);
+        $("#polar-angle").val(theta_new_deg);
+        $("#azimuth-angle").val(phi_new_deg);
+
+        GlobalContext.blochSphere.resetPtheta(theta_new_deg);
+        GlobalContext.blochSphere.resetPphi(phi_new_deg);
+
+        //console.log("Yeni polar açı (theta): " + theta_new_deg + " derece");
+        //console.log("Yeni azimuth açı (phi): " + phi_new_deg + " derece");
+
+        GlobalContext.blochSphere.reset(theta_new_deg, phi_new_deg);
     },
 
     valuesOnChange: function() {
         const state = BlochSphereState.getInstance();
 
-        // $("#polar-angle-value").html(`${parseInt(state.theta)}<span>&#176;</span>`);
-        // $("#polar-angle").val(parseInt(state.theta));
-
-        // $("#azimuth-angle-value").html(`${state.phi}<span>&#176;</span>`);
-        // $("#azimuth-angle").val(state.phi);
-   
         //Updates added
         $("#bloch-sphere-state-theta").text(state.theta);
         $("#bloch-sphere-state-phi").text(state.phi);
@@ -126,11 +151,11 @@ var ToolboxEventsNamespace = {
         });
 
         $("#positive-z").click(function () {
-            ToolboxEventsNamespace.GateOnClickEvent(0, 90);
+            ToolboxEventsNamespace.GateOnClickEvent(0, 0);
         });
 
         $("#negative-z").click(function () {
-            ToolboxEventsNamespace.GateOnClickEvent(180, 90);
+            ToolboxEventsNamespace.GateOnClickEvent(180, 0);
         });
 
         $("#positive-x").click(function () {

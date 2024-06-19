@@ -53,15 +53,15 @@ class BlochSphere extends BaseGroup {
         this.add(this.sphere);
 
         // Create CartesianAxes
-        this.cartesianAxes = new CartesianAxes(properties.axesLength, properties.axesWidth);
+        this.cartesianAxes = new CartesianAxes(this.getSphereRadius() + (this.getSphereRadius() * 0.15), properties.axesWidth);
 
         // Add CartesianAxes to BaseGroup
         this.add(this.cartesianAxes);
 
         // Create StatePointer
-         this.statePointer = new StatePointer(radius, 3, {
+         this.statePointer = new StatePointer(this.getSphereRadius(), 3, {
             color: new THREE.Color(0xFFFFFF),
-            position: new THREE.Vector3(0, radius / 2, 0)
+            position: new THREE.Vector3(0, this.getSphereRadius() / 2, 0)
         });
 
         // Add StatePointer to BaseGroup
@@ -74,48 +74,34 @@ class BlochSphere extends BaseGroup {
         this.updateBlochSphereState(CartesianAxes.YAxis, THREE.MathUtils.degToRad(0));
         this.updateBlochSphereState(CartesianAxes.ZAxis, THREE.MathUtils.degToRad(90));
 
-        this.parallel = new Parallel(this.getSphereRadius(), {
+        this.parallel = new Parallel(0, {
             color: new THREE.Color(0xFFFF00),
         });
 
         this.add(this.parallel);
 
-        this.parallel.position.copy(new THREE.Vector3(0, radius, 0));
+        this.parallel.position.copy(new THREE.Vector3(0, this.getSphereRadius(), 0));
         this.parallel.rotateX(THREE.MathUtils.degToRad(90));
 
-
-        //this.setBlochSphereState(0 , 0)
-
-
-
-        // this.createPphi(radius, 0);
-        // this.createPtheta(radius, 0, 0);
-        // this.meridian.rotateY(MathUtils.degToRad(BlochSphereState.getInstance().phi));
+        // Adding Meridian
+        let geometrym = new THREE.TorusGeometry( this.getSphereRadius(), 1, 16, 64 ).translate(0,0,0);
+        let materialm = new THREE.MeshBasicMaterial( { color: 0xcea2fd } );
+        this.meridian = new THREE.Mesh( geometrym, materialm );
+        this.add( this.meridian );
     }
 
     updateBlochSphereState(axis, angle) {
         this.statePointer.rotate(axis, new THREE.Vector3(), angle);
 
         // this.parallel.rotate(radius, angle);
-
-        console.log(angle);
-
         this.updateStates();
-    }
-
-    setParallelState(angle) {
-        //this.reset(polar, polar);
-
-        this.parallel.set(this.getSphereRadius(), angle);
-
-        //this.updateStates();
     }
 
     updateStates() {
         this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
 
-        GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
-        GlobalContext.blochSphereStateProperties.phi = this.statePointer.phi();
+        //GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
+        //GlobalContext.blochSphereStateProperties.phi = this.statePointer.phi();
 
         ToolboxEventsNamespace.valuesOnChange();
     }
@@ -152,115 +138,46 @@ class BlochSphere extends BaseGroup {
 
     resetPtheta(theta) {
         this.remove(this.parallel);
-    
-        // get canvas
-        let canvas = document.getElementById("bloch-sphere");
-        let canvasWidth = canvas.offsetWidth;
-        let canvasHeight = canvas.offsetHeight;
-    
-        // set diameter to 80% of canvas size
-        let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
-        let radius = diameter / 2;
-    
-        // Hesapla: Başlangıçta 90 derecede başlayıp, ardından 0 dereceye inip tekrar -90 dereceye inip tekrar 90 dereceye dönmesi
-        let adjustedTheta = theta - 90;
-    
-        let x = Math.pow(BlochSphereState.getInstance().x, 2);
-        let y = Math.pow(BlochSphereState.getInstance().y, 2);
-        let z = Math.pow(BlochSphereState.getInstance().z, 2);
-        let rad = Math.sqrt(x + y + z);
-        
-        x /= rad;
-        y /= rad;
-        z /= rad;
 
-        let normalVector = new THREE.Vector3(x, y, z);
+        let radius = this.getSphereRadius();
 
-        let horizontalPlaneNormal = new THREE.Vector3(0, 0, 1); // Assuming the z-axis is up
-        let projectionVector = normalVector.projectOnPlane(horizontalPlaneNormal);
-
-        let scaledRadius = radius * projectionVector.length();
-
-
-        let direction = 1;
-        if (0 <= theta & theta <= 90)
-            direction = -1;
-        else if (90 <= theta & theta <= 180)
-            direction = -1;
-        else if (180 <= theta & theta <= 270)
-            direction = 1;
-        else if (270 <= theta & theta <= 360)
-            direction = 1;
-
-        // console.log(verticalOffset);
-
-        let r = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * scaledRadius);
-        this.createPtheta(r, scaledRadius, direction, -radius);
-    }
-
-    /*
-    resetPtheta(theta) {
-        this.remove(this.parallel);
-    
-        // get canvas
-        let canvas = document.getElementById("bloch-sphere");
-        let canvasWidth = canvas.offsetWidth;
-        let canvasHeight = canvas.offsetHeight;
-    
-        // set diameter to 80% of canvas size
-        let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
-    
-        let radius = diameter / 2;
-    
         // Hesapla: Başlangıçta 90 derecede başlayıp, ardından 0 dereceye inip tekrar -90 dereceye inip tekrar 90 dereceye dönmesi
         let adjustedTheta = ((theta - 90 ) % 360);
     
         let x = Math.abs(Math.sin(MathUtils.degToRad(adjustedTheta)) * radius);
         let scaledRadius = radius * Math.abs(Math.cos(MathUtils.degToRad(adjustedTheta)));
         let direction = 1;
-        if (0 <= theta % 360 & theta % 360 <= 90)
+        if (0 <= theta % 360 && theta % 360 <= 90)
             direction = 1;
-        else if (90 <= theta % 360 & theta % 360 <= 180)
+        else if (90 <= theta % 360 && theta % 360 <= 180)
             direction = -1;
-        else if (180 <= theta % 360 & theta % 360 <= 270)
+        else if (180 <= theta % 360 && theta % 360 <= 270)
             direction = -1;
-        else if (270 <= theta % 360 & theta % 360 <= 360)
+        else if (270 <= theta % 360 && theta % 360 <= 360)
             direction = 1;
-    
+
+        //this.parallel.scale.set(scaledRadius, scaledRadius, this.parallel.scale.z);
         this.createPtheta(x, scaledRadius, direction);
     }
-    */
 
     createPtheta(radius, scaledRadius, direction) {
         // let geometryp = new THREE.TorusGeometry(scaledRadius, 1, 16, 64).translate(0, 0, 0);
-        let geometryp = new THREE.TorusGeometry(50, 1, 16, 64);
-        let materialp = new THREE.MeshBasicMaterial({ color: 0xcea2fd });
+        let geometryp = new THREE.TorusGeometry(scaledRadius, 1, 16, 64);
+        let materialp = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
         this.parallel = new THREE.Mesh(geometryp, materialp);
         this.add(this.parallel);
         this.parallel.rotateX(MathUtils.degToRad(90));
         this.parallel.translateZ(-radius * direction);
-        // this.parallel.translateZ(-radius * direction);
     }
 
     resetPphi(phi) {
         this.remove(this.meridian);
 
-        // get canvas
-        let canvas = document.getElementById("bloch-sphere");
-        let canvasWidth = canvas.offsetWidth;
-        let canvasHeight = canvas.offsetHeight;
+        let radius = this.getSphereRadius();
 
-        // set diameter to 80% of canvas size
-        let diameter = (Math.min(canvasWidth, canvasHeight) / 100) * 80;
-        let radius = diameter / 2;
-
-        this.createPphi(radius, phi);
-    }
-
-    createPphi(radius, phi) {
         // Adding Meridian
-        let geometrym = new THREE.TorusGeometry( radius, 1, 16, 64 ).translate(0,0,0); 
-        let materialm = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        let geometrym = new THREE.TorusGeometry( radius, 1, 16, 64 ).translate(0,0,0).rotateY(MathUtils.degToRad(90));
+        let materialm = new THREE.MeshBasicMaterial( { color: 0xcea2fd } );
         this.meridian = new THREE.Mesh( geometrym, materialm ); 
         this.add( this.meridian );
         this.meridian.rotateY(MathUtils.degToRad(phi));

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" xmlns="http://www.w3.org/1999/html">
 <head>
     <!-- Encoding -->
     <meta charset="UTF-8">
@@ -11,147 +11,310 @@
     <title>Bloch Sphere Simulation</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="container-fluid mt-3">
-        <div class="row h-auto d-flex">
-            <div class="col-3">
-                <form>
-                    <div class="statement-group">
-                        <h2>BLOCH SPHERE SIMULATOR</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident,
-                            sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
+<div class="container-fluid mt-3">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-3 mb-3">
+            <h1 class="text-center"><b>BLOCH SPHERE SIMULATOR</b></h1>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Bloch Küresi Nedir? Ne İçin Kullanılır?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>🪐 Bloch küresi, adını fizikçi Felix Bloch'tan alan ve kuantum sistemlerinin durum uzayını temsil eden üç boyutlu bir geometrik yapıdır.</p>
+                            <p>🌐 Kübitler, bu küre üzerindeki noktalar olarak temsil edilir. Her nokta, kübitin belirli bir durumunu ifade eder.</p>
+                            <p>📐 Bir kübitin durumu, Bloch küresi üzerindeki bir nokta ile tanımlanır. Bu noktanın konumu, kübitin θ (Polar) ve φ (Azimuth) açıları ile belirlenen birim kürenin yüzeyindeki yerini gösterir. θ açısı, noktanın z eksenine göre yüksekliğini belirlerken, φ açısı noktanın x-y düzlemindeki konumunu belirler.</p>
+                            <p>🔍 Kuantum hesaplama ve kuantum bilgi teorisi alanında Bloch küresi, kuantum süreçlerini ve işlemlerini üç boyutlu bir küre üzerinde görselleştirerek anlamamıza büyük ölçüde katkı sağlar.</p>
+                        </div>
                     </div>
-                </form>
-            </div>
-            <div class="col-6">
-                <div id="bloch-sphere" class="col-12"></div>
-                <div id="bloch-sphere-state" class="col-12">
-					<div class="row pt-3">
-						<div class="col-6">
-							<div class="row">
-								<span class="col-6 text-right">Theta:</span>
-								<span id="bloch-sphere-state-theta" class="col-10 text-left">+0.0000</span>
-							</div>
-							<div class="row">
-								<span class="col-2 text-right">Phi:</span>
-								<span id="bloch-sphere-state-phi" class="col-10 text-left">+90.0000</span>
-							</div>
-						</div>
-						<div class="col-6">
-							<div class="row">
-								<span class="col-2 text-right">Alpha:</span>
-								<span id="bloch-sphere-state-alpha" class="col-10 text-left">+1.0000</span>
-							</div>
-							<div class="row">
-								<span class="col-2 text-right">Beta:</span>
-								<span id="bloch-sphere-state-beta" class="col-10 text-left">+0.0000 + i * 0.0000</span>
-							</div>
-						</div>
-					</div>
-                    <div class="row pt-3">
-						<div class="col-6">
-							<div class="row">
-								<span class="col-2 text-right">0 Olasılığı:</span>
-								<span id="bloch-sphere-state-0" class="col-10 text-left">+1.0000</span>
-							</div>
-							<div class="row">
-								<span class="col-2 text-right">1 Olasılığı:</span>
-								<span id="bloch-sphere-state-1" class="col-10 text-left">+0.0000</span>
-							</div>
-						</div>
-                        <div class="col-6">
-							<div class="row">
-								<span class="col-2 text-right">X:</span>
-								<span id="bloch-sphere-state-x" class="col-10 text-left">+0.0000</span>
-							</div>
-							<div class="row">
-								<span class="col-2 text-right">Y:</span>
-								<span id="bloch-sphere-state-y" class="col-10 text-left">+0.0000</span>
-							</div>
-							<div class="row">
-								<span class="col-2 text-right">Z:</span>
-								<span id="bloch-sphere-state-z" class="col-10 text-left">+1.0000</span>
-							</div>
-						</div>
-					</div>
-				</div>
-            </div>
-            <div class="col-3">
-                <form>
-                    <div class="form-group">
-                        <label id="polar-angle-label">
-                            Polar:
-                            <span id="polar-angle-value">0<span>°</span></span>
-                        </label>
-                        <input type="range" id="polar-angle" class="slider" min="0" max="180" step="1" value="0">
-                        <label id="azimuth-angle-label">
-                            Azimuth:
-                            <span id="azimuth-angle-value">90<span>°</span></span>
-                        </label>
-                        <input type="range" id="azimuth-angle" class="slider" min="0" max="360" step="1" value="90">
-                        <button type="button" id="positive-z" class="button">I0></button>
-                        <button type="button" id="negative-z" class="button">I1></button>
-                        <button type="button" id="positive-x" class="button">I+></button>
-                        <button type="button" id="negative-x" class="button">I-></button>
-                        <button type="button" id="positive-y" class="button">I+i></button>
-                        <button type="button" id="negative-y" class="button">I-i></button>
-                        <hr>
-                        <button type="button" id="gate-px" class="button">X</button>
-                        <button type="button" id="gate-py" class="button">Y</button>
-                        <button type="button" id="gate-pz" class="button">Z</button>
-                        <hr>
-                        <label>
-                            X Rotasyon:
-                            <div class="input-group col-2">
-                                <input type="text" class="form-control" id="x-rot-input" placeholder="x [-180, 180]">
-                                <span>
-                                    <button type="button" class="btn btn-primary" id="x-rot-submit">Döndür</button>
-                                </span>
-                            </div>
-                        </label>
-                        <label>
-                            Y Rotasyon:
-                            <div class="input-group col-2">
-                                <input type="text" class="form-control" id="y-rot-input" placeholder="y [-180, 180]">
-                                <span>
-                                    <button type="button" class="btn btn-primary" id="y-rot-submit">Döndür</button>
-                                </span>
-                            </div>
-                        </label>
-                        <label>
-                            Z Rotasyon:
-                            <div class="input-group col-2">
-                                <input type="text" class="form-control" id="z-rot-input" placeholder="z [-180, 180]">
-                                <span>
-                                    <button type="button" class="btn btn-primary" id="z-rot-submit">Döndür</button>
-                                </span>
-                            </div>
-                        </label>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Theta (Polar / θ) ve Phi (Azimuth / φ) Açıları
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>Theta (θ): Polar açısı olarak da bilinir. Bu açı, Bloch küresi üzerinde bir noktanın z eksenine göre yüksekliğini belirler. 0 ile π (pi 180°) arasında bir değer alır.</p>
+                            <p>
+                                Örneğin;
+                                <ul>
+                                    <li>θ = 0°: Nokta, kürenin en üstünde (z ekseninde +1 noktasında), kubitin |0⟩ durumunu temsil eder.</li>
+                                    <li>θ = π (180°): Nokta, kürenin en altında (z ekseninde -1 noktasında), kubitin |1⟩ durumunu temsil eder.</li>
+                                </ul>
+                            </p>
+                            <p>Phi (φ): Azimuth açısı olarak da bilinir. Bu açı, x-y düzlemindeki konumu belirler. 0 ile 2π (2 pi / 360°) arasında bir değer alır.</p>
+                            <p>
+                                Örneğin;
+                                <ul>
+                                    <li>φ = 0°: Nokta, x ekseninde pozitif yönde.</li>
+                                    <li>φ = π (180°): Nokta, x ekseninde negatif yönde.</li>
+                                    <li>φ = π/2 (90°): Nokta, y ekseninde pozitif yönde.</li>
+                                    <li>φ = 3π/2 (270°): Nokta, y ekseninde negatif yönde.</li>
+                                </ul>
+                            </p>
+                        </div>
                     </div>
-                </form>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Alpha (α), Beta (β) Değerleri ve Kübit Durumlarının 0 (|α|²), 1 (|β|²) Olma Olasılıkları
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>Alpha (α) ve Beta (β), kubitlerin süperpozisyon durumlarını ve kuantum bilgisayarların işleyişini anlamak için temel bileşenlerdir. Bu değerler, kubitlerin kuantum durumlarının olasılıklarını ve faz ilişkilerini tanımlayarak kuantum hesaplamalarının temelini oluşturur.</p>
+
+                            <h4>Kubit Durumları</h4>
+                            <p>Bir kubitin durumu, genellikle iki baz durumunun (|0⟩ ve |1⟩) süperpozisyonu olarak ifade edilir. Bu durum, şu şekilde yazılır:</p>
+                            <p><code>|ψ⟩ ≈ α|0⟩ + β|1⟩</code></p>
+                            <p>Bu katsayılar kompleks sayılar olabilir ve kubitin süperpozisyonunu belirler.</p>
+
+                            <h4>Normalizasyon Koşulu ve Fiziksel Anlam</h4>
+                            <p>Kubitlerin durum vektörleri, normalizasyon şartını sağlamalıdır. Yani, kubitin durumunun toplam olasılığı 1 olmalıdır. Bu, şu şekilde ifade edilir:</p>
+                            <p><code>|α|² + |β|² = 1</code></p>
+                            <p>Burada |α|², kubitin |0⟩ durumunda olma olasılığını ve |β|², kubitin |1⟩ durumunda olma olasılığını temsil eder.</p>
+                            <p>Örneğin, eğer |α|² = 0.6 ise, kubitin |0⟩ olarak ölçülme olasılığı %60'tır. |β|² = 0.4 ise, kubitin |1⟩ olarak ölçülme olasılığı %40'tır.</p>
+
+                            <h4>Kubit Durumunun Bloch Küresindeki Temsili</h4>
+                            <p>Kubitin durumu Bloch küresi üzerinde de gösterilebilir ve bu gösterim θ ve φ açıları kullanılarak ifade edilebilir. Kubitin durumu:</p>
+                            <p><code>|ψ⟩ = cos(θ/2)|0⟩ + e<sup>iφ</sup>sin(θ/2)|1⟩</code></p>
+                            <p>Burada:</p>
+                            <ul>
+                                <li><code>cos(θ/2)</code>: α'nın genliği</li>
+                                <li><code>e<sup>iφ</sup>sin(θ/2)</code>: β'nın genliği ve fazı</li>
+                            </ul>
+
+                            <h4>Örneğin;</h4>
+                            <p>Diyelim ki bir kubit şu durumdadır:</p>
+                            <p><code>|ψ⟩ = 1/√2 |0⟩ + 1/√2 |1⟩</code></p>
+                            <p>Burada α = 1/√2 ve β = 1/√2.</p>
+                            <p>|α|² = (1/√2)² = 1/2. Yani, kubitin |0⟩ durumunda ölçülme olasılığı %50'dir.</p>
+                            <p>|β|² = (1/√2)² = 1/2. Yani, kubitin |1⟩ durumunda ölçülme olasılığı %50'dir.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            Kübit Durumunun X, Y ve Z Bileşenleri
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>Bloch küresinde, kübit durumu üç boyutlu uzayda bir nokta olarak temsil edilir. Bu noktanın X, Y ve Z bileşenleri, kübitin durumunun geometrik bir ifadesidir ve kübitlerin kuantum durumlarını üç boyutlu bir yapıda görselleştirmemize olanak tanır.</p>
+                            <h4>X, Y ve Z Bileşenleri</h4>
+                            <p>Bloch küresi üzerindeki kübitin durumu şu şekilde temsil edilir:</p>
+                            <ul>
+                                <li><code>X = sin(θ) cos(φ)</code></li>
+                                <li><code>Y = sin(θ) sin(φ)</code></li>
+                                <li><code>Z = cos(θ)</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingSix">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            Kuantum Kubit Durumları
+                        </button>
+                    </h2>
+                    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <h4>|0⟩ ve |1⟩ Durumları</h4>
+                            <p>|0⟩: Kuantum bilgisayarlarında en temel durumdaki bir kubitin durumu.</p>
+                            <p>|1⟩: Bir kubitin ikinci temel durumu.</p>
+
+                            <h4>|+⟩ ve |−⟩ Süperpozisyon Durumları</h4>
+                            <p>|+⟩: Kubitin |0⟩ ve |1⟩ durumlarının eşit genlikte birleşimi.</p>
+                            <p>Matematiksel olarak: <code>|+⟩ = 1/√2 (|0⟩ + |1⟩)</code>.</p>
+                            <p>|−⟩: Kubitin |0⟩ ve |1⟩ durumlarının ters işaretli eşit genlikte birleşimi.</p>
+                            <p>Matematiksel olarak: <code>|−⟩ = 1/√2 (|0⟩ - |1⟩)</code>.</p>
+
+                            <h4>|+i⟩ ve |−i⟩ Karmaşık Durumları</h4>
+                            <p>|+i⟩: Kubitin |0⟩ ve |1⟩ durumlarının eşit genlikte ve bir faz faktörü ile birleşimi.</p>
+                            <p>Matematiksel olarak: <code>|+i⟩ = 1/√2 (|0⟩ + i|1⟩)</code>.</p>
+                            <p>|−i⟩: Kubitin |0⟩ ve |1⟩ durumlarının ters işaretli eşit genlikte ve bir faz faktörü ile birleşimi.</p>
+                            <p>Matematiksel olarak: <code>|−i⟩ = 1/√2 (|0⟩ - i|1⟩)</code>.</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Referanslar:
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="link-container">
+                                <ul>
+                                    <li><a href="https://en.wikipedia.org/wiki/Bloch_sphere" target="_blank">Wikipedia</a></li>
+                                    <li><a href="https://www.quera.com/glossary/bloch-sphere" target="_blank">Quera</a></li>
+                                    <li><a href="https://bilgisayarkavramlari.com/2010/10/14/bloch-kuresi-bloch-sphere" target="_blank">BilgisayarKavramlari</a></li>
+                                    <li><a href="https://kuantumturkiye.org/encyclopedia/bloch-kuresi-2" target="_blank">KuantumTurkiye</a></li>
+                                    <li><a href="https://medium.com/quantum-untangled/quantum-states-and-the-bloch-sphere-9f3c0c445ea3" target="_blank">Medium</a></li>
+                                    <li><a href="https://www.sharetechnote.com/html/QC/QuantumComputing_BlochSphere.html" target="_blank">ShareTechnote</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div id="bloch-sphere" class="col-12"></div>
+            <div id="bloch-sphere-state" class="col-12 mt-3">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">Theta ( θ ):</span>
+                            <span id="bloch-sphere-state-theta" class="col-6">+0.0000</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">Phi ( φ ):</span>
+                            <span id="bloch-sphere-state-phi" class="col-6">+90.0000</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">Alpha ( α ):</span>
+                            <span id="bloch-sphere-state-alpha" class="col-6">+1.0000</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">Beta ( β ):</span>
+                            <span id="bloch-sphere-state-beta" class="col-6">+0.0000 + i * 0.0000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">0 olma olasılığı ( |α|² ):</span>
+                            <span id="bloch-sphere-state-0" class="col-6">+1.0000</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">1 olma olasılığı ( |β|² ):</span>
+                            <span id="bloch-sphere-state-1" class="col-6">+0.0000</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">X:</span>
+                            <span id="bloch-sphere-state-x" class="col-6">+0.0000</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">Y:</span>
+                            <span id="bloch-sphere-state-y" class="col-6">+0.0000</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span class="col-6 text-end">Z:</span>
+                            <span id="bloch-sphere-state-z" class="col-6">+1.0000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3 mb-3">
+            <form>
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label id="polar-angle-label">
+                            Polar: <span id="polar-angle-value">0<span>°</span></span>
+                        </label>
+                        <input type="range" id="polar-angle" class="form-range" min="0" max="180" step="1" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label id="azimuth-angle-label">
+                            Azimuth: <span id="azimuth-angle-value">90<span>°</span></span>
+                        </label>
+                        <input type="range" id="azimuth-angle" class="form-range" min="0" max="360" step="1" value="90">
+                    </div>
+                    <hr>
+                    <div class="container mb-3">
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <button type="button" id="positive-z" class="btn btn-outline-primary w-100">|0⟩</button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button type="button" id="negative-z" class="btn btn-outline-primary w-100">|1⟩</button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button type="button" id="positive-x" class="btn btn-outline-primary w-100">|+⟩</button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button type="button" id="negative-x" class="btn btn-outline-primary w-100">|-⟩</button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button type="button" id="positive-y" class="btn btn-outline-primary w-100">|+i⟩</button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button type="button" id="negative-y" class="btn btn-outline-primary w-100">|-i⟩</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-4 d-grid">
+                            <button type="button" id="gate-px" class="btn btn-outline-secondary">X</button>
+                        </div>
+                        <div class="col-4 d-grid">
+                            <button type="button" id="gate-py" class="btn btn-outline-secondary">Y</button>
+                        </div>
+                        <div class="col-4 d-grid">
+                            <button type="button" id="gate-pz" class="btn btn-outline-secondary">Z</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label for="x-rot-input" class="form-label">X Rotasyon:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="x-rot-input" placeholder="x [-180, 180]">
+                            <button type="button" class="btn btn-primary" id="x-rot-submit">Döndür</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="y-rot-input" class="form-label">Y Rotasyon:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="y-rot-input" placeholder="y [-180, 180]">
+                            <button type="button" class="btn btn-primary" id="y-rot-submit">Döndür</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="z-rot-input" class="form-label">Z Rotasyon:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="z-rot-input" placeholder="z [-180, 180]">
+                            <button type="button" class="btn btn-primary" id="z-rot-submit">Döndür</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
-    <!-- JQuery -->
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkRNF0q74Fy1Hbw9eKRR02Jl8fO5AG" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-Qp9WR9zqC1TzotnW0hijHbOnb7ELUPhmZp4o2dUygbJrQW7Zc5B8DfdQ79+FYpFg" crossorigin="anonymous"></script>
 
-    <!-- Scripts -->
-    <script type="module" src="./init.js"></script>
+<!-- Scripts -->
+<script type="module" src="./init.js"></script>
+
 </body>
 </html>

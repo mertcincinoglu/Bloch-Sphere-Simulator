@@ -26,8 +26,8 @@ var GlobalContext = {
     blochSphere: null,
 
     blochSphereStateProperties: {
-        theta: 0,
-        phi: 0
+        polar: 0,
+        azimuth: 90
     },
 
     init: function () {
