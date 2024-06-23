@@ -93,16 +93,7 @@ class BlochSphere extends BaseGroup {
     updateBlochSphereState(axis, angle) {
         this.statePointer.rotate(axis, new THREE.Vector3(), angle);
 
-        // this.parallel.rotate(radius, angle);
-        this.updateStates();
-    }
-
-    updateStates() {
         this.blochSphereState.update(this.statePointer.theta(), this.statePointer.phi());
-
-        //GlobalContext.blochSphereStateProperties.theta = this.statePointer.theta();
-        //GlobalContext.blochSphereStateProperties.phi = this.statePointer.phi();
-
         ToolboxEventsNamespace.valuesOnChange();
     }
 

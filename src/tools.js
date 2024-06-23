@@ -11,7 +11,6 @@ import {
 import {
     BlochSphereState
 } from "./bloch_sphere_state.js";
-import {Float} from "./float.js";
 
 var ToolboxEventsNamespace = {
     thetaAngleOnInputChangeEvent: function() {
@@ -36,9 +35,9 @@ var ToolboxEventsNamespace = {
         $("#polar-angle").val(polar);
         $("#azimuth-angle").val(azimuth);
 
-        GlobalContext.blochSphere.reset(polar, azimuth);
         GlobalContext.blochSphereStateProperties.polar = polar;
         GlobalContext.blochSphereStateProperties.azimuth = azimuth;
+        GlobalContext.blochSphere.reset(polar, azimuth);
 
         GlobalContext.blochSphere.resetPtheta(polar);
         GlobalContext.blochSphere.resetPphi(azimuth);
