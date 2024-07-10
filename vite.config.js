@@ -1,18 +1,8 @@
-const isCodeSandbox = 'SANDBOX_URL' in process.env || 'CODESANDBOX_HOST' in process.env
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
 
-export default {
-    root: './',
-    publicDir: '../static/',
-    base: './',
-    server:
-    {
-        host: true,
-        open: !isCodeSandbox // Open if it's not a CodeSandbox
-    },
-    build:
-    {
-        outDir: '../dist',
-        emptyOutDir: true,
-        sourcemap: true
-    }
-}
+// https://vitejs.dev/config/
+export default defineConfig({
+    base: "/deploy-vite/",
+    plugins: [react()],
+})
