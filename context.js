@@ -1,12 +1,12 @@
-import * as THREE from "../node_modules/three/build/three.module.js";
+import * as THREE from "./node_modules/three/build/three.module.js";
 
 import {
     OrbitControls
-} from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
+} from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
 
 import {
     CSS2DRenderer
-} from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
+} from "./node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
 
 import {
     BlochSphere

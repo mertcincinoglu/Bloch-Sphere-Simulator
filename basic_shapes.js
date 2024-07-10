@@ -1,8 +1,8 @@
-import * as THREE from "../node_modules/three/build/three.module.js";
+import * as THREE from "./node_modules/three/build/three.module.js";
 
 import {
     CSS2DObject
-} from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
+} from "./node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
 
 import {
     BaseMesh
