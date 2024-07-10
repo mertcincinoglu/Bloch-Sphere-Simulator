@@ -40,6 +40,7 @@ class BlochSphereState {
 
         this.prob0 = Float.round(this.alpha**2);
         this.prob1 = Float.round(1 - this.prob0);
+        //  TODO: PROB1 için a+ib a^2 + b^2 yap
     }
 
     update(theta, phi) {
