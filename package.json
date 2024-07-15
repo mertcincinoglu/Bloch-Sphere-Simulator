@@ -1,17 +1,28 @@
 {
-  "name": "threejs-journey-exercise",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "bloch-sphere",
+  "description": "A simple web based Bloch sphere simulator",
+  "version": "2.1.0",
+  "license": "MIT",
+  "keywords": [
+    "qubit",
+    "bloch-sphere",
+    "quantum-comuting",
+    "quantum-mechanics"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "test": "jest --config jest.config.json --no-cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bits-and-electrons/bloch-sphere-simulator"
+  },
+  "bugs": {
+    "url": "https://github.com/bits-and-electrons/bloch-sphere-simulator/issues"
   },
   "devDependencies": {
-    "vite": "^4.5.0"
-  },
-  "dependencies": {
-    "bootstrap": "^5.3.2",
-    "three": "^0.153.0"
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.13",
+    "jest": "^26.6.3",
+    "jest-canvas-mock": "^2.3.1"
   }
 }
