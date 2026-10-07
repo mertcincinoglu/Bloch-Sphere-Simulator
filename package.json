@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "to-site": "npm run build && node scripts/to-site.mjs"
   },
   "dependencies": {
     "jquery": "4.0.0",

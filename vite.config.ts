@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
-// Relative asset paths: the build is served from /projects/bloch-sphere-simulator/ on mertcincinoglu.com.
+// The build is served from /projects/bloch-sphere-simulator on mertcincinoglu.com (no trailing slash),
+// so asset paths must be absolute.
 export default defineConfig({
-  base: './',
+  base: '/projects/bloch-sphere-simulator/',
 });
