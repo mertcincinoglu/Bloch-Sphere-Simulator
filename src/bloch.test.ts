@@ -11,8 +11,9 @@ describe('gates move the Bloch vector', () => {
   it('H twice is the identity', () => close(apply(GATES.H, apply(GATES.H, fromAngles(1, 2))), fromAngles(1, 2)));
   it('S takes |+⟩ to |+i⟩', () => close(apply(GATES.S, new Vector3(1, 0, 0)), new Vector3(0, 1, 0)));
   it('T twice equals S', () => close(apply(GATES.T, apply(GATES.T, fromAngles(1, 0.3))), apply(GATES.S, fromAngles(1, 0.3))));
-  it('Ry(π/2) takes |0⟩ to |+⟩', () => close(apply(GATES.Ry, ZERO), new Vector3(1, 0, 0)));
-  it('Rx(π/2) takes |0⟩ to |−i⟩', () => close(apply(GATES.Rx, ZERO), new Vector3(0, -1, 0)));
+  it('Ry(π/4) twice takes |0⟩ to |+⟩', () => close(apply(GATES.Ry, apply(GATES.Ry, ZERO)), new Vector3(1, 0, 0)));
+  it('Rx(π/4) twice takes |0⟩ to |−i⟩', () => close(apply(GATES.Rx, apply(GATES.Rx, ZERO)), new Vector3(0, -1, 0)));
+  it('a gate keeps a mixed state mixed (same length)', () => expect(apply(GATES.H, new Vector3(0, 0, 0.4)).length()).toBeCloseTo(0.4, 12));
 });
 
 describe('angles and probabilities', () => {

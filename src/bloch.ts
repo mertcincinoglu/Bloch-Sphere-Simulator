@@ -5,24 +5,33 @@ import { Quaternion, Vector3 } from 'three';
 export type Basis = 'Z' | 'X' | 'Y';
 
 export interface Gate {
-  name: string;
   axis: Vector3; // rotation axis in Bloch coordinates
   angle: number; // radians
-  matrix: string; // TeX
+  label: string; // shown above the matrix
+  prefix: string; // scalar in front of the matrix
+  cells: [string, string, string, string]; // matrix entries, row by row
+  story: string;
 }
 
 const s2 = Math.SQRT1_2;
 
 export const GATES: Record<string, Gate> = {
-  X: { name: 'X', axis: new Vector3(1, 0, 0), angle: Math.PI, matrix: String.raw`\begin{pmatrix}0&1\\1&0\end{pmatrix}` },
-  Y: { name: 'Y', axis: new Vector3(0, 1, 0), angle: Math.PI, matrix: String.raw`\begin{pmatrix}0&-i\\i&0\end{pmatrix}` },
-  Z: { name: 'Z', axis: new Vector3(0, 0, 1), angle: Math.PI, matrix: String.raw`\begin{pmatrix}1&0\\0&-1\end{pmatrix}` },
-  H: { name: 'H', axis: new Vector3(s2, 0, s2), angle: Math.PI, matrix: String.raw`\tfrac{1}{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}` },
-  S: { name: 'S', axis: new Vector3(0, 0, 1), angle: Math.PI / 2, matrix: String.raw`\begin{pmatrix}1&0\\0&i\end{pmatrix}` },
-  T: { name: 'T', axis: new Vector3(0, 0, 1), angle: Math.PI / 4, matrix: String.raw`\begin{pmatrix}1&0\\0&e^{i\pi/4}\end{pmatrix}` },
-  Rx: { name: 'Rx(π/2)', axis: new Vector3(1, 0, 0), angle: Math.PI / 2, matrix: String.raw`\tfrac{1}{\sqrt2}\begin{pmatrix}1&-i\\-i&1\end{pmatrix}` },
-  Ry: { name: 'Ry(π/2)', axis: new Vector3(0, 1, 0), angle: Math.PI / 2, matrix: String.raw`\tfrac{1}{\sqrt2}\begin{pmatrix}1&-1\\1&1\end{pmatrix}` },
-  Rz: { name: 'Rz(π/2)', axis: new Vector3(0, 0, 1), angle: Math.PI / 2, matrix: String.raw`\begin{pmatrix}e^{-i\pi/4}&0\\0&e^{i\pi/4}\end{pmatrix}` },
+  X: { axis: new Vector3(1, 0, 0), angle: Math.PI, label: 'X (BIT FLIP)', prefix: '', cells: ['0', '1', '1', '0'],
+    story: 'Applied Pauli X (Bit Flip): Rotates 180° around the X-axis. Inverts the North pole (|0⟩) into South pole (|1⟩) while keeping equatorial points on X static.' },
+  Y: { axis: new Vector3(0, 1, 0), angle: Math.PI, label: 'Y (PAULI-Y)', prefix: '', cells: ['0', '−i', 'i', '0'],
+    story: 'Applied Pauli Y: 180° rotation around the Y-axis. Flips both the bit value and phase angle simultaneously.' },
+  Z: { axis: new Vector3(0, 0, 1), angle: Math.PI, label: 'Z (PHASE FLIP)', prefix: '', cells: ['1', '0', '0', '−1'],
+    story: 'Applied Pauli Z (Phase Flip): Rotates 180° around the vertical Z-axis. Leaves the probability of |0⟩ and |1⟩ unchanged, but flips relative quantum phase.' },
+  H: { axis: new Vector3(s2, 0, s2), angle: Math.PI, label: 'H (HADAMARD)', prefix: '1/√2', cells: ['1', '1', '1', '−1'],
+    story: 'Applied Hadamard (H): Rotates 180° around the diagonal axis halfway between X and Z. Creates an equal 50/50 superposition from standard basis states.' },
+  S: { axis: new Vector3(0, 0, 1), angle: Math.PI / 2, label: 'S (PHASE π/2)', prefix: '', cells: ['1', '0', '0', 'i'],
+    story: 'Applied Phase S: 90° counter-clockwise rotation around Z. Advances quantum phase angle by π/2 without perturbing pole probability.' },
+  T: { axis: new Vector3(0, 0, 1), angle: Math.PI / 4, label: 'T (π/8 ROTATION)', prefix: '', cells: ['1', '0', '0', 'e^(iπ/4)'],
+    story: "Applied Gate T: 45° rotation around Z (the 'π/8 gate'). Fundamental building block for fault-tolerant universal quantum computation." },
+  Rx: { axis: new Vector3(1, 0, 0), angle: Math.PI / 4, label: 'Rx(π/4)', prefix: '', cells: ['cos(π/8)', '−i·sin(π/8)', '−i·sin(π/8)', 'cos(π/8)'],
+    story: 'Rotated 45° (π/4) around X-axis. Tilts the superposition angle in the Y-Z vertical plane.' },
+  Ry: { axis: new Vector3(0, 1, 0), angle: Math.PI / 4, label: 'Ry(π/4)', prefix: '', cells: ['cos(π/8)', '−sin(π/8)', 'sin(π/8)', 'cos(π/8)'],
+    story: 'Rotated 45° (π/4) around Y-axis. Shifts the latitude coordinate directly toward or away from the North pole.' },
 };
 
 export const BASIS_AXIS: Record<Basis, Vector3> = {
@@ -32,9 +41,9 @@ export const BASIS_AXIS: Record<Basis, Vector3> = {
 };
 
 export const BASIS_LABELS: Record<Basis, [string, string]> = {
-  Z: ['0', '1'],
-  X: ['+', '−'],
-  Y: ['+i', '−i'],
+  Z: ['|0⟩', '|1⟩'],
+  X: ['|+⟩', '|−⟩'],
+  Y: ['|i⟩', '|−i⟩'],
 };
 
 export function fromAngles(theta: number, phi: number): Vector3 {
@@ -42,7 +51,8 @@ export function fromAngles(theta: number, phi: number): Vector3 {
 }
 
 export function toAngles(v: Vector3): { theta: number; phi: number } {
-  const theta = Math.acos(Math.min(1, Math.max(-1, v.z)));
+  const len = v.length() || 1; // mixed states are shorter than 1; the angles are the arrow's direction
+  const theta = Math.acos(Math.min(1, Math.max(-1, v.z / len)));
   let phi = Math.atan2(v.y, v.x);
   if (phi < 0) phi += 2 * Math.PI;
   // at the poles φ has no meaning; report 0

@@ -11,16 +11,18 @@
     "to-site": "npm run build && node scripts/to-site.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/jost": "5.3.0",
-    "@fontsource-variable/source-serif-4": "5.3.0",
-    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource-variable/eb-garamond": "5.3.0",
+    "@fontsource-variable/space-grotesk": "5.3.0",
+    "@fontsource/space-mono": "5.3.0",
     "jquery": "4.0.0",
-    "katex": "0.19.0",
     "three": "0.186.1"
   },
   "devDependencies": {
+    "@material-symbols/svg-400": "0.47.6",
+    "@tailwindcss/vite": "4.3.3",
     "@types/jquery": "4.0.1",
     "@types/three": "0.186.0",
+    "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "vite": "8.3.3",
     "vitest": "5.0.3"
