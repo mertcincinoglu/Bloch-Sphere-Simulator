@@ -11,6 +11,11 @@
     "to-site": "npm run build && node scripts/to-site.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/caveat": "5.3.0",
+    "@fontsource-variable/jost": "5.3.0",
+    "@fontsource-variable/newsreader": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
     "jquery": "4.0.0",
     "katex": "0.19.0",
     "three": "0.186.1"

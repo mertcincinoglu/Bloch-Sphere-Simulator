@@ -1,15 +1,132 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="notebook">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Bloch Sphere Simulator</title>
+    <script>
+      // theme from ?theme= before first paint, so the page never flashes the other theme
+      document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') === 'textbook' ? 'textbook' : 'notebook';
+    </script>
   </head>
   <body>
-    <canvas id="scene"></canvas>
-    <p id="status"></p>
-    <div id="formula"></div>
+    <header class="top">
+      <a class="back" href="https://www.mertcincinoglu.com">← mertcincinoglu.com</a>
+      <h1>Bloch Sphere Simulator</h1>
+      <nav class="tabs" aria-label="Sections">
+        <a aria-current="page">Lab</a>
+        <a aria-disabled="true" title="Coming soon">Story</a>
+        <a href="#sources">Sources</a>
+      </nav>
+      <div class="switches">
+        <div class="seg" role="group" aria-label="Theme preview">
+          <button type="button" data-theme-btn="notebook">Notebook</button>
+          <button type="button" data-theme-btn="textbook">Textbook</button>
+        </div>
+        <div class="seg" role="group" aria-label="Language">
+          <button type="button" aria-pressed="true">EN</button>
+          <button type="button" disabled title="Coming soon">TR</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab">
+      <section class="card state" aria-labelledby="h-state">
+        <h2 id="h-state">State</h2>
+        <label class="slider">
+          <span>θ <small>tilt from |0⟩</small></span>
+          <input id="theta" type="range" min="0" max="180" step="1" value="0" />
+          <output id="theta-out">0°</output>
+        </label>
+        <label class="slider">
+          <span>φ <small>turn around the equator</small></span>
+          <input id="phi" type="range" min="0" max="359" step="1" value="0" />
+          <output id="phi-out">0°</output>
+        </label>
+        <p class="sub">Jump to</p>
+        <div class="chips">
+          <button type="button" data-preset="0,0">|0⟩</button>
+          <button type="button" data-preset="180,0">|1⟩</button>
+          <button type="button" data-preset="90,0">|+⟩</button>
+          <button type="button" data-preset="90,180">|−⟩</button>
+          <button type="button" data-preset="90,90">|+i⟩</button>
+          <button type="button" data-preset="90,270">|−i⟩</button>
+        </div>
+      </section>
+
+      <section class="card gates" aria-labelledby="h-gates">
+        <h2 id="h-gates">Gates</h2>
+        <div class="gate-grid">
+          <button type="button" data-gate="X">X</button>
+          <button type="button" data-gate="Y">Y</button>
+          <button type="button" data-gate="Z">Z</button>
+          <button type="button" data-gate="H">H</button>
+          <button type="button" data-gate="S">S</button>
+          <button type="button" data-gate="T">T</button>
+          <button type="button" data-gate="Rx">Rx</button>
+          <button type="button" data-gate="Ry">Ry</button>
+          <button type="button" data-gate="Rz">Rz</button>
+        </div>
+        <div class="row">
+          <button type="button" id="undo">Undo</button>
+          <button type="button" id="reset">Reset</button>
+        </div>
+      </section>
+
+      <figure class="stage">
+        <div id="sphere" aria-label="3D Bloch sphere. Drag to turn it."></div>
+        <figcaption><b>Fig. 1</b> The qubit's state as an arrow. Drag to turn the sphere.</figcaption>
+        <div class="readouts">
+          <div><span class="sub">State</span><div id="psi"></div></div>
+          <div><span class="sub">Arrow (x, y, z)</span><div id="xyz" class="mono"></div></div>
+          <div class="probs">
+            <span class="sub">Chance when measured</span>
+            <div class="bar"><i id="p0-bar"></i></div>
+            <div class="mono"><span id="p0"></span><span id="p1"></span></div>
+          </div>
+        </div>
+      </figure>
+
+      <aside class="card explain" aria-labelledby="h-explain">
+        <h2 id="h-explain">What just happened</h2>
+        <p id="story" aria-live="polite"></p>
+        <div id="matrix"></div>
+        <details>
+          <summary>Show the math</summary>
+          <div id="math"></div>
+        </details>
+        <div class="note">
+          <b>Common mix-up</b>
+          <p>|0⟩ and |1⟩ sit on opposite poles, 180° apart, yet as quantum states they are only “perpendicular”. That is why the formula uses θ/2, not θ.</p>
+        </div>
+      </aside>
+
+      <section class="card measure" aria-labelledby="h-measure">
+        <h2 id="h-measure">Measure</h2>
+        <div class="seg" role="group" aria-label="Measure along">
+          <button type="button" data-basis="Z" aria-pressed="true">Z</button>
+          <button type="button" data-basis="X">X</button>
+          <button type="button" data-basis="Y">Y</button>
+        </div>
+        <button type="button" id="once" class="primary">Measure once</button>
+        <button type="button" id="many">Measure 1000×</button>
+        <div class="hist" aria-live="polite">
+          <div class="col"><div class="track"><i id="h0"></i><b id="m0"></b></div><span id="l0">0</span></div>
+          <div class="col"><div class="track"><i id="h1"></i><b id="m1"></b></div><span id="l1">1</span></div>
+        </div>
+        <p id="hist-note" class="sub"></p>
+      </section>
+    </main>
+
+    <footer id="sources">
+      <ol>
+        <li><a href="https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE" target="_blank" rel="noopener">Nielsen &amp; Chuang, <i>Quantum Computation and Quantum Information</i>, §1.2</a></li>
+        <li><a href="https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information/density-matrices/bloch-sphere" target="_blank" rel="noopener">IBM Quantum Learning: the Bloch sphere (J. Watrous)</a></li>
+        <li><a href="https://arxiv.org/abs/2403.01047" target="_blank" rel="noopener">Hu, Li, Mong &amp; Singh, “Student understanding of the Bloch sphere” (2024)</a></li>
+      </ol>
+      <p>Preview build · <a href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator" target="_blank" rel="noopener">Source code</a> · MIT licence · © 2026 Mert Çinçinoğlu</p>
+    </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
