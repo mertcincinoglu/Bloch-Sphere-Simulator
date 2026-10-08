@@ -1,5 +1,3 @@
-import '@fontsource-variable/caveat';
-import '@fontsource-variable/newsreader';
 import '@fontsource-variable/jost';
 import '@fontsource-variable/source-serif-4';
 import '@fontsource/ibm-plex-mono/400.css';
@@ -163,22 +161,7 @@ $('#many').on('click', () => {
   showHistogram([n, 1000 - n]);
 });
 
-$('[data-theme-btn]').on('click', function () {
-  const theme = $(this).data('theme-btn') as string;
-  document.documentElement.dataset.theme = theme;
-  history.replaceState(null, '', `?theme=${theme}`);
-  markTheme();
-  scene.setColors();
-});
-
-function markTheme() {
-  $('[data-theme-btn]').each(function () {
-    $(this).attr('aria-pressed', String($(this).data('theme-btn') === document.documentElement.dataset.theme));
-  });
-}
-
-markTheme();
 scene.setColors();
-say('This is |0⟩: the arrow points straight up. Try a gate, drag the sliders, or measure.');
+say('The arrow points straight up: this is 0. Try H first: it turns the arrow to an even mix of 0 and 1. Then measure a few times.');
 render();
 showHistogram(null);

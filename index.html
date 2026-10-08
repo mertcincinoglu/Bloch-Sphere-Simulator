@@ -1,14 +1,10 @@
 <!doctype html>
-<html lang="en" data-theme="notebook">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Bloch Sphere Simulator</title>
-    <script>
-      // theme from ?theme= before first paint, so the page never flashes the other theme
-      document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') === 'textbook' ? 'textbook' : 'notebook';
-    </script>
   </head>
   <body>
     <header class="top">
@@ -20,10 +16,6 @@
         <a href="#sources">Sources</a>
       </nav>
       <div class="switches">
-        <div class="seg" role="group" aria-label="Theme preview">
-          <button type="button" data-theme-btn="notebook">Notebook</button>
-          <button type="button" data-theme-btn="textbook">Textbook</button>
-        </div>
         <div class="seg" role="group" aria-label="Language">
           <button type="button" aria-pressed="true">EN</button>
           <button type="button" disabled title="Coming soon">TR</button>
@@ -31,9 +23,18 @@
       </div>
     </header>
 
+    <section class="intro" aria-label="How to use">
+      <p>A <b>qubit</b> is the basic unit of a quantum computer. Here its state is an arrow on a sphere: pointing up means <b>0</b>, down means <b>1</b>, anywhere in between is a mix of both.</p>
+      <ol>
+        <li><b>Set a state</b> with the sliders or a preset.</li>
+        <li><b>Apply gates</b> to turn the arrow.</li>
+        <li><b>Measure</b> to see what you would actually get.</li>
+      </ol>
+    </section>
+
     <main class="lab">
       <section class="card state" aria-labelledby="h-state">
-        <h2 id="h-state">State</h2>
+        <h2 id="h-state"><span class="n">1</span> Set a state</h2>
         <label class="slider">
           <span>θ <small>tilt from |0⟩</small></span>
           <input id="theta" type="range" min="0" max="180" step="1" value="0" />
@@ -56,18 +57,19 @@
       </section>
 
       <section class="card gates" aria-labelledby="h-gates">
-        <h2 id="h-gates">Gates</h2>
+        <h2 id="h-gates"><span class="n">2</span> Apply gates</h2>
         <div class="gate-grid">
-          <button type="button" data-gate="X">X</button>
-          <button type="button" data-gate="Y">Y</button>
-          <button type="button" data-gate="Z">Z</button>
-          <button type="button" data-gate="H">H</button>
-          <button type="button" data-gate="S">S</button>
-          <button type="button" data-gate="T">T</button>
-          <button type="button" data-gate="Rx">Rx</button>
-          <button type="button" data-gate="Ry">Ry</button>
-          <button type="button" data-gate="Rz">Rz</button>
+          <button type="button" data-gate="X" class="flip">X<small>flip</small></button>
+          <button type="button" data-gate="Y" class="flip">Y<small>flip</small></button>
+          <button type="button" data-gate="Z" class="flip">Z<small>flip</small></button>
+          <button type="button" data-gate="H" class="mix">H<small>mix</small></button>
+          <button type="button" data-gate="S" class="phase">S<small>¼ turn</small></button>
+          <button type="button" data-gate="T" class="phase">T<small>⅛ turn</small></button>
+          <button type="button" data-gate="Rx">Rx<small>90° on X</small></button>
+          <button type="button" data-gate="Ry">Ry<small>90° on Y</small></button>
+          <button type="button" data-gate="Rz">Rz<small>90° on Z</small></button>
         </div>
+        <p class="legend"><span><i class="flip"></i>half turn around an axis</span><span><i class="mix"></i>makes an even mix of 0 and 1</span><span><i class="phase"></i>turns the phase only</span></p>
         <div class="row">
           <button type="button" id="undo">Undo</button>
           <button type="button" id="reset">Reset</button>
@@ -103,7 +105,7 @@
       </aside>
 
       <section class="card measure" aria-labelledby="h-measure">
-        <h2 id="h-measure">Measure</h2>
+        <h2 id="h-measure"><span class="n">3</span> Measure</h2>
         <div class="seg" role="group" aria-label="Measure along">
           <button type="button" data-basis="Z" aria-pressed="true">Z</button>
           <button type="button" data-basis="X">X</button>
