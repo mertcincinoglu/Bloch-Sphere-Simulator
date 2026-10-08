@@ -1,10 +1,11 @@
-/* "Textbook" theme: a 1960s physics book, kept plain so the page reads easily. */
+/* "Textbook" theme: a 1960s physics book on halftone-printed cream paper. */
 
 :root {
-  --bg: #f4ead6;
-  --card: #fbf5e8;
+  --bg: #f1e3c6;
+  --paper: radial-gradient(rgb(43 38 34 / 0.07) 1px, transparent 1.4px) 0 0 / 6px 6px;
+  --card: #f9f0dc;
   --ink: #2b2622;
-  --muted: #5e5244;
+  --muted: #6b5d4c;
   --line: #2b2622;
   --orange: #c4561d;
   --teal: #1f6f78;
@@ -12,8 +13,9 @@
   --head: 'Jost Variable', 'Futura', sans-serif;
   --body: 'Source Serif 4 Variable', Georgia, serif;
   --mono: 'IBM Plex Mono', monospace;
-  --radius: 10px;
-  --border: 1.5px solid var(--line);
+  --radius: 12px;
+  --border: 2px solid var(--line);
+  --shadow: 4px 4px 0 var(--line);
   /* sphere colours, read by scene.ts */
   --sphere: #1f6f78;
   --axis: #2b2622;
@@ -24,10 +26,10 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
-body { min-height: 100vh; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--body); }
+body { min-height: 100vh; background: var(--paper), var(--bg); color: var(--ink); font: 400 17px/1.55 var(--body); }
 
 h1, h2 { margin: 0; font-family: var(--head); }
-h2 { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); }
+h2 { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--teal); }
 h2 .n { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--orange); color: #fff; font-size: 0.85rem; letter-spacing: 0; }
 a { color: var(--teal); }
 small, .sub { color: var(--muted); font-size: 0.85rem; }
@@ -39,15 +41,15 @@ button {
   background: var(--card); border: var(--border); border-radius: var(--radius);
   padding: 0.55rem 0.8rem; cursor: pointer;
 }
-button:hover { background: #fff; }
+button:hover { border-color: var(--orange); }
 button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 button[aria-pressed='true'] { background: var(--ink); color: var(--card); }
 button:disabled { opacity: 0.45; cursor: not-allowed; }
 button.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
 
 /* top bar */
-.top { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; padding: 0.9rem clamp(1rem, 3vw, 2rem); border-bottom: var(--border); }
-.top h1 { font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; padding: 0.9rem clamp(1rem, 3vw, 2rem); border-bottom: var(--border); background: color-mix(in srgb, var(--bg) 85%, transparent); }
+.top h1 { font-size: 1.35rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
 .back { font-size: 0.9rem; text-decoration: none; }
 .tabs { display: flex; gap: 1.1rem; margin-right: auto; }
 .tabs a { text-decoration: none; color: var(--muted); font: 600 0.9rem var(--head); text-transform: uppercase; letter-spacing: 0.1em; }
@@ -55,7 +57,7 @@ button.primary { background: var(--orange); color: #fff; border-color: var(--ora
 .tabs a[aria-disabled='true'] { opacity: 0.55; cursor: default; }
 .seg { display: inline-flex; }
 .seg button { border-radius: 0; padding: 0.45rem 0.7rem; font-size: 0.85rem; }
-.seg button + button { margin-left: -1.5px; }
+.seg button + button { margin-left: -2px; }
 .seg button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
 .seg button:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
 
@@ -77,7 +79,7 @@ button.primary { background: var(--orange); color: #fff; border-color: var(--ora
   max-width: 96rem; margin: 0 auto;
 }
 .state { grid-area: state; } .gates { grid-area: gates; } .stage { grid-area: stage; } .explain { grid-area: explain; } .measure { grid-area: measure; }
-.card { background: var(--card); border: var(--border); border-radius: var(--radius); padding: 1rem 1.1rem 1.15rem; display: grid; gap: 0.75rem; align-content: start; }
+.card { background: var(--card); border: var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1rem 1.1rem 1.15rem; display: grid; gap: 0.75rem; align-content: start; }
 
 .slider { display: grid; grid-template-columns: 1fr auto; gap: 0.2rem 0.5rem; align-items: center; }
 .slider span { grid-column: 1 / -1; }
@@ -114,7 +116,7 @@ figcaption b { font-style: normal; color: var(--ink); }
 #story { margin: 0; font-size: 1.05rem; }
 #matrix:empty { display: none; }
 details summary { cursor: pointer; color: var(--teal); }
-.note { border: var(--border); border-radius: var(--radius); background: color-mix(in srgb, var(--mustard) 30%, var(--card)); padding: 0.6rem 0.8rem; }
+.note { border: var(--border); border-radius: var(--radius); background: color-mix(in srgb, var(--mustard) 35%, var(--card)); padding: 0.6rem 0.8rem; }
 .note p { margin: 0.25rem 0 0; font-size: 0.95rem; }
 
 /* measurement */
