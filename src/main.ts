@@ -44,7 +44,7 @@ function render() {
   $('#slider-radius').val(r);
   $('#readout-theta').text(centre ? '—' : `${thPi} π (${deg(theta)})`);
   $('#readout-phi').text(centre ? '—' : `${(phiShown / Math.PI).toFixed(2)} π (${deg(phiShown)})`);
-  $('#readout-r').text(`${r.toFixed(2)} (${t(r >= 0.995 ? 'r.pure' : 'r.mixed')})`);
+  $('#readout-r').text(`${r.toFixed(2)} (${t(r >= 0.995 ? 'r.pure' : centre ? 'r.maxMixed' : 'r.mixed')})`);
   $('#coord-x').text(signed(v.x));
   $('#coord-y').text(signed(v.y));
   $('#coord-z').text(signed(v.z));

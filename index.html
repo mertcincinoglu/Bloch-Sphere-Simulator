@@ -234,7 +234,7 @@
               <div class="space-y-4">
                 <div>
                   <div class="flex justify-between items-center gap-2 mb-1">
-                    <label for="slider-theta" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-primary">θ</span> <span data-i18n="state.theta">Polar angle (Z-axis)</span></label>
+                    <label for="slider-theta" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-primary">θ</span> <span data-i18n="state.theta">Polar angle (from +Z)</span></label>
                     <span class="font-label-md text-[15px] font-bold text-on-surface whitespace-nowrap" id="readout-theta">0.50 π (90.0°)</span>
                   </div>
                   <input class="w-full cursor-ew-resize" id="slider-theta" max="180" min="0" step="1" type="range" value="90" />
@@ -242,23 +242,23 @@
                 </div>
                 <div class="pt-2 border-t border-outline-variant/60">
                   <div class="flex justify-between items-center gap-2 mb-1">
-                    <label for="slider-phi" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-secondary">φ</span> <span data-i18n="state.phi">Azimuthal phase (X-Y)</span></label>
+                    <label for="slider-phi" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-secondary">φ</span> <span data-i18n="state.phi">Azimuth = relative phase (from +X toward +Y)</span></label>
                     <span class="font-label-md text-[15px] font-bold text-on-surface whitespace-nowrap" id="readout-phi">0.00 π (0.0°)</span>
                   </div>
                   <input class="w-full cursor-ew-resize" id="slider-phi" max="360" min="0" step="1" type="range" value="0" />
                   <div class="scale mt-1" aria-hidden="true"><span style="--p: 0">0<br />+X</span><span style="--p: 0.25">π/2<br />+Y</span><span style="--p: 0.5">π<br />−X</span><span style="--p: 0.75">3π/2<br />−Y</span><span style="--p: 1">2π<br />+X</span></div>
                 </div>
-                <div class="pt-2 border-t border-outline-variant/60 flex items-center justify-between gap-2 font-body-md text-[15px]">
-                  <label for="slider-radius" class="text-on-surface-variant"><span data-i18n="state.length">Length</span> <span class="italic">r</span> <span data-i18n="state.lengthHint">(1 = pure) :</span></label>
-                  <div class="flex items-center gap-3">
-                    <input class="w-24" id="slider-radius" max="1.0" min="0" step="0.05" type="range" value="1.0" />
+                <div class="pt-2 border-t border-outline-variant/60 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 font-body-md text-[15px]">
+                  <label for="slider-radius" class="text-on-surface-variant whitespace-nowrap"><span data-i18n="state.length">Length</span> <span class="italic">r</span> <span data-i18n="state.lengthHint">(1 = pure) :</span></label>
+                  <div class="flex items-center justify-end gap-3 flex-1 min-w-[15rem]">
+                    <input class="flex-1 min-w-16 max-w-32" id="slider-radius" max="1.0" min="0" step="0.05" type="range" value="1.0" />
                     <span class="font-label-md text-[15px] text-on-surface font-bold whitespace-nowrap" id="readout-r">1.00 (Pure)</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="pt-3 border-t border-outline-variant">
-              <h3 class="font-label-sm text-[13px] font-bold text-on-surface-variant uppercase mb-2" data-i18n="state.presets">Canonical basis presets</h3>
+              <h3 class="font-label-sm text-[13px] font-bold text-on-surface-variant uppercase mb-2" data-i18n="state.presets">Axis states (one click)</h3>
               <div class="grid grid-cols-3 gap-2 font-label-sm text-[13px]">
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0,0" data-label="|0⟩"><span class="font-bold text-secondary block text-sm">|0⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.pz">+Z pole</span></button>
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,0" data-label="|+⟩"><span class="font-bold text-primary block text-sm">|+⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.px">+X axis</span></button>

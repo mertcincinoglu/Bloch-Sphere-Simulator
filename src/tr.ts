@@ -68,13 +68,13 @@ export const TR_STATIC: Record<string, string> = {
 
   // § 1 state
   'state.head': 'Açılar ve uzunluk',
-  'state.theta': 'Kutupsal açı (Z ekseni)',
+  'state.theta': 'Kutupsal açı (+Z\'den)',
   'state.eq': 'ekvator',
   'state.half': 'Hilbert açısı θ/2 =',
-  'state.phi': 'Azimut fazı (X-Y)',
+  'state.phi': 'Azimut = bağıl faz (+X\'ten +Y\'ye)',
   'state.length': 'Uzunluk',
   'state.lengthHint': '(1 = saf) :',
-  'state.presets': 'Kanonik taban durumları',
+  'state.presets': 'Eksen durumları (tek tıkla)',
   'preset.pz': '+Z kutbu',
   'preset.mz': '−Z kutbu',
   'preset.px': '+X ekseni',
@@ -115,7 +115,7 @@ export const TR_STATIC: Record<string, string> = {
   'fig.clearTrail': 'İzi sil',
   'fig.history': 'Geçmiş:',
   'fig.historyAria': 'Geçmiş',
-  'fig.dial': 'Göreli faz',
+  'fig.dial': 'Bağıl faz',
   'fig.cornerA': 'BLOCH TOPU: |r| ≤ 1<br />DÖNDÜRMEK İÇİN SÜRÜKLE',
   'fig.cornerB': 'İZDÜŞÜM: ORTOGRAFİK<br />İLK GÖRÜNÜM: OKTANT I',
   'fig.aria': '3B Bloch küresi. Görünümü çevirmek için sürükle ya da ok tuşlarını kullan; yakınlaştırmak için tekerleği çevir ya da iki parmakla sıkıştır.',
@@ -268,6 +268,7 @@ export const TR_STRINGS: Partial<Record<Key, string>> = {
 
   'r.pure': 'Saf',
   'r.mixed': 'Karışık',
+  'r.maxMixed': 'Tam karışık',
   'formula.mixed': 'karışık: ρ = ½(I + r·σ), r = {r}; tek bir |ψ⟩ yok',
   'autorotate': 'Oto-dönüş: {state}',
   'on': 'AÇIK',

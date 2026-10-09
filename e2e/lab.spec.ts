@@ -76,7 +76,7 @@ test('length slider: r = 0 hides the angles, r = 1 brings back the same directio
   await r.fill('0');
   await expect(page.locator('#readout-theta')).toHaveText('—');
   await expect(page.locator('#readout-phi')).toHaveText('—');
-  await expect(page.locator('#readout-r')).toHaveText(`0.00 (${EN['r.mixed']})`);
+  await expect(page.locator('#readout-r')).toHaveText(`0.00 (${EN['r.maxMixed']})`);
   await expectCoords(page, '0.000', '0.000', '0.000');
   await r.fill('1');
   await expectCoords(page, '0.000', '+1.000', '0.000');

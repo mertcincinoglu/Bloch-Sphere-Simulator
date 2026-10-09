@@ -63,6 +63,7 @@ export const EN = {
 
   'r.pure': 'Pure',
   'r.mixed': 'Mixed',
+  'r.maxMixed': 'Maximally mixed',
   'formula.mixed': 'mixed: ρ = ½(I + r·σ), r = {r}; no single |ψ⟩',
   'autorotate': 'Auto-rotate: {state}',
   'on': 'ON',
