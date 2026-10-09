@@ -23,8 +23,7 @@ const COLS: Record<number, string> = { 1: 'grid-cols-1', 2: 'grid-cols-2', 3: 'g
 
 /** A small bordered frame holding one 3D sphere. */
 function sphereFrame(height: string) {
-  const frame = $('<div class="flex flex-col items-center justify-center p-3 pt-7 border border-outline-variant technical-grid-bg relative w-full">');
-  frame.append($('<div class="absolute top-1 left-2 right-2 flex justify-between font-label-sm text-[13px] text-on-surface-variant select-none" aria-hidden="true">').append(['-1.0', '-0.5', '0.0', '+0.5', '+1.0'].map((x) => $('<span>').text(x))));
+  const frame = $('<div class="flex flex-col items-center justify-center p-3 border border-outline-variant clean-paper relative w-full">');
   const host = $(`<div class="mini-sphere relative w-full ${height} cursor-grab" tabindex="0" role="img">`).attr('aria-label', t('sp.fig'));
   frame.append(host);
   return { frame, host: host[0] };
@@ -43,11 +42,11 @@ function outcomeBar() {
   const a = $('<span class="text-primary font-bold">'), b = $('<span class="text-secondary font-bold text-right">');
   top.append(a, b);
   const bar = $('<div class="relative w-full h-5 bg-surface-container border border-on-surface overflow-hidden flex">');
-  const fa = $('<div class="bg-primary h-full transition-all duration-300" style="width:50%">');
-  const fb = $('<div class="bg-secondary h-full transition-all duration-300" style="width:50%">');
+  const fa = $('<div class="bg-primary h-full transition-all duration-300" style="width:0%">');
+  const fb = $('<div class="bg-secondary h-full transition-all duration-300" style="width:0%">');
   const tick = $('<div class="absolute top-0 bottom-0 w-0.5 bg-on-surface z-10" style="left:50%">');
   bar.append(fa, fb, tick);
-  const note = $('<div class="text-[13px] font-label-sm text-on-surface-variant">').text(t('sp.tick'));
+  const note = $('<div class="text-[13px] font-label-sm text-on-surface-variant">');
   wrap.append(top, bar, note);
   return {
     el: wrap,
@@ -56,9 +55,11 @@ function outcomeBar() {
       const [la, lb] = BASIS_LABELS[basis];
       a.text(`${la}: ${counts[0]} (${pct(total ? counts[0] / total : 0)})`);
       b.text(`${lb}: ${counts[1]} (${pct(total ? counts[1] / total : 0)})`);
-      fa.css('width', total ? pct(counts[0] / total) : '50%');
-      fb.css('width', total ? pct(counts[1] / total) : '50%');
+      fa.css('width', pct(total ? counts[0] / total : 0));
+      fb.css('width', pct(total ? counts[1] / total : 0));
       tick.css('left', pct(predicted));
+      const spread = total >= 20 ? t('measure.spread', { n: total.toLocaleString(lang), s: pct(Math.sqrt((predicted * (1 - predicted)) / total)) }) : '';
+      note.text(t('measure.expect', { p: pct(predicted), a: la }) + spread);
     },
   };
 }
@@ -180,8 +181,8 @@ function sphereFigure(fig: Extract<Figure, { type: 'sphere' }>) {
     };
     paintChips();
     box.append(chips);
-    const once = $('<button type="button" class="flex-1 bg-surface-container border border-on-surface px-3 py-2 font-label-md text-label-md font-bold uppercase shadow-hard-press text-on-surface hover:bg-surface-container-high transition-all">').text(t('sp.once'));
-    const many = $('<button type="button" class="flex-1 bg-secondary text-on-secondary border border-on-surface px-3 py-2 font-label-md text-label-md font-bold uppercase shadow-hard-press hover:opacity-90 transition-all flex items-center justify-center gap-1.5">')
+    const once = $('<button type="button" class="flex-1 bg-surface-container border border-on-surface px-3 py-2 font-label-md text-label-md font-bold shadow-hard-press text-on-surface hover:bg-surface-container-high transition-all">').text(t('sp.once'));
+    const many = $('<button type="button" class="flex-1 bg-secondary text-on-secondary border border-on-surface px-3 py-2 font-label-md text-label-md font-bold shadow-hard-press hover:opacity-90 transition-all flex items-center justify-center gap-1.5">')
       .append($('<i class="icon size-[16px]" data-icon="bar_chart">'), $('<span>').text(t('sp.many')));
     once.on('click', () => {
       if (busy) return;
@@ -253,7 +254,7 @@ function compareFigure(fig: Extract<Figure, { type: 'compare' }>) {
     }
     cards.forEach((c) => c.paint());
   };
-  const both = $('<button type="button" class="bg-secondary text-on-secondary border border-on-surface px-3 py-2 font-label-md text-label-md font-bold uppercase shadow-hard-press hover:opacity-90 transition-all flex items-center justify-center gap-1.5">')
+  const both = $('<button type="button" class="bg-secondary text-on-secondary border border-on-surface px-3 py-2 font-label-md text-label-md font-bold shadow-hard-press hover:opacity-90 transition-all flex items-center justify-center gap-1.5">')
     .append($('<i class="icon size-[16px]" data-icon="bar_chart">'), $('<span>').text(t('sp.both')))
     .on('click', () => { cards.forEach((c) => c.run()); paintAll(); });
   paintAll();
@@ -295,7 +296,6 @@ function figurePlate(ch: Chapter, index: number) {
   plate.append($('<div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant pb-2">').append(
     $('<h2 class="font-headline-sm text-[15px] font-bold uppercase tracking-[0.04em] text-on-surface flex items-center gap-2">')
       .append($('<span class="w-2.5 h-2.5 bg-primary inline-block" aria-hidden="true">'), $('<span>').text(`${t('sp.fig')} ${index} — ${ch.title}`)),
-    $('<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-mono">').text(`APPARATUS REF. BM-64 • ${t(`tag.${ch.id}` as Key)}`),
   ));
   const f = ch.figure;
   if (f.type === 'sphere') plate.append(sphereFigure(f));
@@ -342,7 +342,6 @@ function render() {
     $('<div class="flex flex-wrap items-center gap-3">').append(
       $('<span class="font-headline-md text-headline-md text-primary font-bold">').text(ch.kicker),
       $('<span class="px-2 py-0.5 bg-surface-container-high border border-outline font-label-sm text-label-sm uppercase tracking-[0.04em] text-on-surface">').text(t(`tag.${ch.id}` as Key)),
-      $('<span class="text-on-surface-variant font-label-sm text-label-sm">').text(`• FOLIO ${String(40 + i).padStart(2, '0')}`),
     ),
     $('<h1 class="font-display-lg-mobile text-display-lg-mobile sm:font-display-lg sm:text-display-lg text-on-surface leading-none tracking-tight">').text(ch.title),
     $('<p class="font-body-md text-[20px] font-semibold text-on-surface leading-[1.45] pt-2 reading-measure">').text(ch.lead),
@@ -366,7 +365,6 @@ function render() {
     main.append($('<details class="border border-on-surface clean-paper-low shadow-hard-card group">').append(
       $('<summary class="w-full px-4 py-3 flex items-center justify-between gap-2 text-left font-label-md text-label-md font-bold text-on-surface hover:bg-surface-container transition-colors cursor-pointer list-none">').append(
         $('<span class="flex items-center gap-2">').append($('<i class="icon size-[18px] group-open:rotate-180 transition-transform" data-icon="keyboard_arrow_down">'), $('<span>').text(t('sp.math'))),
-        $('<span class="font-label-sm text-label-sm text-on-surface-variant uppercase hidden sm:inline">').text(t('sp.expand')),
       ),
       $('<div class="px-4 sm:px-5 pb-5 pt-2 border-t border-outline-variant">').append(
         $('<div class="p-4 clean-paper border border-outline-variant font-label-md text-[15px] leading-[1.6] whitespace-pre-line overflow-x-auto">').text(ch.math),
