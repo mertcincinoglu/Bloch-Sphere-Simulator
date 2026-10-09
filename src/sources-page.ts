@@ -35,7 +35,7 @@ function render() {
     refs.append($('<div class="clean-paper border border-on-surface shadow-hard-card p-4 sm:p-6 space-y-2">').append(
       $('<div class="flex items-center gap-2 border-b border-outline-variant pb-2">').append(
         $(`<span class="w-2 h-2 ${g.mark}" aria-hidden="true">`),
-        $('<h3 class="font-headline-sm text-label-lg uppercase tracking-[0.04em] text-on-surface">').text(`§ B.${gi + 1} ${t(g.key)}`),
+        $('<h3 class="font-headline-sm text-label-lg text-on-surface">').text(`§ B.${gi + 1} ${t(g.key)}`),
       ),
       list,
     ));

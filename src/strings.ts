@@ -116,11 +116,11 @@ export const EN = {
   'tag.mixed': 'PURE & MIXED STATES',
   'tag.entanglement': 'TWO QUBITS',
   'tag.limits': 'LIMITS OF THE PICTURE',
-  'ref.theory': 'THEORY & QUANTUM FORMALISM',
-  'ref.teaching': 'PEDAGOGY & TEACHING',
-  'ref.research': 'RESEARCH ON LEARNING',
-  'ref.tools': 'TOOLS & SIMULATORS',
-  'ref.count': '{n} ENTRIES CATALOGUED',
+  'ref.theory': 'Theory & quantum formalism',
+  'ref.teaching': 'Pedagogy & teaching',
+  'ref.research': 'Research on learning',
+  'ref.tools': 'Tools & simulators',
+  'ref.count': '{n} entries',
   'ref.nd': 'n.d.',
 } as const;
 
