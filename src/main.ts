@@ -1,8 +1,9 @@
 // The laboratory page.
-import './common';
+import { fillIcons } from './common';
 import $ from 'jquery';
 import { Quaternion, Vector3 } from 'three';
-import { BASIS_LABELS, GATES, allBases, apply, customGate, fromAngles, measure, probFirst, rotation, sample, stateName, toAngles, type Basis, type Gate } from './bloch';
+import { BASIS_LABELS, GATES, allBases, apply, customGate, densityMatrix, fromAngles, measure, probFirst, randomState, rotGate, rotation, sample, stateName, toAngles, tomography, type Basis, type Gate } from './bloch';
+import { TASKS, judge, type Task } from './tasks';
 import { BlochScene } from './scene';
 import { onLang, t } from './i18n';
 import type { Key } from './strings';
@@ -19,9 +20,19 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scene = new BlochScene($('#sphere')[0], { guides: true, zoom: true });
 let v = fromAngles(Math.PI / 2, 0); // the design opens on |+⟩
 let dir = v.clone(); // last direction, kept when the arrow shrinks to the centre
-let basis: Basis = 'Z';
+// a measurement basis: Z, X, Y, or a custom axis n ('N')
+type MBasis = Basis | 'N';
+let basis: MBasis = 'Z';
+let nAxis = fromAngles(Math.PI / 4, 0);
+const axisFor = (b: MBasis) => (b === 'N' ? nAxis : b);
+const labelsFor = (b: MBasis): [string, string] => (b === 'N' ? ['+n', '−n'] : BASIS_LABELS[b]);
+const basisName = (b: MBasis) => (b === 'N' ? 'n' : b);
+let shots = 1000;
+let rotAngle = 'π/4';
+const DEG: Record<string, string> = { 'π/8': '22.5°', 'π/4': '45°', 'π/2': '90°', π: '180°' };
 let busy = false;
 let counts = { first: 0, second: 0 };
+const lang = () => document.documentElement.lang;
 
 const pct = (p: number) => `${Math.max(0, p * 100).toFixed(1)}%`; // never “−0.0%” from rounding noise
 const signed = (x: number) => (Math.abs(x) < 0.0005 ? '0.000' : `${x > 0 ? '+' : ''}${x.toFixed(3)}`.replace('-', '−'));
@@ -59,8 +70,17 @@ function render() {
     $(this).find('i').first().css('width', pct(p0));
     $(this).find('b').text(`${pct(p0)} / ${pct(p1)}`);
   });
-  $('#theory-mark').css('left', pct(probFirst(v, basis)));
+  $('#theory-mark').css('left', pct(probFirst(v, axisFor(basis))));
   paintCounts();
+
+  // ρ = ½ (I + r·σ), row by row
+  const cplx = (re: number, im: number) => {
+    const f = (x: number) => x.toFixed(3).replace('-', '−');
+    if (Math.abs(im) < 5e-4) return f(Math.abs(re) < 5e-4 ? 0 : re);
+    if (Math.abs(re) < 5e-4) return `${f(im)}i`;
+    return `${f(re)} ${im < 0 ? '−' : '+'} ${Math.abs(im).toFixed(3)}i`;
+  };
+  $('#rho-cells').empty().append(densityMatrix(v).map(([re, im]) => $('<span>').text(cplx(re, im))));
 
   // relative-phase dial: hand at φ, as long as |β|² = P(|1⟩)
   const p1 = all.Z[1];
@@ -85,9 +105,9 @@ function render() {
 // what just happened: kept as keys so a language switch can re-say it
 type Said = { text: Key; params: Record<string, string | number>; tag: Key; tagParams: Record<string, string | number> };
 let said: Said = { text: 'story.initial', params: {}, tag: 'action.initial', tagParams: {} };
-let shownGate: { gate: Gate; label: Key } = { gate: GATES.H, label: 'label.H' };
+let shownGate: { gate: Gate; label: Key; lp?: Record<string, string> } = { gate: GATES.H, label: 'label.H' };
 
-function explain(text: Key, tag: Key, params: Record<string, string | number> = {}, tagParams: Record<string, string | number> = {}, gate?: { gate: Gate; label: Key }) {
+function explain(text: Key, tag: Key, params: Record<string, string | number> = {}, tagParams: Record<string, string | number> = {}, gate?: { gate: Gate; label: Key; lp?: Record<string, string> }) {
   said = { text, params, tag, tagParams };
   if (gate) shownGate = gate;
   paintExplain();
@@ -96,7 +116,7 @@ function explain(text: Key, tag: Key, params: Record<string, string | number> = 
 function paintExplain() {
   $('#narrative-text').text(t(said.text, said.params));
   const { gate, label } = shownGate;
-  $('#matrix-label').text(t(label));
+  $('#matrix-label').text(t(label, shownGate.lp));
   $('#matrix-prefix').text(gate.prefix);
   $('#matrix-cells').empty().append(gate.cells.map((c) => $('<span>').text(c)));
   const n = gate.axis.clone().normalize();
@@ -105,16 +125,17 @@ function paintExplain() {
 }
 
 // ---------- history: every step, a chip for each; undo and the chips move along it ----------
-type Step = { label: string; measure?: boolean; v: Vector3; said: Said; gate: { gate: Gate; label: Key } };
+type Step = { label: string; measure?: boolean; kind?: 'gate' | 'other'; v: Vector3; said: Said; gate: typeof shownGate };
 let steps: Step[] = [];
 let cursor = 0;
 
-function record(label: string, measureStep = false) {
+function record(label: string, measureStep = false, kind: 'gate' | 'other' = 'other') {
   steps = steps.slice(0, cursor + 1);
-  steps.push({ label, measure: measureStep, v: v.clone(), said: { ...said }, gate: shownGate });
-  if (steps.length > 40) steps.shift();
+  steps.push({ label, measure: measureStep, kind, v: v.clone(), said: { ...said }, gate: shownGate });
+  if (steps.length > 40) { steps.shift(); if (task) task.startIdx = Math.max(0, task.startIdx - 1); }
   cursor = steps.length - 1;
   paintHistory();
+  paintTask();
 }
 
 function paintHistory() {
@@ -143,6 +164,7 @@ function goTo(i: number) {
     shownGate = to.gate;
     if (back) explain(from.measure ? 'story.undoMeasure' : 'story.undo', 'action.undo');
     else explain('story.goto', 'action.undo', { n: i + 1, label: to.label });
+    paintTask();
   });
   paintHistory();
 }
@@ -172,6 +194,8 @@ function animate(to: Vector3, q?: Quaternion, ms = 600, done?: () => void) {
 // a new state: the counts and the collapse note belonged to the old one
 function newState() {
   counts = { first: 0, second: 0 };
+  scene.setGhost(null);
+  $('#tomo-out').text('');
   paintCounts();
   $('#collapse-status').text(t('status.unmeasured'));
 }
@@ -183,28 +207,43 @@ function axisName(n: Vector3) {
   return AXES.find(([, a]) => a.distanceTo(u) < 1e-6)?.[0] ?? `(${f(u.x)}, ${f(u.y)}, ${f(u.z)})`;
 }
 
-function applyGate(g: Gate, story: Key, tag: Key, label: Key, chip: string, params: Record<string, string | number> = {}, tagParams: Record<string, string | number> = {}) {
+function applyGate(g: Gate, story: Key, tag: Key, label: Key, chip: string, params: Record<string, string | number> = {}, tagParams: Record<string, string | number> = {}, lp?: Record<string, string>) {
   if (busy) return;
   scene.preview(null, null);
   newState();
   // a negative angle is a turn the other way: show it as such
   scene.showTurn(g.axis, t('turn.label', { angle: piText(g.angle), axis: axisName(g.axis) }));
   animate(v.clone().applyQuaternion(rotation(g)), rotation(g), 700, () => {
-    explain(story, tag, params, tagParams, { gate: g, label });
-    record(chip);
+    explain(story, tag, params, tagParams, { gate: g, label, lp });
+    record(chip, false, 'gate');
   });
 }
 
-const GATE_CHIP: Record<string, string> = { Sdg: 'S†', Tdg: 'T†', Rx: 'Rx', Ry: 'Ry', Rz: 'Rz' };
+const GATE_CHIP: Record<string, string> = { Sdg: 'S†', Tdg: 'T†', SX: '√X' };
+const isRot = (name: string): name is 'Rx' | 'Ry' | 'Rz' => name === 'Rx' || name === 'Ry' || name === 'Rz';
+const gateFor = (name: string) => (isRot(name) ? rotGate(name, rotAngle) : GATES[name]);
 function gateByName(name: string) {
-  applyGate(GATES[name], `story.${name}` as Key, 'action.gate', `label.${name}` as Key, GATE_CHIP[name] ?? name, {}, { gate: GATE_CHIP[name] ?? name });
+  const chip = isRot(name) ? `${name}(${rotAngle})` : GATE_CHIP[name] ?? name;
+  const p: Record<string, string> = isRot(name) ? { a: rotAngle, deg: DEG[rotAngle] } : {};
+  applyGate(gateFor(name), `story.${name}` as Key, 'action.gate', `label.${name}` as Key, chip, p, { gate: chip }, isRot(name) ? { a: rotAngle } : undefined);
 }
+
+// the angle the rotation gates turn by
+function paintRot() {
+  $('[data-rot]').each(function () {
+    const on = this.dataset.rot === rotAngle;
+    this.setAttribute('aria-pressed', String(on));
+    this.className = `px-1.5 min-h-6 border text-[13px] ${on ? 'bg-primary text-on-primary border-primary font-bold' : 'clean-paper border-outline hover:bg-surface-container-high'}`;
+  });
+  $('[data-rot-sub]').each(function () { this.textContent = t('gate.rotSub', { deg: DEG[rotAngle], axis: this.dataset.rotSub! }); });
+}
+$('[data-rot]').on('click', function () { rotAngle = this.dataset.rot!; paintRot(); });
 
 $('[data-gate]').on('click', function () { gateByName($(this).data('gate') as string); })
   // before applying: show the axis and where the arrow would land
   .on('mouseenter focus', function () {
     if (busy) return;
-    const g = GATES[$(this).data('gate') as string];
+    const g = gateFor($(this).data('gate') as string);
     scene.preview(g.axis, apply(g, v));
   })
   .on('mouseleave blur', () => scene.preview(null, null));
@@ -252,13 +291,26 @@ function clearHistory() {
   if (busy) return;
   steps = [steps[cursor]];
   cursor = 0;
+  if (task) task.startIdx = 0;
   clearTrail();
   paintHistory();
+  paintTask();
 }
 $('[data-action="clear-history"]').on('click', clearHistory);
 $('[data-action="reset-zero"]').on('click', reset);
 $('[data-action="undo"]').on('click', undo);
 $('[data-action="clear-trail"]').on('click', clearTrail);
+
+$('[data-action="random"]').on('click', () => {
+  if (busy) return;
+  const to = randomState();
+  const { theta, phi } = toAngles(to);
+  newState();
+  animate(to, undefined, 600, () => {
+    explain('story.random', 'action.typed', { theta: piText(theta), phi: piText(phi) });
+    record(t('chip.random'));
+  });
+});
 
 // typed values: exact angles, or the amplitudes α and β
 function typed(to: Vector3, chip: string, story: Key, params: Record<string, string | number>) {
@@ -310,6 +362,8 @@ $('#slider-radius').on('input', () => {
 
 // measurement
 function paintBasis() {
+  $('#custom-axis').toggleClass('hidden', basis !== 'N');
+  scene.setMeasureAxis(basis === 'N' ? nAxis : null);
   $('[data-basis]').each(function () {
     const on = $(this).data('basis') === basis;
     this.className = on
@@ -321,40 +375,73 @@ function paintBasis() {
 
 function paintCounts() {
   const total = counts.first + counts.second;
-  const [a, b] = BASIS_LABELS[basis];
+  const [a, b] = labelsFor(basis);
   const pa = total ? counts.first / total : 0, pb = total ? counts.second / total : 0;
   $('#count-result-0').text(`${a}: ${counts.first} (${pct(pa)})`);
   $('#count-result-1').text(`${b}: ${counts.second} (${pct(pb)})`);
   $('#bar-measure-0').css('width', pct(pa));
   $('#bar-measure-1').css('width', pct(pb));
   // what the black line means, and how far a run may honestly stray from it (one standard deviation)
-  const p = probFirst(v, basis);
-  const spread = total >= 20 ? t('measure.spread', { n: total.toLocaleString(document.documentElement.lang), s: pct(Math.sqrt((p * (1 - p)) / total)) }) : '';
+  const p = probFirst(v, axisFor(basis));
+  const spread = total >= 20 ? t('measure.spread', { n: total.toLocaleString(lang()), s: pct(Math.sqrt((p * (1 - p)) / total)) }) : '';
   $('#measure-expect').text(t('measure.expect', { p: pct(p), a }) + spread);
 }
 
 $('[data-basis]').on('click', function () {
-  basis = $(this).data('basis') as Basis;
+  basis = $(this).data('basis') as MBasis;
   counts = { first: 0, second: 0 };
   paintBasis();
   paintCounts();
   render();
-  $('#collapse-status').text(t('status.ready', { basis }));
+  $('#collapse-status').text(t('status.ready', { basis: basisName(basis) }));
+});
+
+$('#custom-axis').on('submit', (e) => {
+  e.preventDefault();
+  const th = parsePi(String($('#ax-theta').val())), ph = parsePi(String($('#ax-phi').val()));
+  if (th === null || ph === null || th < -1e-9 || th > Math.PI + 1e-9) { $('#ax-error').text(t('measure.axisErr')); return; }
+  $('#ax-error').text('');
+  nAxis = fromAngles(Math.min(Math.PI, Math.max(0, th)), ph);
+  counts = { first: 0, second: 0 };
+  paintBasis();
+  render();
+  const f = (x: number) => (Math.abs(x) < 5e-3 ? '0' : x.toFixed(2).replace('-', '−'));
+  explain('story.axis', 'action.once', { nx: f(nAxis.x), ny: f(nAxis.y), nz: f(nAxis.z) });
+});
+
+function paintShots() {
+  $('[data-shots]').each(function () {
+    const on = Number(this.dataset.shots) === shots;
+    this.setAttribute('aria-pressed', String(on));
+    this.textContent = Number(this.dataset.shots).toLocaleString(lang());
+    this.className = `px-2 min-h-6 border ${on ? 'bg-primary text-on-primary border-primary font-bold' : 'clean-paper border-outline hover:bg-surface-container-high'}`;
+  });
+  $('#many-label').text(t('measure.manyN', { n: shots.toLocaleString(lang()) }));
+}
+$('[data-shots]').on('click', function () { shots = Number(this.dataset.shots); paintShots(); });
+
+$('[data-action="tomography"]').on('click', () => {
+  if (busy) return;
+  const { r, sd } = tomography(v, shots);
+  const f = (x: number) => (Math.abs(x) < 5e-4 ? '0.000' : x.toFixed(3).replace('-', '−'));
+  scene.setGhost(r, t('tomo.label'));
+  $('#tomo-out').text(t('tomo.out', { x: f(r.x), y: f(r.y), z: f(r.z), s: f(Math.max(sd.x, sd.y, sd.z)), rx: f(v.x), ry: f(v.y), rz: f(v.z), d: f(r.distanceTo(v)) }));
+  explain('story.tomo', 'action.many', { n: shots.toLocaleString(lang()) });
 });
 
 function measureOnce() {
   if (busy) return;
-  const before = probFirst(v, basis);
-  const { first, after } = measure(v, basis);
-  const [a, b] = BASIS_LABELS[basis];
+  const before = probFirst(v, axisFor(basis));
+  const { first, after } = measure(v, axisFor(basis));
+  const [a, b] = labelsFor(basis);
   const result = first ? a : b;
   // the run so far belongs to the state before; after this shot the state is the pole it found
   const sameState = v.distanceTo(after) < 1e-9;
   if (!sameState) counts = { first: 0, second: 0 };
   counts[first ? 'first' : 'second']++;
   animate(after, undefined, 250, () => {
-    explain('story.once', 'action.once', { basis, result, p: pct(first ? before : 1 - before) });
-    record(`M(${basis})→${result}`, true);
+    explain('story.once', 'action.once', { basis: basisName(basis), result, p: pct(first ? before : 1 - before) });
+    record(`M(${basisName(basis)})→${result}`, true);
   });
   $('#collapse-status').empty().append($('<span class="text-primary font-bold">').text(t('status.collapsed', { result })));
   paintCounts();
@@ -363,11 +450,11 @@ $('[data-action="measure-once"]').on('click', measureOnce);
 
 $('[data-action="measure-many"]').on('click', () => {
   if (busy) return;
-  const n = sample(v, basis, 1000);
+  const n = sample(v, axisFor(basis), shots);
   counts.first += n;
-  counts.second += 1000 - n;
-  $('#collapse-status').empty().append($('<span class="text-secondary font-bold">').text(t('status.sampled', { n: (counts.first + counts.second).toLocaleString(document.documentElement.lang) })));
-  explain('story.many', 'action.many', { basis });
+  counts.second += shots - n;
+  $('#collapse-status').empty().append($('<span class="text-secondary font-bold">').text(t('status.sampled', { n: (counts.first + counts.second).toLocaleString(lang()) })));
+  explain('story.many', 'action.many', { basis: basisName(basis), n: shots.toLocaleString(lang()) });
   paintCounts();
 });
 
@@ -429,6 +516,65 @@ $('[data-action="guide"]').on('click', function () {
 $('[data-action="close-guide"]').on('click', closeGuide);
 modal.on('click', (e) => { if (e.target === modal[0]) closeGuide(); });
 
+// ---------- tasks ----------
+let task: { t: Task; startIdx: number } | null = null;
+const DONE_KEY = 'bloch-tasks-done';
+function doneSet(): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) ?? '[]') as string[]); } catch { return new Set(); }
+}
+function markDone(id: string) {
+  const d = doneSet();
+  d.add(id);
+  try { localStorage.setItem(DONE_KEY, JSON.stringify([...d])); } catch { /* private mode: the tick lasts this visit */ }
+}
+function paintTasks() {
+  const done = doneSet();
+  $('#task-list').empty().append(TASKS.map((tk, i) => $('<li class="clean-paper border border-outline-variant p-3 flex items-start gap-3">').append(
+    $('<div class="flex-1 min-w-0">').append(
+      $('<h3 class="font-label-md text-[14px] font-bold text-on-surface flex items-center gap-1.5">').append(
+        $('<span class="text-on-surface-variant">').text(`${i + 1}.`), $('<span>').text(t(`task.${tk.id}.title` as Key)),
+        done.has(tk.id) ? $('<span class="font-label-sm text-[13px] text-secondary flex items-center gap-1">').append($('<i class="icon size-[15px]" data-icon="task_alt">'), $('<span>').text(t('task.done'))) : ''),
+      $('<p class="font-body-md text-[15px] text-on-surface-variant leading-snug">').text(t(`task.${tk.id}.goal` as Key)),
+    ),
+    $('<button type="button" class="shrink-0 px-2.5 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high font-label-sm text-[13px] font-bold">')
+      .text(t(done.has(tk.id) ? 'task.again' : 'task.start')).on('click', () => startTask(tk)),
+  )));
+  fillIcons($('#task-list')[0]);
+}
+function paintTask() {
+  if (!task) { $('#task-active').addClass('hidden'); return; }
+  const { t: tk, startIdx } = task;
+  const kinds = steps.slice(startIdx + 1, cursor + 1).map((st) => st.kind ?? 'other');
+  const res = judge(tk, v, kinds);
+  $('#task-active').removeClass('hidden');
+  $('#task-title').text(t(`task.${tk.id}.title` as Key));
+  $('#task-goal').text(t(`task.${tk.id}.goal` as Key));
+  $('#task-progress').text(tk.maxGates !== undefined ? t('task.gatesMax', { k: res.gates, m: tk.maxGates }) : t('task.gates', { k: res.gates }));
+  const fb = $('#task-feedback').removeClass('text-secondary text-error text-on-tertiary-fixed');
+  if (res.state === 'solved') {
+    fb.addClass('text-secondary').text(t('task.solved'));
+    if (!doneSet().has(tk.id)) { markDone(tk.id); paintTasks(); }
+  } else if (res.state === 'going') fb.addClass('text-on-tertiary-fixed').text(t('task.going'));
+  else fb.addClass('text-error').text(t(res.state === 'tooMany' ? 'task.tooMany' : 'task.gatesOnly'));
+}
+function startTask(tk: Task) {
+  if (busy) return;
+  task = { t: tk, startIdx: 0 };
+  scene.preview(null, null);
+  scene.setTarget(tk.target ?? null, t('task.goal'));
+  newState();
+  animate(tk.start.clone(), undefined, 500, () => {
+    explain('story.preset', 'action.preset', { label: stateName(tk.start) ?? '|ψ⟩' });
+    steps = [{ label: stateName(tk.start) ?? '|ψ⟩', kind: 'other', v: v.clone(), said: { ...said }, gate: shownGate }];
+    cursor = 0;
+    clearTrail();
+    paintHistory();
+    paintTask();
+  });
+}
+$('[data-action="task-restart"]').on('click', () => { if (task) startTask(task.t); });
+$('[data-action="task-stop"]').on('click', () => { task = null; scene.setTarget(null); paintTask(); });
+
 // control deck tabs (WAI-ARIA tabs: arrows move between them)
 const tabs = $('[role="tab"]');
 function showTab(name: string, focus = false) {
@@ -473,6 +619,10 @@ onLang(() => {
   paintCounts();
   paintRotate();
   paintHistory();
+  paintRot();
+  paintShots();
+  paintTasks();
+  paintTask();
   render();
 });
 
@@ -492,4 +642,7 @@ paintHistory();
 paintBasis();
 paintCounts();
 paintRotate();
+paintRot();
+paintShots();
+paintTasks();
 $('#collapse-status').text(t('status.unmeasured'));

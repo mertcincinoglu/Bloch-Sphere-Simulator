@@ -78,11 +78,11 @@
                 <span class="max-[1400px]:hidden text-outline-variant" aria-hidden="true">·</span>
                 <span class="max-[1400px]:hidden text-on-surface-variant truncate" data-i18n="fig.title">State vector in the Bloch ball</span>
               </div>
-              <div class="flex items-center gap-2 max-sm:w-full max-sm:justify-end">
+              <div class="flex flex-wrap items-center gap-2 max-sm:w-full max-sm:justify-end">
                 <button class="px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap" id="btn-autorotate" aria-pressed="false">Auto-rotate: OFF</button>
                 <button class="px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap" data-action="reset-view" data-i18n="fig.resetView">Reset view</button>
-                <button class="w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high font-label-md text-[16px] font-bold" data-action="zoom-out" aria-label="Zoom out" data-i18n-aria="fig.zoomOut" title="Zoom out (−, scroll, pinch)" data-i18n-title="fig.zoomOutTip">−</button>
-                <button class="w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high font-label-md text-[16px] font-bold" data-action="zoom-in" aria-label="Zoom in" data-i18n-aria="fig.zoomIn" title="Zoom in (+, scroll, pinch)" data-i18n-title="fig.zoomInTip">+</button>
+                <button class="max-sm:hidden w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high font-label-md text-[16px] font-bold" data-action="zoom-out" aria-label="Zoom out" data-i18n-aria="fig.zoomOut" title="Zoom out (−, scroll, pinch)" data-i18n-title="fig.zoomOutTip">−</button>
+                <button class="max-sm:hidden w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high font-label-md text-[16px] font-bold" data-action="zoom-in" aria-label="Zoom in" data-i18n-aria="fig.zoomIn" title="Zoom in (+, scroll, pinch)" data-i18n-title="fig.zoomInTip">+</button>
                 <button class="max-sm:hidden px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap" data-action="clear-trail" data-i18n="fig.clearTrail">Clear trail</button>
                 <button class="w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high text-on-surface-variant" data-action="share" title="Share state" data-i18n-title="fig.share"><i class="icon size-[16px]" data-icon="share"></i><span class="sr-only" data-i18n="fig.share">Share state</span></button>
               </div>
@@ -163,10 +163,11 @@
       <!-- RIGHT: one control deck with three tabs -->
       <div class="col-span-12 lg:col-span-5 flex flex-col space-y-4 max-lg:contents">
         <div class="clean-paper border border-outline-variant rounded-sm flex flex-col overflow-hidden max-lg:order-2 max-lg:col-span-12">
-          <div class="grid grid-cols-3 border-b border-outline-variant clean-paper-low text-center font-label-md text-[14px]" role="tablist" aria-label="Controls" data-i18n-aria="tab.aria">
+          <div class="grid grid-cols-4 border-b border-outline-variant clean-paper-low text-center font-label-md text-[14px]" role="tablist" aria-label="Controls" data-i18n-aria="tab.aria">
             <button class="py-2.5 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" role="tab" id="tab-state" aria-controls="panel-state" aria-selected="false" tabindex="-1" data-tab="state" data-i18n="tab.state">State</button>
             <button class="py-2.5 border-b-2 border-primary text-primary font-bold" role="tab" id="tab-gates" aria-controls="panel-gates" aria-selected="true" data-tab="gates" data-i18n="tab.gates">Gates</button>
             <button class="py-2.5 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" role="tab" id="tab-measure" aria-controls="panel-measure" aria-selected="false" tabindex="-1" data-tab="measure" data-i18n="tab.measure">Measure</button>
+            <button class="py-2.5 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" role="tab" id="tab-tasks" aria-controls="panel-tasks" aria-selected="false" tabindex="-1" data-tab="tasks" data-i18n="tab.tasks">Tasks</button>
           </div>
 
           <!-- GATES -->
@@ -198,11 +199,20 @@
                     <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Tdg"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">T†</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">−π/4 <span data-i18n="gate.turn">turn</span></span></button>
                   </div>
                 </div>
-                <div class="col-span-4"><h3 class="font-label-sm text-[13px] text-on-surface-variant mb-1" data-i18n="gates.rot">Rotations by π/4</h3>
-                  <div class="grid grid-cols-4 gap-2">
-                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rx"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">Rx</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Rx">45° about X</span></button>
-                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Ry"><span class="font-label-md font-bold text-base text-tertiary block leading-none mb-1">Ry</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Ry">45° about Y</span></button>
-                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rz"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">Rz</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Rz">45° about Z</span></button>
+                <div class="col-span-3">
+                  <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mb-1">
+                    <h3 class="font-label-sm text-[13px] text-on-surface-variant" data-i18n="gates.rot">Rotations</h3>
+                    <div class="flex gap-1 font-label-sm" role="group" aria-label="Rotation angle" data-i18n-aria="gates.angle" id="rot-angles"><button type="button" class="px-1.5 min-h-6 border text-[13px]" data-rot="π/8">π/8</button><button type="button" class="px-1.5 min-h-6 border text-[13px]" data-rot="π/4">π/4</button><button type="button" class="px-1.5 min-h-6 border text-[13px]" data-rot="π/2">π/2</button><button type="button" class="px-1.5 min-h-6 border text-[13px]" data-rot="π">π</button></div>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rx"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">Rx</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-rot-sub="X">45° about X</span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Ry"><span class="font-label-md font-bold text-base text-tertiary block leading-none mb-1">Ry</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-rot-sub="Y">45° about Y</span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rz"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">Rz</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-rot-sub="Z">45° about Z</span></button>
+                  </div>
+                </div>
+                <div><h3 class="font-label-sm text-[13px] text-on-surface-variant mb-1" data-i18n="gates.sqrt">Square root</h3>
+                  <div class="grid grid-cols-1 gap-2">
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="SX"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">√X</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.SX">Half an X</span></button>
                   </div>
                 </div>
               </div>
@@ -270,6 +280,7 @@
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,1" data-label="|−⟩"><span class="font-bold text-primary block text-sm">|−⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.mx">−X axis</span></button>
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,1.5" data-label="|−i⟩"><span class="font-bold text-tertiary block text-sm">|−i⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.my">−Y axis</span></button>
               </div>
+              <button class="mt-2 w-full clean-paper hover:bg-surface-container-high border border-outline py-2 font-label-sm text-[13px] font-bold flex items-center justify-center gap-1.5 active:translate-y-0.5" data-action="random"><i class="icon size-[16px]" data-icon="casino"></i><span data-i18n="state.random">Random state</span></button>
             </div>
                       <!-- exact values: angles, or the amplitudes α and β -->
             <details class="clean-paper border border-outline-variant p-3 group rounded-sm" id="exact">
@@ -301,17 +312,31 @@
           <div class="p-4 sm:p-5 space-y-4 hidden" id="panel-measure" role="tabpanel" aria-labelledby="tab-measure">
             <div>
               <h2 class="font-label-sm text-[13px] font-bold text-primary uppercase mb-2" data-i18n="measure.choose">Measurement basis</h2>
-              <div class="grid grid-cols-3 gap-2 font-label-sm text-[13px]">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-label-sm text-[13px]">
                 <button class="py-1.5 border border-outline" data-basis="Z">Z (|0⟩/|1⟩)</button>
                 <button class="py-1.5 border border-outline" data-basis="X">X (|+⟩/|−⟩)</button>
                 <button class="py-1.5 border border-outline" data-basis="Y">Y (|i⟩/|−i⟩)</button>
+                <button class="py-1.5 border border-outline" data-basis="N" data-i18n="measure.custom">n (custom)</button>
               </div>
+              <form class="hidden mt-2 space-y-1" id="custom-axis">
+                <p class="font-body-md text-[15px] text-on-surface-variant leading-snug" data-i18n="measure.axisHint">The axis n, in units of π (1/4 means π/4) or in degrees (45°). Shown dashed on the sphere.</p>
+                <div class="grid grid-cols-[1fr_1fr_auto] gap-2 items-end font-label-sm text-[13px]">
+                  <div class="flex flex-col"><label for="ax-theta" class="text-on-surface-variant mb-1">θn</label><input id="ax-theta" class="w-full clean-paper border border-outline px-1.5 py-1 text-center font-bold" type="text" value="1/4" /></div>
+                  <div class="flex flex-col"><label for="ax-phi" class="text-on-surface-variant mb-1">φn</label><input id="ax-phi" class="w-full clean-paper border border-outline px-1.5 py-1 text-center font-bold" type="text" value="0" /></div>
+                  <button type="submit" class="bg-primary hover:bg-primary-container text-on-primary font-bold px-3 py-1 min-h-7 hard-shadow active:translate-x-0.5 active:translate-y-0.5" data-i18n="custom.apply">Apply</button>
+                </div>
+                <p class="font-body-md text-[14px] text-error" id="ax-error" aria-live="polite"></p>
+              </form>
             </div>
-            <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="flex flex-wrap items-center gap-1.5 font-label-sm text-[13px] pt-1" role="group" aria-label="Copies" data-i18n-aria="measure.copies">
+              <span class="text-on-surface-variant mr-1" data-i18n="measure.copies">Copies:</span>
+              <button type="button" class="px-2 min-h-6 border" data-shots="10">10</button><button type="button" class="px-2 min-h-6 border" data-shots="100">100</button><button type="button" class="px-2 min-h-6 border" data-shots="1000">1,000</button><button type="button" class="px-2 min-h-6 border" data-shots="10000">10,000</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
               <button class="clean-paper hover:bg-surface-container-high border border-outline px-3 py-2.5 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="measure-once"><i class="icon size-[18px] text-primary" data-icon="flash_on"></i><span data-i18n="measure.once">Measure once</span></button>
-              <button class="clean-paper hover:bg-surface-container-high border border-outline px-3 py-2.5 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="measure-many"><i class="icon size-[18px] text-secondary" data-icon="bar_chart"></i><span data-i18n="measure.many">Measure 1,000 copies</span></button>
+              <button class="clean-paper hover:bg-surface-container-high border border-outline px-3 py-2.5 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="measure-many"><i class="icon size-[18px] text-secondary" data-icon="bar_chart"></i><span id="many-label">Measure 1,000 copies</span></button>
             </div>
-            <p class="font-body-md text-[15px] text-on-surface-variant leading-snug flex gap-1.5"><i class="icon size-[16px] shrink-0 mt-0.5 text-tertiary" data-icon="info"></i><span data-i18n-html="measure.warn"><strong class="text-on-surface">Measuring changes the qubit:</strong> the arrow jumps to the answer. To see the odds without touching it, measure 1,000 copies.</span></p>
+            <p class="font-body-md text-[15px] text-on-surface-variant leading-snug flex gap-1.5"><i class="icon size-[16px] shrink-0 mt-0.5 text-tertiary" data-icon="info"></i><span data-i18n-html="measure.warn"><strong class="text-on-surface">Measuring changes the qubit:</strong> the arrow jumps to the answer. To see the odds without touching it, measure copies.</span></p>
             <div class="pt-3 border-t border-outline-variant space-y-2 font-label-sm text-[13px]" aria-live="polite">
               <div class="flex justify-between items-center gap-2"><span class="text-on-surface-variant" data-i18n="measure.status">Last measurement:</span><span class="font-bold text-on-surface" id="collapse-status">Unmeasured</span></div>
               <div class="flex justify-between"><span id="count-result-0">|0⟩: 0 (0.0%)</span><span id="count-result-1">|1⟩: 0 (0.0%)</span></div>
@@ -323,6 +348,32 @@
               <p class="font-label-sm text-[13px] text-on-surface-variant" id="measure-expect"></p>
               <div class="flex justify-end pt-1"><button class="text-on-surface-variant hover:text-on-surface hover:underline font-bold min-h-6 px-1" data-action="clear" data-i18n="measure.clear">Clear counts</button></div>
             </div>
+            <!-- state tomography: rebuild the arrow from measurements -->
+            <div class="pt-3 border-t border-outline-variant space-y-2">
+              <h3 class="font-label-sm text-[13px] font-bold text-primary uppercase" data-i18n="tomo.head">Find the arrow from measurements</h3>
+              <p class="font-body-md text-[15px] text-on-surface-variant leading-snug" data-i18n="tomo.hint">Measures the chosen number of copies in X, in Y and in Z, then rebuilds the arrow: each coordinate is 2·P(+) − 1. Real labs find a qubit's state this way, since nobody can see the arrow itself.</p>
+              <button class="w-full clean-paper hover:bg-surface-container-high border border-outline px-3 py-2 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="tomography"><i class="icon size-[18px] text-secondary" data-icon="my_location"></i><span data-i18n="tomo.btn">Rebuild the arrow</span></button>
+              <p class="font-label-sm text-[13px] text-on-surface" id="tomo-out" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <!-- TASKS -->
+          <div class="p-4 sm:p-5 space-y-4 hidden" id="panel-tasks" role="tabpanel" aria-labelledby="tab-tasks">
+            <div>
+              <h2 class="font-label-sm text-[13px] font-bold text-primary uppercase mb-1" data-i18n="tasks.head">Tasks</h2>
+              <p class="font-body-md text-[15px] text-on-surface-variant leading-snug" data-i18n="tasks.lead">Short exercises. The ring on the sphere marks the goal, and the lab checks every step.</p>
+            </div>
+            <div class="hidden bg-tertiary-fixed border border-tertiary p-3 space-y-2" id="task-active" aria-live="polite">
+              <h3 class="font-label-md text-[14px] font-bold text-on-tertiary-fixed" id="task-title"></h3>
+              <p class="font-body-md text-[16px] text-on-tertiary-fixed leading-snug" id="task-goal"></p>
+              <p class="font-label-sm text-[13px] text-on-tertiary-fixed-variant" id="task-progress"></p>
+              <p class="font-body-md text-[15px] font-semibold" id="task-feedback"></p>
+              <div class="flex gap-2 font-label-sm text-[13px]">
+                <button class="px-2.5 py-1 min-h-6 border border-on-surface clean-paper hover:bg-surface flex items-center gap-1" data-action="task-restart"><i class="icon size-[15px]" data-icon="restart_alt"></i><span data-i18n="task.restart">Restart</span></button>
+                <button class="px-2.5 py-1 min-h-6 border border-on-surface clean-paper hover:bg-surface" data-action="task-stop" data-i18n="task.stop">Stop</button>
+              </div>
+            </div>
+            <ol class="space-y-2" id="task-list"></ol>
           </div>
         </div>
 
@@ -333,6 +384,16 @@
             <i class="icon size-[20px] group-open:rotate-180 transition-transform" data-icon="keyboard_arrow_down"></i>
           </summary>
           <div class="pt-4 mt-3 border-t border-outline-variant/60 space-y-4 font-body-md text-[15px]">
+            <div class="clean-paper border border-outline-variant p-3 space-y-2">
+              <div class="flex justify-between items-center gap-2 font-label-sm text-[13px]">
+                <span class="text-on-surface-variant" data-i18n="rho.head">Density matrix ρ</span>
+                <span class="text-primary font-bold">ρ = ½(I + r·σ)</span>
+              </div>
+              <div class="flex items-center justify-center gap-3 font-label-md text-[14px] py-1">
+                <div class="border-l-2 border-r-2 border-on-surface px-3 py-0.5 grid grid-cols-2 gap-x-4 justify-items-center whitespace-nowrap" id="rho-cells"></div>
+              </div>
+              <p class="text-[14px] text-on-surface-variant leading-snug" data-i18n="rho.note">Diagonal: the Z probabilities. Off-diagonal: the X and Y parts; they shrink toward 0 as the state becomes mixed.</p>
+            </div>
             <div class="clean-paper border border-outline-variant p-3 space-y-2">
               <div class="flex justify-between items-center gap-2 font-label-sm text-[13px]">
                 <span class="text-on-surface-variant" data-i18n="guide.matrix">Operator matrix [ U ]</span>

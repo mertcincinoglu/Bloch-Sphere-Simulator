@@ -132,7 +132,7 @@ test('language switch to TR changes html[lang] and texts, and survives a reload'
   const check = async () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
     await expect(page.locator('#tab-gates')).toHaveText(TR_STATIC['tab.gates']);
-    await expect(page.locator('[data-action="measure-many"] span')).toHaveText(TR_STATIC['measure.many']);
+    await expect(page.locator('#many-label')).toHaveText(TR_STRINGS['measure.manyN']!.replace('{n}', '1.000'));
     await expect(page.locator('#narrative-text')).toHaveText(TR_STRINGS['story.initial']!);
     await expect(page.locator('[data-lang="tr"]')).toHaveAttribute('aria-pressed', 'true');
   };
@@ -224,11 +224,13 @@ test('control deck tabs: click and arrow keys switch panels', async ({ page }) =
   await expect(page.locator('#panel-state')).toBeHidden();
   await tab(page, 'measure');
   await expect(page.locator('#tab-measure')).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#panel-tasks')).toBeVisible();
   await page.keyboard.press('ArrowRight'); // wraps to State
   await expect(page.locator('#panel-state')).toBeVisible();
   await expect(page.locator('#tab-state')).toBeFocused();
   await page.keyboard.press('ArrowLeft');
-  await expect(page.locator('#panel-measure')).toBeVisible();
+  await expect(page.locator('#panel-tasks')).toBeVisible();
 });
 
 test('clear history keeps only the present step', async ({ page }) => {
@@ -259,7 +261,8 @@ test('slider marks sit under the thumb: φ = 3π/2 lands exactly on −Y', async
   await expectCoords(page, '+1.000', '0.000', '0.000');
 });
 
-test('zoom: buttons and the wheel change the zoom; reset view brings it back', async ({ page }) => {
+test('zoom: buttons and the wheel change the zoom; reset view brings it back', async ({ page }, info) => {
+  test.skip(info.project.name === 'phone', 'phones zoom with two fingers; the buttons are hidden there');
   const label = page.locator('#sphere .axis-label', { hasText: /^\+X$/ });
   const where = () => label.evaluate((el) => (el as HTMLElement).style.transform);
   const before = await where();
@@ -343,4 +346,65 @@ test('measurement: the line under the bar says what the black line is and the no
   await expect(page.locator('#measure-expect')).toHaveText('Black line: expected 50.0% for |0⟩');
   await page.locator('[data-action="measure-many"]').click();
   await expect(page.locator('#measure-expect')).toHaveText('Black line: expected 50.0% for |0⟩ · over 1,000 copies a spread of about ±1.6% is normal');
+});
+
+test('gates: √X twice makes X; the rotation angle changes Rx', async ({ page }) => {
+  await resetToZero(page);
+  await page.locator('[data-gate="SX"]').click(); // |0⟩ → −Y
+  await expectCoords(page, '0.000', '−1.000', '0.000');
+  await page.locator('[data-gate="SX"]').click();
+  await expectCoords(page, '0.000', '0.000', '−1.000');
+  await page.locator('[data-rot="π/2"]').click();
+  await expect(page.locator('[data-rot-sub="X"]')).toHaveText('90° about X');
+  await page.locator('[data-gate="Rx"]').click(); // |1⟩ → +Y
+  await expectCoords(page, '0.000', '+1.000', '0.000');
+  await expect(page.locator('#matrix-label')).toHaveText('Rx(π/2)');
+  await expect(page.locator('#history button').last()).toHaveText('Rx(π/2)');
+});
+
+test('state: a random state is on the sphere, and ρ follows the state', async ({ page }) => {
+  await tab(page, 'state');
+  await page.locator('[data-action="random"]').click();
+  await expect(page.locator('#readout-r')).toHaveText(`1.00 (${EN['r.pure']})`);
+  await expect(page.locator('#history button').last()).toHaveText(EN['chip.random']);
+  await resetToZero(page);
+  await expect(page.locator('#rho-cells span')).toHaveText(['1.000', '0.000', '0.000', '0.000']);
+});
+
+test('measure: a custom axis, the number of copies, and tomography', async ({ page }) => {
+  await tab(page, 'measure');
+  await page.locator('[data-basis="N"]').click();
+  await expect(page.locator('#custom-axis')).toBeVisible();
+  await page.locator('#ax-theta').fill('1/2');
+  await page.locator('#ax-phi').fill('0');
+  await page.locator('#custom-axis [type="submit"]').click(); // n = +X; the lab opens on |+⟩
+  await expect(page.locator('#measure-expect')).toHaveText('Black line: expected 100.0% for +n');
+  await page.locator('[data-shots="100"]').click();
+  await expect(page.locator('#many-label')).toHaveText('Measure 100 copies');
+  await page.locator('[data-action="measure-many"]').click();
+  await expect(page.locator('#count-result-0')).toHaveText('+n: 100 (100.0%)');
+  await page.locator('[data-shots="10000"]').click();
+  await page.locator('[data-action="tomography"]').click();
+  await expect(page.locator('#tomo-out')).toContainText('real: (1.000, 0.000, 0.000)');
+  const gap = Number((await page.locator('#tomo-out').textContent())!.match(/off by ([\d.]+)/)![1]);
+  expect(gap).toBeLessThan(0.08);
+});
+
+test('tasks: solve "Flip the bit", and too many gates is caught', async ({ page }) => {
+  await tab(page, 'tasks');
+  await page.locator('#task-list li').first().getByRole('button').click();
+  await expect(page.locator('#task-title')).toHaveText(EN['task.flip.title']);
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+  await page.locator('h1').click();
+  await page.keyboard.press('h');
+  await expect(page.locator('#task-feedback')).toHaveText(EN['task.going']);
+  await page.waitForTimeout(800); // a key pressed mid-turn is ignored
+  await page.keyboard.press('h');
+  await expect(page.locator('#task-feedback')).toHaveText(EN['task.tooMany']);
+  await page.locator('[data-action="task-restart"]').click();
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+  await page.waitForTimeout(800); // the restart turns the arrow home first
+  await page.keyboard.press('x');
+  await expect(page.locator('#task-feedback')).toHaveText(EN['task.solved']);
+  await expect(page.locator('#task-list li').first()).toContainText(EN['task.done']);
 });

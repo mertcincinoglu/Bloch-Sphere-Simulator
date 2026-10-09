@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Vector3 } from 'three';
-import { GATES, allBases, apply, customGate, fromAngles, measure, probFirst, sample, stateName, toAngles } from './bloch';
+import { GATES, allBases, apply, customGate, densityMatrix, fromAngles, measure, probFirst, randomState, rotGate, sample, stateName, toAngles, tomography } from './bloch';
 
 const ZERO = new Vector3(0, 0, 1);
 const close = (a: Vector3, b: Vector3) => expect(a.distanceTo(b)).toBeLessThan(1e-9);
@@ -41,6 +41,7 @@ const U: Record<string, [C, C, C, C]> = {
   S: [[1, 0], [0, 0], [0, 0], [0, 1]], T: [[1, 0], [0, 0], [0, 0], [h, h]],
   Rx: [[c8, 0], [0, -s8], [0, -s8], [c8, 0]], Ry: [[c8, 0], [-s8, 0], [s8, 0], [c8, 0]],
   Rz: [[c8, -s8], [0, 0], [0, 0], [c8, s8]], Sdg: [[1, 0], [0, 0], [0, 0], [0, -1]], Tdg: [[1, 0], [0, 0], [0, 0], [h, -h]],
+  SX: [[0.5, 0.5], [0.5, -0.5], [0.5, -0.5], [0.5, 0.5]],
 };
 const blochOf = (a: C, b: C) => { const ab = mul(conj(a), b); return new Vector3(2 * ab[0], 2 * ab[1], a[0] ** 2 + a[1] ** 2 - b[0] ** 2 - b[1] ** 2); };
 const ket = (th: number, ph: number): [C, C] => [[Math.cos(th / 2), 0], [Math.sin(th / 2) * Math.cos(ph), Math.sin(th / 2) * Math.sin(ph)]];
@@ -107,5 +108,43 @@ describe('names, inverses and readouts (hands-on audit, 2026-10-09)', () => {
     expect(b.Y[0]).toBeCloseTo(1, 12);
     expect(b.Z[0]).toBeCloseTo(0.5, 12);
     expect(b.X[1]).toBeCloseTo(0.5, 12);
+  });
+});
+
+describe('new tools', () => {
+  it('√X twice is X', () => { for (const [th, ph] of STATES) close(apply(GATES.SX, apply(GATES.SX, fromAngles(th, ph))), apply(GATES.X, fromAngles(th, ph))); });
+  it('rotGate(Rx, π/4) is the old Rx; Rx(π) turns like X; Rz(π/2) like S', () => {
+    for (const [th, ph] of STATES) {
+      close(apply(rotGate('Rx', 'π/4'), fromAngles(th, ph)), apply(GATES.Rx, fromAngles(th, ph)));
+      close(apply(rotGate('Rx', 'π'), fromAngles(th, ph)), apply(GATES.X, fromAngles(th, ph)));
+      close(apply(rotGate('Rz', 'π/2'), fromAngles(th, ph)), apply(GATES.S, fromAngles(th, ph)));
+    }
+    expect(rotGate('Ry', 'π/2').cells).toEqual(['cos(π/4)', '−sin(π/4)', 'sin(π/4)', 'cos(π/4)']);
+  });
+  it('measuring along any axis n: P = (1 + r·n)/2, and the state lands on ±n', () => {
+    const n = fromAngles(Math.PI / 3, 1);
+    expect(probFirst(n, n)).toBeCloseTo(1, 12);
+    expect(probFirst(n.clone().negate(), n)).toBeCloseTo(0, 12);
+    expect(probFirst(new Vector3(0, 0, 1), n)).toBeCloseTo((1 + Math.cos(Math.PI / 3)) / 2, 12);
+    close(measure(ZERO, n, () => 0).after, n);
+  });
+  it('tomography finds the arrow within a few standard deviations', () => {
+    const v = fromAngles(1.1, 2.3);
+    const { r, sd } = tomography(v, 10000);
+    for (const k of ['x', 'y', 'z'] as const) expect(Math.abs(r[k] - v[k])).toBeLessThan(5 * sd[k] + 1e-9);
+  });
+  it('random states are unit vectors spread evenly in z', () => {
+    const zs = Array.from({ length: 20000 }, () => randomState());
+    zs.forEach((v) => expect(v.length()).toBeCloseTo(1, 12));
+    const upper = zs.filter((v) => v.z > 0.5).length / zs.length; // a cap of height 0.5 holds a quarter of the sphere
+    expect(Math.abs(upper - 0.25)).toBeLessThan(0.02);
+  });
+  it('ρ has trace 1 and the right entries for |+⟩ and |i⟩', () => {
+    const p = densityMatrix(new Vector3(1, 0, 0));
+    expect(p[1][0]).toBeCloseTo(0.5, 12);
+    const m = densityMatrix(new Vector3(0, 1, 0));
+    expect(m[1][1]).toBeCloseTo(-0.5, 12);
+    expect(m[2][1]).toBeCloseTo(0.5, 12);
+    expect(m[0][0] + m[3][0]).toBeCloseTo(1, 12);
   });
 });

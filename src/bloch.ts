@@ -25,7 +25,23 @@ export const GATES: Record<string, Gate> = {
   Rz: { axis: new Vector3(0, 0, 1), angle: Math.PI / 4, prefix: '', cells: ['e^(−iπ/8)', '0', '0', 'e^(iπ/8)'] },
   Sdg: { axis: new Vector3(0, 0, 1), angle: -Math.PI / 2, prefix: '', cells: ['1', '0', '0', '−i'] },
   Tdg: { axis: new Vector3(0, 0, 1), angle: -Math.PI / 4, prefix: '', cells: ['1', '0', '0', 'e^(−iπ/4)'] },
+  // √X: a quarter turn about X; two make X. A native gate on IBM hardware. SX = e^(iπ/4)·Rx(π/2)
+  SX: { axis: new Vector3(1, 0, 0), angle: Math.PI / 2, prefix: '1/2', cells: ['1+i', '1−i', '1−i', '1+i'] },
 };
+
+// angles the rotation gates offer, with their half-angles written out for the matrix
+const HALF: Record<string, string> = { 'π/8': 'π/16', 'π/4': 'π/8', 'π/2': 'π/4', π: 'π/2' };
+export const ROT_ANGLES: Record<string, number> = { 'π/8': Math.PI / 8, 'π/4': Math.PI / 4, 'π/2': Math.PI / 2, π: Math.PI };
+
+/** Rx, Ry or Rz by one of ROT_ANGLES, with its matrix in symbols: Rn(α) = exp(−iα n·σ/2). */
+export function rotGate(name: 'Rx' | 'Ry' | 'Rz', angle: string): Gate {
+  const h = HALF[angle];
+  const axis = { Rx: new Vector3(1, 0, 0), Ry: new Vector3(0, 1, 0), Rz: new Vector3(0, 0, 1) }[name];
+  const cells: Gate['cells'] = name === 'Rx' ? [`cos(${h})`, `−i·sin(${h})`, `−i·sin(${h})`, `cos(${h})`]
+    : name === 'Ry' ? [`cos(${h})`, `−sin(${h})`, `sin(${h})`, `cos(${h})`]
+    : [`e^(−i${h})`, '0', '0', `e^(i${h})`];
+  return { axis, angle: ROT_ANGLES[angle], prefix: '', cells };
+}
 
 /** Rn(α) = exp(−iα n·σ/2) for the axis n(θn, φn); entries rounded for display. */
 export function customGate(axisTheta: number, axisPhi: number, alpha: number): Gate {
@@ -102,20 +118,45 @@ export function apply(gate: Gate, v: Vector3): Vector3 {
   return v.clone().applyQuaternion(rotation(gate));
 }
 
-// Probability of the first outcome (|0⟩, |+⟩ or |+i⟩) when measuring along a basis
-export function probFirst(v: Vector3, basis: Basis): number {
-  return (1 + v.dot(BASIS_AXIS[basis])) / 2;
+// A measurement asks "+n or −n?" along a unit axis n; Z, X and Y are three such axes.
+const axisOf = (b: Basis | Vector3) => (b instanceof Vector3 ? b.clone().normalize() : BASIS_AXIS[b]);
+
+/** Probability of the first outcome (|0⟩, |+⟩, |i⟩ or +n): (1 + r·n)/2, the Born rule. */
+export function probFirst(v: Vector3, basis: Basis | Vector3): number {
+  return (1 + v.dot(axisOf(basis))) / 2;
 }
 
-export function measure(v: Vector3, basis: Basis, rand = Math.random): { first: boolean; after: Vector3 } {
+/** One shot: the answer is random with the Born odds, and the state becomes that pole. */
+export function measure(v: Vector3, basis: Basis | Vector3, rand = Math.random): { first: boolean; after: Vector3 } {
   const first = rand() < probFirst(v, basis);
-  const axis = BASIS_AXIS[basis].clone();
+  const axis = axisOf(basis).clone();
   return { first, after: first ? axis : axis.negate() };
 }
 
-export function sample(v: Vector3, basis: Basis, shots: number, rand = Math.random): number {
+/** Fresh copies of the state, each measured once: how many gave the first outcome. */
+export function sample(v: Vector3, basis: Basis | Vector3, shots: number, rand = Math.random): number {
   const p = probFirst(v, basis);
   let n = 0;
   for (let i = 0; i < shots; i++) if (rand() < p) n++;
   return n;
+}
+
+/** State tomography: measure copies in X, Y and Z and rebuild the arrow, r_k = 2·P(+k) − 1. */
+export function tomography(v: Vector3, shots: number, rand = Math.random) {
+  const est = (b: Basis) => (2 * sample(v, b, shots, rand)) / shots - 1;
+  const r = new Vector3(est('X'), est('Y'), est('Z'));
+  // one standard deviation of each estimate: 2·√(p(1−p)/N)
+  const sd = (b: Basis) => { const p = probFirst(v, b); return 2 * Math.sqrt((p * (1 - p)) / shots); };
+  return { r, sd: new Vector3(sd('X'), sd('Y'), sd('Z')) };
+}
+
+/** A pure state drawn evenly over the whole sphere (not evenly in θ, which would crowd the poles). */
+export function randomState(rand = Math.random): Vector3 {
+  const z = 2 * rand() - 1, phi = 2 * Math.PI * rand(), s = Math.sqrt(1 - z * z);
+  return new Vector3(s * Math.cos(phi), s * Math.sin(phi), z);
+}
+
+/** ρ = ½ (I + x σx + y σy + z σz), row by row as [re, im]. */
+export function densityMatrix(v: Vector3): Array<[number, number]> {
+  return [[(1 + v.z) / 2, 0], [v.x / 2, -v.y / 2], [v.x / 2, v.y / 2], [(1 - v.z) / 2, 0]];
 }

@@ -47,6 +47,14 @@ export class BlochScene {
   private phiArc = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: C.z }));
   private thetaLabel: CSS2DObject;
   private phiLabel: CSS2DObject;
+  // the arrow rebuilt from measurements (tomography), a task's goal, and a chosen measurement axis
+  private ghostLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: C.z, dashSize: 0.05, gapSize: 0.03, depthTest: false }));
+  private ghostDot = new THREE.Mesh(new THREE.SphereGeometry(0.04, 16, 12), new THREE.MeshBasicMaterial({ color: C.z, depthTest: false }));
+  private ghostLabel: CSS2DObject;
+  private target = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.016, 8, 32), new THREE.MeshBasicMaterial({ color: C.y, depthTest: false }));
+  private targetLabel: CSS2DObject;
+  private axisLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: C.y, dashSize: 0.05, gapSize: 0.04 }));
+  private axisLabel: CSS2DObject;
 
   constructor(host: HTMLElement, opts: { guides?: boolean; zoom?: boolean } = {}) {
     this.host = host;
@@ -80,9 +88,17 @@ export class BlochScene {
     this.thetaLabel = this.label('θ', B(0, 0, 0), hex(C.x), 'guide');
     this.phiLabel = this.label('φ', B(0, 0, 0), hex(C.z), 'guide');
     this.previewDot.renderOrder = 2;
-    this.scene.add(this.historyLine, this.turnLine, this.previewLine, this.previewDot, this.latitude, this.meridian, this.thetaArc, this.phiArc);
+    this.ghostLabel = this.label('', B(0, 0, 0), hex(C.z), 'turn');
+    this.targetLabel = this.label('', B(0, 0, 0), hex(C.y), 'turn');
+    this.axisLabel = this.label('n', B(0, 0, 0), hex(C.y), 'guide');
+    for (const o of [this.ghostLine, this.ghostDot, this.target]) o.renderOrder = 3;
+    this.scene.add(this.historyLine, this.turnLine, this.previewLine, this.previewDot, this.latitude, this.meridian, this.thetaArc, this.phiArc,
+      this.ghostLine, this.ghostDot, this.target, this.axisLine);
     this.showTurn(null);
     this.preview(null, null);
+    this.setGhost(null);
+    this.setTarget(null);
+    this.setMeasureAxis(null);
     for (const o of [this.latitude, this.meridian, this.thetaArc, this.phiArc, this.thetaLabel, this.phiLabel]) o.visible = false;
 
     this.observer.observe(host);
@@ -263,6 +279,35 @@ export class BlochScene {
       this.setLine(this.previewLine, [toThree(n.clone().multiplyScalar(-1.3)), toThree(n.clone().multiplyScalar(1.3))]);
     }
     if (target) this.previewDot.position.copy(toThree(target));
+  }
+
+  /** A second, dashed arrow: the state as rebuilt from measurements. */
+  setGhost(v: THREE.Vector3 | null, text = '') {
+    this.ghostLine.visible = this.ghostDot.visible = this.ghostLabel.visible = !!v;
+    if (!v) return;
+    this.setLine(this.ghostLine, [new THREE.Vector3(), toThree(v)]);
+    this.ghostDot.position.copy(toThree(v));
+    this.ghostLabel.position.copy(toThree(v.clone().multiplyScalar(1.18)));
+    (this.ghostLabel.element as HTMLElement).textContent = text;
+  }
+
+  /** A ring where a task wants the arrow to end. */
+  setTarget(v: THREE.Vector3 | null, text = '') {
+    this.target.visible = this.targetLabel.visible = !!v;
+    if (!v) return;
+    this.target.position.copy(toThree(v));
+    this.target.lookAt(new THREE.Vector3()); // the ring faces the centre, so it reads as a circle on the surface
+    this.targetLabel.position.copy(toThree(v.clone().multiplyScalar(1.22)));
+    (this.targetLabel.element as HTMLElement).textContent = text;
+  }
+
+  /** The axis a custom measurement asks about ("+n or −n?"). */
+  setMeasureAxis(n: THREE.Vector3 | null) {
+    this.axisLine.visible = this.axisLabel.visible = !!n;
+    if (!n) return;
+    const u = n.clone().normalize();
+    this.setLine(this.axisLine, [toThree(u.clone().multiplyScalar(-1.25)), toThree(u.clone().multiplyScalar(1.25))]);
+    this.axisLabel.position.copy(toThree(u.clone().multiplyScalar(1.38)));
   }
 
   setTrail(points: THREE.Vector3[]) {
