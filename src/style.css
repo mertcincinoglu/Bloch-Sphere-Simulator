@@ -2,6 +2,16 @@
    (screens 2117bcb9, 8f6c20b9, 2bb0ce4c): nothing under 13 px, sentences in EB Garamond, no texture behind text. */
 @import 'tailwindcss';
 
+/* Kets, Greek letters and arrows: Space Mono, EB Garamond and Space Grotesk lack ⟨ ⟩ ψ θ φ π → ≈ √ …,
+   so browsers fell back to whatever the device had. A subset of Noto Sans Math (OFL-1.1, 25 glyphs)
+   fills exactly those characters; every font stack lists it right after its own face. */
+@font-face {
+  font-family: 'Bloch Math';
+  src: url('./fonts/bloch-math.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+0302, U+03B1-03B3, U+03B8, U+03C0-03C1, U+03C3, U+03C6-03C8, U+03D5, U+2102, U+2190, U+2192, U+2194, U+2208, U+220B, U+221A, U+2248, U+2264-2265, U+27E8-27E9, U+27FA;
+}
+
 @theme {
   --color-surface-container-highest: #ebe0da;
   --color-on-primary-fixed-variant: #802a00;
@@ -65,17 +75,17 @@
   --spacing-margin-mobile: 1.25rem;
   --spacing-gutter-mobile: 1rem;
 
-  --font-headline-sm: 'Space Grotesk Variable', sans-serif;
-  --font-headline-md: 'Space Grotesk Variable', sans-serif;
-  --font-headline-lg: 'Space Grotesk Variable', sans-serif;
-  --font-label-sm: 'Space Mono', monospace;
-  --font-label-md: 'Space Mono', monospace;
-  --font-label-lg: 'Space Mono', monospace;
-  --font-body-sm: 'EB Garamond Variable', serif;
-  --font-body-md: 'EB Garamond Variable', serif;
-  --font-body-lg: 'EB Garamond Variable', serif;
-  --font-mono: 'Space Mono', monospace;
-  --font-serif: 'EB Garamond Variable', serif;
+  --font-headline-sm: 'Space Grotesk Variable', 'Bloch Math', sans-serif;
+  --font-headline-md: 'Space Grotesk Variable', 'Bloch Math', sans-serif;
+  --font-headline-lg: 'Space Grotesk Variable', 'Bloch Math', sans-serif;
+  --font-label-sm: 'Space Mono', 'Bloch Math', monospace;
+  --font-label-md: 'Space Mono', 'Bloch Math', monospace;
+  --font-label-lg: 'Space Mono', 'Bloch Math', monospace;
+  --font-body-sm: 'EB Garamond Variable', 'Bloch Math', serif;
+  --font-body-md: 'EB Garamond Variable', 'Bloch Math', serif;
+  --font-body-lg: 'EB Garamond Variable', 'Bloch Math', serif;
+  --font-mono: 'Space Mono', 'Bloch Math', monospace;
+  --font-serif: 'EB Garamond Variable', 'Bloch Math', serif;
 
   --text-headline-sm: 18px;
   --text-headline-sm--line-height: 26px;
@@ -99,7 +109,7 @@
   --text-label-md--line-height: 20px;
   --text-label-md--letter-spacing: 0.04em;
   --text-label-md--font-weight: 400;
-  --font-display-lg: 'Space Grotesk Variable', sans-serif;
+  --font-display-lg: 'Space Grotesk Variable', 'Bloch Math', sans-serif;
   --text-display-lg: 48px;
   --text-display-lg--line-height: 56px;
   --text-display-lg--letter-spacing: -0.02em;
@@ -173,10 +183,10 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 :focus-visible { outline: 2px solid #006972; outline-offset: 2px; }
 
 /* labels drawn next to the 3D sphere */
-.axis-label { font: 700 12px/1 'Space Mono', monospace; white-space: nowrap; pointer-events: none; }
+.axis-label { font: 700 12px/1 'Space Mono', 'Bloch Math', monospace; white-space: nowrap; pointer-events: none; }
 .axis-label.neg { font-weight: 400; font-size: 12px; color: #57423a; }
 .axis-label.turn { font-size: 12px; background: #fff8f5; border: 1px solid #9f3c0d; padding: 2px 5px; }
-.axis-label.guide { font: italic 700 15px/1 'EB Garamond Variable', serif; }
+.axis-label.guide { font: italic 700 15px/1 'EB Garamond Variable', 'Bloch Math', serif; }
 #sphere .labels, .mini-sphere .labels { position: absolute !important; inset: 0; }
 #sphere canvas, .mini-sphere canvas { position: absolute; inset: 0; }
 
@@ -210,5 +220,5 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 #history .chip::after { content: " ]"; }
 
 /* slider scale: a mark sits under the thumb centre for its value (thumb 18 px wide) */
-.scale { position: relative; height: 2.6em; font: 13px/1.25 'Space Mono', monospace; color: var(--color-on-surface-variant); }
+.scale { position: relative; height: 2.6em; font: 13px/1.25 'Space Mono', 'Bloch Math', monospace; color: var(--color-on-surface-variant); }
 .scale > span { position: absolute; top: 0; white-space: nowrap; text-align: center; left: calc(9px + var(--p) * (100% - 18px)); transform: translateX(-50%); }
