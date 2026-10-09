@@ -96,14 +96,14 @@
             </div>
             <!-- history strip: a chip returns to its step -->
             <div class="px-3 sm:px-5 py-1.5 sm:py-2.5 clean-paper-low flex items-center justify-between gap-3 text-[13px] font-label-sm">
-              <div class="max-sm:hidden flex items-center gap-1.5 min-w-0 overflow-x-auto py-0.5" id="history-scroll">
-                <span class="text-on-surface-variant font-bold mr-1 whitespace-nowrap" data-i18n="fig.history">History:</span>
-                <ol id="history" class="flex items-center gap-1.5" aria-label="History" data-i18n-aria="fig.historyAria"></ol>
+              <div class="max-sm:hidden flex items-start gap-2 min-w-0 flex-1">
+                <span class="text-on-surface-variant font-bold whitespace-nowrap pt-1" data-i18n="fig.history">History:</span>
+                <ol id="history" class="flex flex-wrap items-center gap-1.5 min-w-0" aria-label="History" data-i18n-aria="fig.historyAria"></ol>
               </div>
               <div class="flex items-center gap-1.5 shrink-0 max-sm:w-full max-sm:justify-end">
-                <button class="px-2 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high flex items-center gap-1 active:translate-y-0.5" data-action="undo"><i class="icon size-[15px]" data-icon="undo"></i><span data-i18n="hist.undo">Undo</span></button>
-                <button class="px-2 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high flex items-center gap-1 active:translate-y-0.5" data-action="reset-zero"><i class="icon size-[15px]" data-icon="restart_alt"></i><span data-i18n="hist.reset">Reset</span></button>
-                <button class="px-2 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high flex items-center gap-1 active:translate-y-0.5" data-action="clear-history"><i class="icon size-[15px]" data-icon="delete_sweep"></i><span data-i18n="hist.clear">Clear</span></button>
+                <button class="px-2 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high flex items-center gap-1 active:translate-y-0.5" data-action="undo" title="Undo" data-i18n-title="hist.undo"><i class="icon size-[15px]" data-icon="undo"></i><span class="sm:sr-only" data-i18n="hist.undo">Undo</span></button>
+                <button class="px-2 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high flex items-center gap-1 active:translate-y-0.5" data-action="reset-zero" title="Reset" data-i18n-title="hist.reset"><i class="icon size-[15px]" data-icon="restart_alt"></i><span class="sm:sr-only" data-i18n="hist.reset">Reset</span></button>
+                <button class="px-2 py-1 min-h-6 border border-outline clean-paper hover:bg-surface-container-high flex items-center gap-1 active:translate-y-0.5" data-action="clear-history" title="Clear" data-i18n-title="hist.clear"><i class="icon size-[15px]" data-icon="delete_sweep"></i><span class="sm:sr-only" data-i18n="hist.clear">Clear</span></button>
               </div>
             </div>
             <!-- formula and the relative-phase dial -->
@@ -235,15 +235,16 @@
               <div class="space-y-4">
                 <div>
                   <div class="flex justify-between items-center gap-2 mb-1">
-                    <label for="slider-theta" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-primary">θ</span> <span data-i18n="state.theta">Polar angle (from +Z)</span></label>
+                    <label for="slider-theta" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-primary">θ</span> <span data-i18n="state.theta">Polar angle, also called theta (from +Z)</span></label>
                     <span class="font-label-md text-[15px] font-bold text-on-surface whitespace-nowrap" id="readout-theta">0.50 π (90.0°)</span>
                   </div>
                   <input class="w-full cursor-ew-resize" id="slider-theta" max="180" min="0" step="1" type="range" value="90" />
                   <div class="scale mt-1" aria-hidden="true"><span style="--p: 0">0<br />|0⟩</span><span style="--p: 0.5">π/2<br /><span data-i18n="state.eq">equator</span></span><span style="--p: 1">π<br />|1⟩</span></div>
+                  <p class="font-label-sm text-[13px] text-on-surface mt-1" aria-live="polite"><span class="text-on-surface-variant" data-i18n="state.probZ">In a Z measurement:</span> <b id="readout-p">P(|0⟩) = cos²(θ/2) = 50.0% · P(|1⟩) = 50.0%</b></p>
                 </div>
                 <div class="pt-2 border-t border-outline-variant/60">
                   <div class="flex justify-between items-center gap-2 mb-1">
-                    <label for="slider-phi" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-secondary">φ</span> <span data-i18n="state.phi">Azimuth angle (from +X toward +Y)</span></label>
+                    <label for="slider-phi" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-secondary">φ</span> <span data-i18n="state.phi">Azimuth angle, also called phi (from +X toward +Y)</span></label>
                     <span class="font-label-md text-[15px] font-bold text-on-surface whitespace-nowrap" id="readout-phi">0.00 π (0.0°)</span>
                   </div>
                   <input class="w-full cursor-ew-resize" id="slider-phi" max="360" min="0" step="1" type="range" value="0" />
@@ -270,6 +271,30 @@
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,1.5" data-label="|−i⟩"><span class="font-bold text-tertiary block text-sm">|−i⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.my">−Y axis</span></button>
               </div>
             </div>
+                      <!-- exact values: angles, or the amplitudes α and β -->
+            <details class="clean-paper border border-outline-variant p-3 group rounded-sm" id="exact">
+              <summary class="font-label-sm text-[13px] font-bold text-on-surface flex justify-between items-center list-none cursor-pointer min-h-6">
+                <span data-i18n="exact.head">Type exact values</span>
+                <i class="icon size-[18px] group-open:rotate-180 transition-transform" data-icon="keyboard_arrow_down"></i>
+              </summary>
+              <form class="pt-3 mt-2 border-t border-outline-variant/60 space-y-2" id="exact-angles">
+                <p class="font-body-md text-[15px] text-on-surface-variant leading-snug" data-i18n="exact.anglesHint">Angles in units of π (1/3 means π/3) or in degrees (60°).</p>
+                <div class="grid grid-cols-[1fr_1fr_auto] gap-2 items-end font-label-sm text-[13px]">
+                  <div class="flex flex-col"><label for="ex-theta" class="text-on-surface-variant mb-1">θ</label><input id="ex-theta" class="w-full clean-paper border border-outline px-1.5 py-1 text-center font-bold" type="text" value="1/3" /></div>
+                  <div class="flex flex-col"><label for="ex-phi" class="text-on-surface-variant mb-1">φ</label><input id="ex-phi" class="w-full clean-paper border border-outline px-1.5 py-1 text-center font-bold" type="text" value="1/4" /></div>
+                  <button type="submit" class="bg-primary hover:bg-primary-container text-on-primary font-bold px-3 py-1 min-h-7 hard-shadow active:translate-x-0.5 active:translate-y-0.5" data-i18n="custom.apply">Apply</button>
+                </div>
+              </form>
+              <form class="pt-3 mt-3 border-t border-outline-variant/60 space-y-2" id="exact-amps">
+                <p class="font-body-md text-[15px] text-on-surface-variant leading-snug" data-i18n-html="exact.ampsHint">Or the amplitudes of |ψ⟩ = α|0⟩ + β|1⟩. Complex numbers work: <b>1/√2</b>, <b>0.6+0.8i</b>, <b>i/2</b>. They are normalised for you.</p>
+                <div class="grid grid-cols-[1fr_1fr_auto] gap-2 items-end font-label-sm text-[13px]">
+                  <div class="flex flex-col"><label for="ex-alpha" class="text-on-surface-variant mb-1">α</label><input id="ex-alpha" class="w-full clean-paper border border-outline px-1.5 py-1 text-center font-bold" type="text" value="1/√2" /></div>
+                  <div class="flex flex-col"><label for="ex-beta" class="text-on-surface-variant mb-1">β</label><input id="ex-beta" class="w-full clean-paper border border-outline px-1.5 py-1 text-center font-bold" type="text" value="i/√2" /></div>
+                  <button type="submit" class="bg-primary hover:bg-primary-container text-on-primary font-bold px-3 py-1 min-h-7 hard-shadow active:translate-x-0.5 active:translate-y-0.5" data-i18n="custom.apply">Apply</button>
+                </div>
+              </form>
+              <p class="font-body-md text-[14px] text-error pt-2" id="ex-error" aria-live="polite"></p>
+            </details>
           </div>
 
           <!-- MEASURE -->

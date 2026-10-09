@@ -163,7 +163,7 @@ test('keyboard: the sphere takes focus and arrow keys turn the view', async ({ p
   const sphere = page.locator('#sphere');
   await sphere.focus();
   await expect(sphere).toBeFocused();
-  const label = page.locator('#sphere .axis-label', { hasText: '+X (|+⟩)' });
+  const label = page.locator('#sphere .axis-label', { hasText: /^\+X$/ });
   const before = await label.evaluate((el) => (el as HTMLElement).style.transform);
   for (const key of ['ArrowLeft', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']) await page.keyboard.press(key);
   await expect.poll(() => label.evaluate((el) => (el as HTMLElement).style.transform)).not.toBe(before);
@@ -260,7 +260,7 @@ test('slider marks sit under the thumb: φ = 3π/2 lands exactly on −Y', async
 });
 
 test('zoom: buttons and the wheel change the zoom; reset view brings it back', async ({ page }) => {
-  const label = page.locator('#sphere .axis-label', { hasText: '+X (|+⟩)' });
+  const label = page.locator('#sphere .axis-label', { hasText: /^\+X$/ });
   const where = () => label.evaluate((el) => (el as HTMLElement).style.transform);
   const before = await where();
   await page.locator('[data-action="zoom-in"]').click();
@@ -301,4 +301,39 @@ test('at θ = 0 the θ label reads "θ = 0" and moves beside the arrow', async (
   await expect(label).toHaveText('θ = 0');
   await page.locator('#slider-theta').fill('90');
   await expect(label).toHaveText('θ');
+});
+
+test('typed values: angles in π or degrees, and amplitudes α, β', async ({ page }) => {
+  await tab(page, 'state');
+  await page.locator('#exact summary').click();
+  await page.locator('#ex-theta').fill('90°');
+  await page.locator('#ex-phi').fill('1/2');
+  await page.locator('#exact-angles [type="submit"]').click();
+  await expectCoords(page, '0.000', '+1.000', '0.000');
+  await page.locator('#ex-alpha').fill('3');
+  await page.locator('#ex-beta').fill('4i'); // ∝ 0.6|0⟩ + 0.8i|1⟩
+  await page.locator('#exact-amps [type="submit"]').click();
+  await expectCoords(page, '0.000', '+0.960', '−0.280');
+  await expect(page.locator('#narrative-text')).toContainText('divided by √25');
+  await page.locator('#ex-beta').fill('banana');
+  await page.locator('#exact-amps [type="submit"]').click();
+  await expect(page.locator('#ex-error')).toHaveText(EN['exact.errAmps']);
+});
+
+test('the Z probability line follows θ', async ({ page }) => {
+  await tab(page, 'state');
+  await page.locator('#slider-theta').fill('60');
+  await expect(page.locator('#readout-p')).toHaveText('P(|0⟩) = cos²(θ/2) = 75.0% · P(|1⟩) = 25.0%');
+});
+
+test('history keeps the newest 6 steps in view and folds the rest', async ({ page }, info) => {
+  test.skip(info.project.name === 'phone', 'the strip is hidden on phones');
+  await page.locator('h1').click();
+  for (let k = 0; k < 14; k++) {
+    await page.keyboard.press('z');
+    await expect(page.locator('#history button').last()).toHaveAttribute('aria-current', 'step');
+    await page.waitForTimeout(750); // a key pressed mid-turn is ignored
+  }
+  await expect(page.locator('#history button')).toHaveCount(6);
+  await expect(page.locator('#history li').first()).toHaveText('… +9');
 });

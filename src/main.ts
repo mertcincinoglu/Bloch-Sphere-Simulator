@@ -7,6 +7,7 @@ import { BlochScene } from './scene';
 import { onLang, t } from './i18n';
 import type { Key } from './strings';
 import { parsePi, piText, readShared, shareUrl } from './state-url';
+import { blochFromAmplitudes, parseComplex } from './amplitudes';
 import { SOURCES } from './content/sources';
 
 // reference numbers match the Notation & Sources page
@@ -42,6 +43,8 @@ function render() {
     if (!atPole && phiDeg !== phiSlider % 360) $('#slider-phi').val(phiDeg);
   }
   $('#slider-radius').val(r);
+  const p0 = (1 + v.z) / 2;
+  $('#readout-p').text(`P(|0⟩) = ${r >= 0.995 ? 'cos²(θ/2)' : '(1 + r·cos θ)/2'} = ${pct(p0)} · P(|1⟩) = ${pct(1 - p0)}`);
   $('#readout-theta').text(centre ? '—' : `${thPi} π (${deg(theta)})`);
   $('#readout-phi').text(centre ? '—' : `${(phiShown / Math.PI).toFixed(2)} π (${deg(phiShown)})`);
   $('#readout-r').text(`${r.toFixed(2)} (${t(r >= 0.995 ? 'r.pure' : centre ? 'r.maxMixed' : 'r.mixed')})`);
@@ -115,8 +118,11 @@ function record(label: string, measureStep = false) {
 
 function paintHistory() {
   const ol = $('#history').empty();
+  const first = Math.max(0, Math.min(cursor, steps.length - 6)); // one line: the newest 6 steps
+  if (first) ol.append($('<li class="text-on-surface-variant px-1">').text(`… +${first}`));
   steps.forEach((s, i) => {
-    if (i) ol.append($('<li aria-hidden="true" class="text-outline-variant">').text('→'));
+    if (i < first) return;
+    if (i > first || first) ol.append($('<li aria-hidden="true" class="text-outline-variant">').text('→'));
     const chip = $('<button type="button" class="chip px-2 py-0.5 min-h-6 whitespace-nowrap">').text(s.label)
       .attr({ 'aria-current': i === cursor ? 'step' : null, title: t('history.goto', { n: i + 1 }) })
       .addClass(i === cursor ? 'border-2 border-primary bg-white text-primary font-bold'
@@ -125,8 +131,6 @@ function paintHistory() {
       .on('click', () => goTo(i));
     ol.append($('<li>').append(chip));
   });
-  const strip = $('#history-scroll')[0];
-  strip.scrollLeft = strip.scrollWidth; // the newest step stays in view
 }
 
 function goTo(i: number) {
@@ -217,6 +221,7 @@ $('#custom-rotation').on('submit', (e) => {
 
 function preset(theta: number, phi: number, label: string, keepLength = true) {
   if (busy) return;
+  scene.preview(null, null);
   newState();
   const r = keepLength ? v.length() : 1;
   animate(fromAngles(theta, phi).multiplyScalar(r), undefined, 600, () => {
@@ -226,6 +231,12 @@ function preset(theta: number, phi: number, label: string, keepLength = true) {
     record(label);
   });
 }
+
+$('[data-preset]').on('mouseenter focus', function () {
+  if (busy) return;
+  const [th, ph] = String($(this).data('preset')).split(',').map(Number);
+  scene.preview(null, fromAngles(th * Math.PI, ph * Math.PI).multiplyScalar(v.length() > 1e-6 ? v.length() : 1));
+}).on('mouseleave blur', () => scene.preview(null, null));
 
 $('[data-preset]').on('click', function () {
   const [th, ph] = String($(this).data('preset')).split(',').map(Number);
@@ -247,6 +258,34 @@ $('[data-action="clear-history"]').on('click', clearHistory);
 $('[data-action="reset-zero"]').on('click', reset);
 $('[data-action="undo"]').on('click', undo);
 $('[data-action="clear-trail"]').on('click', clearTrail);
+
+// typed values: exact angles, or the amplitudes α and β
+function typed(to: Vector3, chip: string, story: Key, params: Record<string, string | number>) {
+  if (busy) return;
+  $('#ex-error').text('');
+  newState();
+  animate(to, undefined, 600, () => {
+    explain(story, 'action.typed', params);
+    record(chip);
+  });
+}
+$('#exact-angles').on('submit', (e) => {
+  e.preventDefault();
+  const th = parsePi(String($('#ex-theta').val())), ph = parsePi(String($('#ex-phi').val()));
+  if (th === null || ph === null || th < -1e-9 || th > Math.PI + 1e-9) { $('#ex-error').text(t('exact.errAngles')); return; }
+  const r = v.length() > 1e-6 ? v.length() : 1;
+  const phi = ((ph % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+  typed(fromAngles(Math.min(Math.PI, Math.max(0, th)), phi).multiplyScalar(r), 'θ,φ', 'story.typedAngles', { theta: piText(th), phi: piText(phi) });
+});
+$('#exact-amps').on('submit', (e) => {
+  e.preventDefault();
+  const a = String($('#ex-alpha').val()), b = String($('#ex-beta').val());
+  const ca = parseComplex(a), cb = parseComplex(b);
+  const got = ca && cb ? blochFromAmplitudes(ca, cb) : null;
+  if (!got) { $('#ex-error').text(t('exact.errAmps')); return; }
+  const norm = Math.abs(got.norm - 1) > 1e-6 ? t('exact.normalised', { n: `√${got.norm.toFixed(3).replace(/\.?0+$/, '')}` }) : '';
+  typed(got.v, 'α,β', 'story.typedAmps', { a, b, norm });
+});
 
 $('#slider-theta, #slider-phi').on('input', () => {
   const r = Number($('#slider-radius').val());

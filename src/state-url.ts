@@ -5,7 +5,9 @@ import { fromAngles } from './bloch';
 /** A number in units of π: "0.5π", "0.5pi", "π/4", "1/4", "-0.25" → radians; null if unreadable. */
 export function parsePi(text: string): number | null {
   const s = text.replace(/\s+/g, '').replace(/pi/gi, 'π').replace(/[−–]/g, '-').replace(',', '.'); // Turkish keyboards write 0,5
-  const m = s.match(/^(-?)(\d*\.?\d+)?(π)?(?:\/(\d*\.?\d+))?(π)?$/);
+  const deg = s.match(/^(-?\d*\.?\d+)(°|deg)$/i); // "60°" is degrees
+  if (deg) return (parseFloat(deg[1]) * Math.PI) / 180;
+  const m =s.match(/^(-?)(\d*\.?\d+)?(π)?(?:\/(\d*\.?\d+))?(π)?$/);
   if (!m || (!m[2] && !m[3] && !m[5])) return null;
   const num = m[2] ? parseFloat(m[2]) : 1;
   const den = m[4] ? parseFloat(m[4]) : 1;

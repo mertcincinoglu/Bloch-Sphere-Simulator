@@ -29,7 +29,6 @@ export class BlochScene {
   private tip = new THREE.Vector3(0, 0, 1);
   private arrowLine = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1, 12), this.arrowMat);
   private arrowHead = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.14, 20), this.arrowMat);
-  private psi: CSS2DObject;
   private shadowA: THREE.Line;
   private shadowB: THREE.Line;
   private trail: THREE.Line;
@@ -74,7 +73,6 @@ export class BlochScene {
     host.addEventListener('keydown', (e) => this.key(e));
 
     this.build();
-    this.psi = this.label('|ψ⟩', B(0, 0, 0), hex(C.state));
     this.shadowA = this.dashedLine(C.shadow, 0.3);
     this.shadowB = this.dashedLine(C.shadow, 0.25);
     this.trail = this.dashedLine(C.trail, 1);
@@ -95,7 +93,6 @@ export class BlochScene {
       // depth cue: an arrow pointing into the far hemisphere is drawn fainter
       const away = this.tip.dot(this.camera.position) < -0.05;
       this.arrowMat.opacity = away ? 0.45 : 1;
-      (this.psi.element as HTMLElement).style.opacity = away ? '0.55' : '1';
       this.renderer.render(this.scene, this.camera);
       this.labels.render(this.scene, this.camera);
     });
@@ -159,12 +156,12 @@ export class BlochScene {
     this.line(this.circle(1, (a) => toThree(B(Math.cos(a), 0, Math.sin(a)))), C.ring, true);
     this.line(this.circle(1, (a) => toThree(B(0, Math.cos(a), Math.sin(a)))), C.ring, true);
 
-    this.axis(B(1, 0, 0), 1.25, C.x, '+X (|+⟩)');
-    this.axis(B(0, 1, 0), 1.25, C.y, '+Y (|i⟩)');
-    this.axis(B(0, 0, 1), 1.28, C.z, '+Z (|0⟩)');
-    this.negAxis(B(-1, 0, 0), 1.1, '−X (|−⟩)');
-    this.negAxis(B(0, -1, 0), 1.1, '−Y (|−i⟩)');
-    this.negAxis(B(0, 0, -1), 1.15, '−Z (|1⟩)');
+    this.axis(B(1, 0, 0), 1.25, C.x, '+X');
+    this.axis(B(0, 1, 0), 1.25, C.y, '+Y');
+    this.axis(B(0, 0, 1), 1.28, C.z, '+Z');
+    this.negAxis(B(-1, 0, 0), 1.1, '−X');
+    this.negAxis(B(0, -1, 0), 1.1, '−Y');
+    this.negAxis(B(0, 0, -1), 1.15, '−Z');
 
     this.scene.add(this.arrowLine, this.arrowHead);
     this.scene.add(new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), new THREE.MeshBasicMaterial({ color: C.pivot })));
@@ -175,7 +172,7 @@ export class BlochScene {
     this.tip.copy(t);
     const len = t.length();
     const visible = len > 0.02;
-    this.arrowLine.visible = this.arrowHead.visible = this.psi.visible = visible;
+    this.arrowLine.visible = this.arrowHead.visible = visible;
     if (visible) {
       const dir = t.clone().normalize();
       const shaft = Math.max(len - 0.12, 0.001);
@@ -184,9 +181,6 @@ export class BlochScene {
       this.arrowLine.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
       this.arrowHead.position.copy(dir.clone().multiplyScalar(len - 0.07));
       this.arrowHead.quaternion.copy(this.arrowLine.quaternion);
-      // |ψ⟩ sits beside the tip, off the axis line, so it never covers an axis label
-      const side = new THREE.Vector3().crossVectors(dir, this.camera.position).normalize().multiplyScalar(0.12);
-      this.psi.position.copy(dir.clone().multiplyScalar(len * 0.82).add(side));
     }
     // shadow on the equator, then up to the tip
     const foot = toThree(B(v.x, v.y, 0));

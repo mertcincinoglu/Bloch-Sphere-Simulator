@@ -215,9 +215,6 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .mini-sphere .axis-label { font-size: 11px; }
 .mini-sphere .axis-label.neg { font-size: 11px; }
 
-/* history chips read as a printed sequence: [ H ] (Stitch eebad484) */
-#history .chip::before { content: "[ "; }
-#history .chip::after { content: " ]"; }
 
 /* slider scale: a mark sits under the thumb centre for its value (thumb 18 px wide) */
 .scale { position: relative; height: 2.6em; font: 13px/1.25 'Space Mono', 'Bloch Math', monospace; color: var(--color-on-surface-variant); }
