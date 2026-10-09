@@ -25,7 +25,8 @@ test.afterEach(async ({ page }) => expectNoOverflow(page));
 test('opens on |+⟩ with matching readouts', async ({ page }) => {
   await expectCoords(page, '+1.000', '0.000', '0.000');
   await expect(page.locator('#readout-theta')).toHaveText('0.50 π (90.0°)');
-  await expect(page.locator('#prob-0-text')).toHaveText('50.0%');
+  await expect(page.locator('#bases [data-row="Z"] b')).toHaveText('50% / 50%');
+  await expect(page.locator('#bases [data-row="X"] b')).toHaveText('100% / 0%');
   await expect(page.locator('#narrative-text')).toHaveText(EN['story.initial']);
 });
 
@@ -148,4 +149,52 @@ test('keyboard: the sphere takes focus and arrow keys turn the view', async ({ p
   for (const key of ['ArrowLeft', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']) await page.keyboard.press(key);
   await expect.poll(() => label.evaluate((el) => (el as HTMLElement).style.transform)).not.toBe(before);
   await expect(sphere).toBeFocused();
+});
+
+test('history: each step gets a chip; undo and a chip go back; a new step drops the rest', async ({ page }, info) => {
+  const chips = page.locator('#history button');
+  await expect(chips).toHaveText(['|+⟩']);
+  await page.locator('[data-gate="H"]').click(); // |+⟩ → |0⟩
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+  await page.locator('[data-gate="X"]').click(); // → |1⟩
+  await expectCoords(page, '0.000', '0.000', '−1.000');
+  await expect(chips).toHaveText(['|+⟩', 'H', 'X']);
+  await expect(chips.nth(2)).toHaveAttribute('aria-current', 'step');
+  await page.locator('[data-action="undo"]').first().click();
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+  await expect(page.locator('#narrative-text')).toHaveText(EN['story.undo']);
+  if (info.project.name === 'phone') return; // the strip is hidden on phones; undo is there
+  await chips.nth(0).click();
+  await expectCoords(page, '+1.000', '0.000', '0.000');
+  await expect(chips.nth(0)).toHaveAttribute('aria-current', 'step');
+  await page.locator('[data-gate="Z"]').click(); // |+⟩ → |−⟩, replaces H and X
+  await expectCoords(page, '−1.000', '0.000', '0.000');
+  await expect(chips).toHaveText(['|+⟩', 'Z']);
+});
+
+test('keyboard shortcuts: gates, S†, measure, undo, reset; ignored while typing', async ({ page }) => {
+  await page.locator('h1').click();
+  await page.keyboard.press('s'); // |+⟩ → |i⟩
+  await expectCoords(page, '0.000', '+1.000', '0.000');
+  await page.keyboard.press('Shift+S'); // S† brings it back
+  await expectCoords(page, '+1.000', '0.000', '0.000');
+  await expect(page.locator('#matrix-label')).toHaveText(EN['label.Sdg']);
+  await page.keyboard.press('u');
+  await expectCoords(page, '0.000', '+1.000', '0.000');
+  await page.keyboard.press('r');
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+  await page.keyboard.press('m'); // |0⟩ in Z always gives |0⟩
+  await expect(page.locator('#count-result-0')).toHaveText('|0⟩: 1 (100.0%)');
+  await expect(page.locator('#history button').last()).toHaveText('M(Z)→|0⟩');
+  await page.locator('#cr-theta').fill('');
+  await page.locator('#cr-theta').press('x'); // typing, not a gate
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+});
+
+test('H on |0⟩ reads φ = 0, not 2π, and names |+⟩', async ({ page }) => {
+  await resetToZero(page);
+  await page.locator('[data-gate="H"]').click();
+  await expectCoords(page, '+1.000', '0.000', '0.000');
+  await expect(page.locator('#readout-phi')).toHaveText('0.00 π (0.0°)');
+  await expect(page.locator('#formula-numeric')).toHaveText('0.707 |0⟩ + 0.707 |1⟩ = |+⟩');
 });

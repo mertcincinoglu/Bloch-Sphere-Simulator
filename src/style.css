@@ -1,4 +1,5 @@
-/* Stitch design "Lab — tema 5" (1960s physics textbook), ported 1:1: same tokens, same rules. */
+/* Stitch design "Lab — tema 5" (1960s physics textbook), with the readability variants approved on 2026-10-09
+   (screens 2117bcb9, 8f6c20b9, 2bb0ce4c): nothing under 13 px, sentences in EB Garamond, no texture behind text. */
 @import 'tailwindcss';
 
 @theme {
@@ -80,23 +81,23 @@
   --text-headline-sm--line-height: 26px;
   --text-headline-sm--letter-spacing: 0.01em;
   --text-headline-sm--font-weight: 600;
-  --text-label-sm: 10px;
-  --text-label-sm--line-height: 14px;
-  --text-label-sm--letter-spacing: 0.08em;
+  --text-label-sm: 13px;
+  --text-label-sm--line-height: 18px;
+  --text-label-sm--letter-spacing: 0.04em;
   --text-label-sm--font-weight: 400;
   --text-body-lg: 21px;
   --text-body-lg--line-height: 32px;
-  --text-body-sm: 15px;
-  --text-body-sm--line-height: 22px;
+  --text-body-sm: 16px;
+  --text-body-sm--line-height: 24px;
   --text-body-md: 18px;
   --text-body-md--line-height: 28px;
   --text-label-lg: 14px;
   --text-label-lg--line-height: 20px;
   --text-label-lg--letter-spacing: 0.05em;
   --text-label-lg--font-weight: 700;
-  --text-label-md: 12px;
-  --text-label-md--line-height: 18px;
-  --text-label-md--letter-spacing: 0.06em;
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--letter-spacing: 0.04em;
   --text-label-md--font-weight: 400;
   --font-display-lg: 'Space Grotesk Variable', sans-serif;
   --text-display-lg: 48px;
@@ -112,21 +113,21 @@
   --text-headline-md--font-weight: 600;
 }
 
-/* Vintage paper background and halftone grid rules */
+/* paper: a faint grain only in the outer margin; panels are clean */
 body {
   background-color: #fdfaf3;
-  background-image:
-    radial-gradient(#dec0b6 0.65px, transparent 0.65px),
-    linear-gradient(to right, rgba(222, 192, 182, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(222, 192, 182, 0.15) 1px, transparent 1px);
-  background-size: 24px 24px, 12px 12px, 12px 12px;
+  background-image: radial-gradient(rgba(222, 192, 182, 0.45) 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
   color: #1f1b17;
 }
 
 .halftone-sphere-bg {
-  background-image: radial-gradient(circle, #57423a 1.2px, transparent 1.2px);
-  background-size: 8px 8px;
-  opacity: 0.08;
+  background-image:
+    radial-gradient(circle, #57423a 1px, transparent 1px),
+    linear-gradient(to right, rgba(222, 192, 182, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(222, 192, 182, 0.2) 1px, transparent 1px);
+  background-size: 16px 16px, 16px 16px, 16px 16px;
+  opacity: 0.12;
 }
 
 /* mechanical hard shadows */
@@ -172,28 +173,34 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 :focus-visible { outline: 2px solid #006972; outline-offset: 2px; }
 
 /* labels drawn next to the 3D sphere */
-.axis-label { font: 700 11px/1 'Space Mono', monospace; white-space: nowrap; pointer-events: none; }
-.axis-label.neg { font-weight: 400; font-size: 10px; color: #57423a; }
+.axis-label { font: 700 12px/1 'Space Mono', monospace; white-space: nowrap; pointer-events: none; }
+.axis-label.neg { font-weight: 400; font-size: 12px; color: #57423a; }
+.axis-label.turn { font-size: 12px; background: #fff8f5; border: 1px solid #9f3c0d; padding: 2px 5px; }
+.axis-label.guide { font: italic 700 15px/1 'EB Garamond Variable', serif; }
 #sphere .labels, .mini-sphere .labels { position: absolute !important; inset: 0; }
 #sphere canvas, .mini-sphere canvas { position: absolute; inset: 0; }
 
 /* Story and Sources pages (Stitch "Theory & Story", "Notation & Sources") */
 .halftone-paper-bg {
   background-color: #fff8f5;
-  background-image: radial-gradient(#1f1b17 0.75px, transparent 0.75px);
-  background-size: 16px 16px;
+  background-image: radial-gradient(rgba(26, 26, 26, 0.08) 0.65px, transparent 0.65px);
+  background-size: 18px 18px;
 }
+/* grid paper, only inside a figure frame */
 .technical-grid-bg {
-  background-color: #fff8f5;
+  background-color: #fdf2eb;
   background-image:
-    linear-gradient(to right, rgba(138, 114, 105, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(138, 114, 105, 0.12) 1px, transparent 1px);
-  background-size: 12px 12px;
+    linear-gradient(to right, rgba(138, 114, 105, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(138, 114, 105, 0.15) 1px, transparent 1px);
+  background-size: 14px 14px;
 }
+.clean-paper { background-color: #fff8f5; }
+.clean-paper-low { background-color: #fdf2eb; }
+.reading-measure { max-width: 65ch; }
 .shadow-hard-card { box-shadow: 2px 2px 0 0 #1f1b17; }
 .ink-shadow-sm { box-shadow: 2px 2px 0 0 #1f1b17; }
 .ink-shadow-md { box-shadow: 3px 3px 0 0 #1f1b17; }
 .shadow-hard-press { box-shadow: 3px 3px 0 0 #1f1b17; }
 .shadow-hard-press:active { transform: translate(2px, 2px); box-shadow: 0 0 0 0 #1f1b17; }
-.mini-sphere .axis-label { font-size: 10px; }
-.mini-sphere .axis-label.neg { font-size: 9px; }
+.mini-sphere .axis-label { font-size: 11px; }
+.mini-sphere .axis-label.neg { font-size: 11px; }

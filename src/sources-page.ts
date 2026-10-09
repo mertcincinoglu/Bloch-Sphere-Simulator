@@ -23,19 +23,19 @@ function render() {
       list.append($(`<div class="py-3 flex gap-4 items-start scroll-mt-28 target:bg-primary-fixed/60" id="src-${s.id}">`).append(
         $('<span class="font-label-md text-label-md text-primary font-bold shrink-0 w-8">').text(`[${i + 1}]`),
         $('<div class="space-y-1 min-w-0">').append(
-          $('<p class="font-body-md text-body-md text-on-surface break-words">').append(
+          $('<p class="font-body-md text-[18px] leading-[1.5] text-on-surface break-words">').append(
             $('<strong>').text(s.authors), ` (${year}). `,
             $('<a class="italic underline hover:text-primary transition-colors" target="_blank" rel="noopener">').attr('href', s.url).text(s.title),
             ` (${s.venue}).`,
           ),
-          $('<p class="font-body-sm text-body-sm text-on-surface-variant">').text(s.note[lang]),
+          $('<p class="font-body-md text-[16px] leading-[1.5] text-on-surface-variant">').text(s.note[lang]),
         ),
       ));
     });
-    refs.append($('<div class="bg-surface border border-outline-variant p-4 sm:p-6 space-y-2">').append(
+    refs.append($('<div class="clean-paper border border-on-surface shadow-hard-card p-4 sm:p-6 space-y-2">').append(
       $('<div class="flex items-center gap-2 border-b border-outline-variant pb-2">').append(
         $(`<span class="w-2 h-2 ${g.mark}" aria-hidden="true">`),
-        $('<h3 class="font-headline-sm text-label-lg uppercase tracking-wider text-on-surface">').text(`§ B.${gi + 1} ${t(g.key)}`),
+        $('<h3 class="font-headline-sm text-label-lg uppercase tracking-[0.04em] text-on-surface">').text(`§ B.${gi + 1} ${t(g.key)}`),
       ),
       list,
     ));

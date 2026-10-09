@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Vector3 } from 'three';
-import { GATES, apply, customGate, fromAngles, measure, probFirst, sample, toAngles } from './bloch';
+import { GATES, allBases, apply, customGate, fromAngles, measure, probFirst, sample, stateName, toAngles } from './bloch';
 
 const ZERO = new Vector3(0, 0, 1);
 const close = (a: Vector3, b: Vector3) => expect(a.distanceTo(b)).toBeLessThan(1e-9);
@@ -40,6 +40,7 @@ const U: Record<string, [C, C, C, C]> = {
   Z: [[1, 0], [0, 0], [0, 0], [-1, 0]], H: [[h, 0], [h, 0], [h, 0], [-h, 0]],
   S: [[1, 0], [0, 0], [0, 0], [0, 1]], T: [[1, 0], [0, 0], [0, 0], [h, h]],
   Rx: [[c8, 0], [0, -s8], [0, -s8], [c8, 0]], Ry: [[c8, 0], [-s8, 0], [s8, 0], [c8, 0]],
+  Rz: [[c8, -s8], [0, 0], [0, 0], [c8, s8]], Sdg: [[1, 0], [0, 0], [0, 0], [0, -1]], Tdg: [[1, 0], [0, 0], [0, 0], [h, -h]],
 };
 const blochOf = (a: C, b: C) => { const ab = mul(conj(a), b); return new Vector3(2 * ab[0], 2 * ab[1], a[0] ** 2 + a[1] ** 2 - b[0] ** 2 - b[1] ** 2); };
 const ket = (th: number, ph: number): [C, C] => [[Math.cos(th / 2), 0], [Math.sin(th / 2) * Math.cos(ph), Math.sin(th / 2) * Math.sin(ph)]];
@@ -81,5 +82,30 @@ describe('conventions and measurement', () => {
     const { theta, phi } = toAngles(fromAngles(0.7, 4).multiplyScalar(0.4));
     expect(theta).toBeCloseTo(0.7, 12);
     expect(phi).toBeCloseTo(4, 12);
+  });
+});
+
+describe('names, inverses and readouts (hands-on audit, 2026-10-09)', () => {
+  it('H on |0⟩ reads φ = 0, not 2π', () => {
+    const { phi } = toAngles(apply(GATES.H, ZERO));
+    expect(phi).toBe(0);
+  });
+  it('S† undoes S and T† undoes T', () => {
+    const v = fromAngles(1.1, 0.4);
+    close(apply(GATES.Sdg, apply(GATES.S, v)), v);
+    close(apply(GATES.Tdg, apply(GATES.T, v)), v);
+  });
+  it('Rz(π/4) turns |+⟩ toward |i⟩ by 45°', () => close(apply(GATES.Rz, new Vector3(1, 0, 0)), fromAngles(Math.PI / 2, Math.PI / 4)));
+  it('names the six axis states, even with rounding noise', () => {
+    expect(stateName(apply(GATES.H, ZERO))).toBe('|+⟩');
+    expect(stateName(apply(GATES.S, apply(GATES.H, ZERO)))).toBe('|i⟩');
+    expect(stateName(fromAngles(1, 1))).toBeNull();
+    expect(stateName(new Vector3(0, 0, 0.5))).toBeNull();
+  });
+  it('gives all three bases at once', () => {
+    const b = allBases(new Vector3(0, 1, 0));
+    expect(b.Y[0]).toBeCloseTo(1, 12);
+    expect(b.Z[0]).toBeCloseTo(0.5, 12);
+    expect(b.X[1]).toBeCloseTo(0.5, 12);
   });
 });

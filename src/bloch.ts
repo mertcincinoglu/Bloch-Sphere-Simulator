@@ -22,6 +22,9 @@ export const GATES: Record<string, Gate> = {
   T: { axis: new Vector3(0, 0, 1), angle: Math.PI / 4, prefix: '', cells: ['1', '0', '0', 'e^(iπ/4)'] },
   Rx: { axis: new Vector3(1, 0, 0), angle: Math.PI / 4, prefix: '', cells: ['cos(π/8)', '−i·sin(π/8)', '−i·sin(π/8)', 'cos(π/8)'] },
   Ry: { axis: new Vector3(0, 1, 0), angle: Math.PI / 4, prefix: '', cells: ['cos(π/8)', '−sin(π/8)', 'sin(π/8)', 'cos(π/8)'] },
+  Rz: { axis: new Vector3(0, 0, 1), angle: Math.PI / 4, prefix: '', cells: ['e^(−iπ/8)', '0', '0', 'e^(iπ/8)'] },
+  Sdg: { axis: new Vector3(0, 0, 1), angle: -Math.PI / 2, prefix: '', cells: ['1', '0', '0', '−i'] },
+  Tdg: { axis: new Vector3(0, 0, 1), angle: -Math.PI / 4, prefix: '', cells: ['1', '0', '0', 'e^(−iπ/4)'] },
 };
 
 /** Rn(α) = exp(−iα n·σ/2) for the axis n(θn, φn); entries rounded for display. */
@@ -62,9 +65,33 @@ export function toAngles(v: Vector3): { theta: number; phi: number } {
   const theta = Math.acos(Math.min(1, Math.max(-1, v.z / len)));
   let phi = Math.atan2(v.y, v.x);
   if (phi < 0) phi += 2 * Math.PI;
+  // rounding noise just below the +X axis must read as 0, not 2π (−0.0001 → 359.99°)
+  if (phi > 2 * Math.PI - 1e-6) phi = 0;
   // at the poles φ has no meaning; report 0
   if (Math.sin(theta) < 1e-9) phi = 0;
   return { theta, phi };
+}
+
+const NAMED: Array<[string, Vector3]> = [
+  ['|0⟩', new Vector3(0, 0, 1)], ['|1⟩', new Vector3(0, 0, -1)],
+  ['|+⟩', new Vector3(1, 0, 0)], ['|−⟩', new Vector3(-1, 0, 0)],
+  ['|i⟩', new Vector3(0, 1, 0)], ['|−i⟩', new Vector3(0, -1, 0)],
+];
+
+/** The usual name of a pure axis state ("|+⟩"), or null; tolerant of rounding noise. */
+export function stateName(v: Vector3): string | null {
+  for (const [name, n] of NAMED) if (v.distanceTo(n) < 1e-6) return name;
+  return null;
+}
+
+/** Probability of each outcome in all three bases at once. */
+export function allBases(v: Vector3): Record<Basis, [number, number]> {
+  const out = {} as Record<Basis, [number, number]>;
+  for (const b of ['Z', 'X', 'Y'] as Basis[]) {
+    const p = probFirst(v, b);
+    out[b] = [p, 1 - p];
+  }
+  return out;
 }
 
 export function rotation(gate: Gate, t = 1): Quaternion {

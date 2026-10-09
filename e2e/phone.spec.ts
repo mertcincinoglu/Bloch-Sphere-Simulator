@@ -40,7 +40,7 @@ test('tapping a gate turns the arrow', async ({ page }) => {
   await expect(page.locator('#coord-x')).toHaveText('0.000');
   await page.locator('[data-gate="X"]').tap(); // |0⟩ → |1⟩
   await expect(page.locator('#coord-z')).toHaveText('−1.000');
-  await expect(page.locator('#prob-1-text')).toHaveText('100.0%');
+  await expect(page.locator('#bases [data-row="Z"] b')).toHaveText('0% / 100%');
 });
 
 test('a vertical swipe that starts on the sphere scrolls the page', async ({ page }) => {

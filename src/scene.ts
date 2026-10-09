@@ -3,6 +3,7 @@
 // arrow with its shadow on the equator. Orthographic camera, as in the design.
 // Bloch coordinates (x toward the viewer, y right, z up) map to three.js as (x, y, z) -> (y, z, x).
 import * as THREE from 'three';
+import { toAngles } from './bloch';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 
@@ -33,9 +34,24 @@ export class BlochScene {
   private shadowB: THREE.Line;
   private trail: THREE.Line;
   private observer = new ResizeObserver(() => this.resize());
+  // lab-only drawing aids (hands-on audit 2026-10-09: QuVis guides, Qubit Evolution trail, IQM axis, Attila preview)
+  private guides: boolean;
+  private history: THREE.Vector3[] = [];
+  private historyLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true }));
+  private turnLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: C.x, dashSize: 0.04, gapSize: 0.03 }));
+  private turnLabel: CSS2DObject;
+  private previewLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: C.shadow, dashSize: 0.03, gapSize: 0.04, transparent: true, opacity: 0.6 }));
+  private previewDot = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 12), new THREE.MeshBasicMaterial({ color: C.x, transparent: true, opacity: 0.55, depthTest: false }));
+  private latitude = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: C.y, dashSize: 0.02, gapSize: 0.03, transparent: true, opacity: 0.7 }));
+  private meridian = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: C.z, dashSize: 0.02, gapSize: 0.03, transparent: true, opacity: 0.7 }));
+  private thetaArc = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: C.x }));
+  private phiArc = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: C.z }));
+  private thetaLabel: CSS2DObject;
+  private phiLabel: CSS2DObject;
 
-  constructor(host: HTMLElement) {
+  constructor(host: HTMLElement, opts: { guides?: boolean } = {}) {
     this.host = host;
+    this.guides = opts.guides ?? false;
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     host.append(this.renderer.domElement);
     this.labels.domElement.className = 'labels';
@@ -59,6 +75,14 @@ export class BlochScene {
     this.shadowA = this.dashedLine(C.shadow, 0.3);
     this.shadowB = this.dashedLine(C.shadow, 0.25);
     this.trail = this.dashedLine(C.trail, 1);
+    this.turnLabel = this.label('', B(0, 0, 0), hex(C.x), 'turn');
+    this.thetaLabel = this.label('θ', B(0, 0, 0), hex(C.x), 'guide');
+    this.phiLabel = this.label('φ', B(0, 0, 0), hex(C.z), 'guide');
+    this.previewDot.renderOrder = 2;
+    this.scene.add(this.historyLine, this.turnLine, this.previewLine, this.previewDot, this.latitude, this.meridian, this.thetaArc, this.phiArc);
+    this.showTurn(null);
+    this.preview(null, null);
+    for (const o of [this.latitude, this.meridian, this.thetaArc, this.phiArc, this.thetaLabel, this.phiLabel]) o.visible = false;
 
     this.observer.observe(host);
     this.resize();
@@ -165,6 +189,79 @@ export class BlochScene {
     const foot = toThree(B(v.x, v.y, 0));
     this.setLine(this.shadowA, [new THREE.Vector3(), foot]);
     this.setLine(this.shadowB, [foot, t]);
+    if (this.guides) this.drawGuides(v);
+  }
+
+  /** Latitude circle and meridian through the tip, and small θ and φ arcs at the centre (QuVis). */
+  private drawGuides(v: THREE.Vector3) {
+    const r = v.length();
+    const on = r > 0.05;
+    for (const o of [this.latitude, this.meridian, this.thetaArc, this.thetaLabel]) o.visible = on;
+    if (!on) { this.phiArc.visible = this.phiLabel.visible = false; return; }
+    const d = v.clone().normalize();
+    const { theta, phi } = toAngles(d);
+    const s = Math.sin(theta), z = Math.cos(theta);
+    const N = 96;
+    this.setLine(this.latitude, Array.from({ length: N + 1 }, (_, i) => toThree(B(s * Math.cos((i / N) * 2 * Math.PI), s * Math.sin((i / N) * 2 * Math.PI), z))));
+    this.setLine(this.meridian, Array.from({ length: N + 1 }, (_, i) => {
+      const a = (i / N) * 2 * Math.PI;
+      return toThree(B(Math.sin(a) * Math.cos(phi), Math.sin(a) * Math.sin(phi), Math.cos(a)));
+    }));
+    const k = 0.32;
+    this.setLine(this.thetaArc, Array.from({ length: 33 }, (_, i) => {
+      const a = (i / 32) * theta;
+      return toThree(B(k * Math.sin(a) * Math.cos(phi), k * Math.sin(a) * Math.sin(phi), k * Math.cos(a)));
+    }));
+    this.thetaLabel.position.copy(toThree(B(0.42 * Math.sin(theta / 2) * Math.cos(phi), 0.42 * Math.sin(theta / 2) * Math.sin(phi), 0.42 * Math.cos(theta / 2))));
+    const hasPhi = s > 0.05 && phi > 0.02;
+    this.phiArc.visible = this.phiLabel.visible = hasPhi;
+    if (hasPhi) {
+      this.setLine(this.phiArc, Array.from({ length: 33 }, (_, i) => toThree(B(k * Math.cos((i / 32) * phi), k * Math.sin((i / 32) * phi), 0))));
+      this.phiLabel.position.copy(toThree(B(0.44 * Math.cos(phi / 2), 0.44 * Math.sin(phi / 2), 0)));
+    }
+  }
+
+  /** Every position the arrow has passed, fading with age (Qubit Evolution, kherb). */
+  addHistory(points: THREE.Vector3[]) {
+    this.history.push(...points);
+    if (this.history.length > 3000) this.history.splice(0, this.history.length - 3000);
+    const n = this.history.length;
+    const ink = new THREE.Color(C.trail), paper = new THREE.Color(C.paper);
+    const colors = new Float32Array(n * 3);
+    this.history.forEach((_, i) => {
+      const c = paper.clone().lerp(ink, 0.15 + 0.85 * ((i + 1) / n) ** 1.5); // old = faint, new = strong
+      colors.set([c.r, c.g, c.b], i * 3);
+    });
+    this.historyLine.geometry.dispose();
+    this.historyLine.geometry = new THREE.BufferGeometry().setFromPoints(this.history.map(toThree));
+    this.historyLine.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  }
+
+  clearHistory() {
+    this.history = [];
+    this.historyLine.geometry.dispose();
+    this.historyLine.geometry = new THREE.BufferGeometry();
+  }
+
+  /** The axis a gate turns about, drawn while it turns, with its angle (IQM, justQ). */
+  showTurn(axis: THREE.Vector3 | null, text = '') {
+    this.turnLine.visible = this.turnLabel.visible = !!axis;
+    if (!axis) return;
+    const n = axis.clone().normalize();
+    this.setLine(this.turnLine, [toThree(n.clone().multiplyScalar(-1.35)), toThree(n.clone().multiplyScalar(1.35))]);
+    this.turnLabel.position.copy(toThree(n.clone().multiplyScalar(1.5)));
+    (this.turnLabel.element as HTMLElement).textContent = text;
+  }
+
+  /** Before a gate is applied: its axis and where the arrow would land (Attila Kun, Andrzejewski). */
+  preview(axis: THREE.Vector3 | null, target: THREE.Vector3 | null) {
+    this.previewLine.visible = !!axis;
+    this.previewDot.visible = !!target;
+    if (axis) {
+      const n = axis.clone().normalize();
+      this.setLine(this.previewLine, [toThree(n.clone().multiplyScalar(-1.3)), toThree(n.clone().multiplyScalar(1.3))]);
+    }
+    if (target) this.previewDot.position.copy(toThree(target));
   }
 
   setTrail(points: THREE.Vector3[]) {

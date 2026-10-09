@@ -18,15 +18,15 @@
     <meta name="description" content="The conventions the Bloch Sphere Simulator uses, and the references behind every claim it makes." />
     <link rel="icon" href="/favicon-circle.svg" type="image/svg+xml" />
   </head>
-  <body class="bg-surface text-on-surface technical-grid-bg min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+  <body class="bg-surface text-on-surface halftone-paper-bg min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
     <!-- TOP BAR -->
-    <header class="w-full bg-surface-container-low border-b border-outline-variant lg:sticky lg:top-0 z-50">
+    <header class="w-full clean-paper-low border-b border-outline-variant lg:sticky lg:top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-4">
           <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 whitespace-nowrap" href="https://www.mertcincinoglu.com"><span>←</span> mertcincinoglu.com</a>
           <div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
           <div>
-            <p class="font-headline-sm text-headline-sm tracking-wider uppercase text-on-surface" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</p>
+            <p class="font-headline-sm text-headline-sm tracking-[0.04em] uppercase text-on-surface" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</p>
             <p class="font-label-sm text-label-sm text-on-surface-variant tracking-normal" data-i18n="head.sub">Bloch Sphere Simulator — a free laboratory for one qubit • Monograph Ref. PH-1964-B</p>
           </div>
         </div>
@@ -62,29 +62,29 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div class="lg:col-span-8 space-y-8 min-w-0">
           <!-- A. conventions -->
-          <section class="bg-surface border border-on-surface shadow-hard-card p-4 sm:p-6 space-y-4" aria-labelledby="h-conv">
+          <section class="clean-paper border border-on-surface shadow-hard-card p-4 sm:p-6 space-y-4" aria-labelledby="h-conv">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <h2 id="h-conv" class="font-headline-sm text-label-lg uppercase tracking-wider text-on-surface flex items-center gap-2"><span class="text-primary">§ A.</span> <span data-i18n="src.convHead">CONVENTIONS &amp; GEOMETRIC RULES</span></h2>
+              <h2 id="h-conv" class="font-headline-sm text-label-lg uppercase tracking-[0.04em] text-on-surface flex items-center gap-2"><span class="text-primary">§ A.</span> <span data-i18n="src.convHead">CONVENTIONS &amp; GEOMETRIC RULES</span></h2>
               <span class="font-label-sm text-label-sm px-1.5 py-0.5 border border-outline text-on-surface-variant">CANONICAL MAP S² → ℂP¹</span>
             </div>
-            <p class="font-body-md text-body-md text-on-surface" data-i18n="src.convLead">Every coordinate, state vector and gate in this simulator follows the conventions below, the same ones used by the references in § B.</p>
-            <div class="overflow-x-auto border border-on-surface" tabindex="0">
+            <p class="font-body-md text-[18px] leading-[1.55] text-on-surface reading-measure" data-i18n="src.convLead">Every coordinate, state vector and gate in this simulator follows the conventions below, the same ones used by the references in § B.</p>
+            <div class="overflow-x-auto border-t-2 border-b border-on-surface" tabindex="0">
               <table class="w-full text-left border-collapse min-w-[34rem]">
                 <thead>
-                  <tr class="bg-surface-container border-b-2 border-on-surface font-label-sm text-label-sm text-on-surface">
-                    <th scope="col" class="py-2.5 px-4 font-bold border-r border-outline-variant w-1/3" data-i18n="src.colSymbol">SYMBOL / FORMULATION</th>
+                  <tr class="clean-paper-low border-b-2 border-on-surface font-label-sm text-label-sm text-on-surface">
+                    <th scope="col" class="py-3 px-4 font-bold w-1/3" data-i18n="src.colSymbol">SYMBOL / FORMULATION</th>
                     <th scope="col" class="py-2.5 px-4 font-bold" data-i18n="src.colMeaning">MEANING &amp; CONVENTION</th>
                   </tr>
                 </thead>
-                <tbody class="font-body-sm text-body-sm divide-y divide-outline-variant">
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">|ψ⟩ = cos(θ/2)|0⟩ + e^{iφ} sin(θ/2)|1⟩</td><td class="py-3 px-4" data-i18n-html="src.row1"><strong>Pure state:</strong> any normalised qubit state, up to an unobservable global phase, is a point on the unit sphere.</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">θ ∈ [0, π]</td><td class="py-3 px-4" data-i18n-html="src.row2"><strong>Polar angle:</strong> measured from the North pole +Z (|0⟩) toward the South pole −Z (|1⟩). The Hilbert-space angle is θ/2.</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">φ ∈ [0, 2π)</td><td class="py-3 px-4" data-i18n-html="src.row3"><strong>Azimuth:</strong> measured counter-clockwise in the equatorial plane, starting at +X (|+⟩) and passing +Y (|i⟩). It is the relative phase between |0⟩ and |1⟩.</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">+X = |+⟩, +Y = |i⟩, +Z = |0⟩</td><td class="py-3 px-4" data-i18n-html="src.row4"><strong>Axis states:</strong> |±⟩ = (|0⟩ ± |1⟩)/√2, |±i⟩ = (|0⟩ ± i|1⟩)/√2. Each pair sits at opposite ends of its axis.</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">r = (⟨X⟩, ⟨Y⟩, ⟨Z⟩)</td><td class="py-3 px-4" data-i18n-html="src.row5"><strong>Bloch vector:</strong> its components are the expectation values of the Pauli matrices. |r| = 1 for pure states, |r| &lt; 1 inside the ball for mixed ones.</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">Rn(α) = exp(−iα n·σ/2)</td><td class="py-3 px-4" data-i18n-html="src.row6"><strong>Gates are turns:</strong> a rotation of the sphere by α about the unit axis n, right-handed. Named gates equal such a turn up to a global phase (e.g. X = i·Rx(π)).</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">P(±n) = (1 ± r·n) / 2</td><td class="py-3 px-4" data-i18n-html="src.row7"><strong>Measurement:</strong> the chance of each outcome along an axis. After one shot the state is the pole that was found.</td></tr>
-                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">Tr ρ² = (1 + |r|²) / 2</td><td class="py-3 px-4" data-i18n-html="src.row8"><strong>Purity:</strong> 1 for pure states on the surface, ½ for the fully mixed state ½I at the centre.</td></tr>
+                <tbody class="font-body-md text-[16px] leading-[1.5] divide-y divide-outline-variant">
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">|ψ⟩ = cos(θ/2)|0⟩ + e<sup>iφ</sup> sin(θ/2)|1⟩</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row1"><strong>Pure state:</strong> any normalised qubit state, up to an unobservable global phase, is a point on the unit sphere.</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">θ ∈ [0, π]</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row2"><strong>Polar angle:</strong> measured from the North pole +Z (|0⟩) toward the South pole −Z (|1⟩). The Hilbert-space angle is θ/2.</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">φ ∈ [0, 2π)</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row3"><strong>Azimuth:</strong> measured counter-clockwise in the equatorial plane, starting at +X (|+⟩) and passing +Y (|i⟩). It is the relative phase between |0⟩ and |1⟩.</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">+X = |+⟩, +Y = |i⟩, +Z = |0⟩</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row4"><strong>Axis states:</strong> |±⟩ = (|0⟩ ± |1⟩)/√2, |±i⟩ = (|0⟩ ± i|1⟩)/√2. Each pair sits at opposite ends of its axis.</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">r = (⟨X⟩, ⟨Y⟩, ⟨Z⟩)</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row5"><strong>Bloch vector:</strong> its components are the expectation values of the Pauli matrices. |r| = 1 for pure states, |r| &lt; 1 inside the ball for mixed ones.</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">Rn(α) = exp(−iα n·σ/2)</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row6"><strong>Gates are turns:</strong> a rotation of the sphere by α about the unit axis n, right-handed. Named gates equal such a turn up to a global phase (e.g. X = i·Rx(π)).</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">P(±n) = (1 ± r·n) / 2</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row7"><strong>Measurement:</strong> the chance of each outcome along an axis. After one shot the state is the pole that was found.</td></tr>
+                  <tr><td class="py-3.5 px-4 font-label-md text-[14px] text-primary font-bold align-top">Tr ρ² = (1 + |r|²) / 2</td><td class="py-3.5 px-4 align-top" data-i18n-html="src.row8"><strong>Purity:</strong> 1 for pure states on the surface, ½ for the fully mixed state ½I at the centre.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -93,7 +93,7 @@
           <!-- B. references -->
           <section class="space-y-6" aria-labelledby="h-refs">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-on-surface pb-2">
-              <h2 id="h-refs" class="font-headline-sm text-label-lg uppercase tracking-wider text-on-surface flex items-center gap-2"><span class="text-primary">§ B.</span> <span data-i18n="src.refHead">REFERENCES</span></h2>
+              <h2 id="h-refs" class="font-headline-sm text-label-lg uppercase tracking-[0.04em] text-on-surface flex items-center gap-2"><span class="text-primary">§ B.</span> <span data-i18n="src.refHead">REFERENCES</span></h2>
               <span class="font-label-sm text-label-sm text-on-surface-variant" id="ref-count"></span>
             </div>
             <div id="refs" class="space-y-6"></div>
@@ -105,10 +105,10 @@
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-6 bg-surface border-2 border-on-surface rounded-b-md flex items-center justify-center" aria-hidden="true"><div class="w-3 h-3 rounded-full bg-on-surface"></div></div>
             <div class="border-b-2 border-on-surface pb-3 mb-4 mt-2">
               <div class="flex justify-between items-center text-on-surface">
-                <span class="font-label-sm text-label-sm font-bold tracking-widest uppercase" data-i18n="src.guideNo">§ GUIDE 04</span>
+                <span class="font-label-sm text-label-sm font-bold tracking-[0.04em] uppercase" data-i18n="src.guideNo">§ GUIDE 04</span>
                 <span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-tertiary-fixed-dim/40 border border-on-surface" data-i18n="src.indexCard">INDEX CARD</span>
               </div>
-              <h2 class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface mt-1" data-i18n="src.cardHead">HOW TO READ THESE</h2>
+              <h2 class="font-headline-sm text-headline-sm uppercase tracking-[0.04em] text-on-surface mt-1" data-i18n="src.cardHead">HOW TO READ THESE</h2>
             </div>
             <div class="space-y-4 font-body-sm text-body-sm text-on-surface leading-relaxed">
               <p data-i18n-html="src.card1">Numbers in square brackets, such as <strong class="font-label-sm text-label-sm bg-surface px-1 py-0.5 border border-on-surface">[1]</strong>, in the lab and in the story point to the references listed on this page.</p>

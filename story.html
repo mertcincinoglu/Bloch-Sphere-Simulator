@@ -20,13 +20,13 @@
   </head>
   <body class="bg-surface text-on-surface halftone-paper-bg min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
     <!-- TOP BAR -->
-    <header class="w-full bg-surface-container-low border-b border-outline-variant lg:sticky lg:top-0 z-50">
+    <header class="w-full clean-paper-low border-b border-outline-variant lg:sticky lg:top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-4">
           <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 whitespace-nowrap" href="https://www.mertcincinoglu.com"><span>←</span> mertcincinoglu.com</a>
           <div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
           <div>
-            <p class="font-headline-sm text-headline-sm tracking-wider uppercase text-on-surface" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</p>
+            <p class="font-headline-sm text-headline-sm tracking-[0.04em] uppercase text-on-surface" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</p>
             <p class="font-label-sm text-label-sm text-on-surface-variant tracking-normal" data-i18n="head.sub">Bloch Sphere Simulator — a free laboratory for one qubit • Monograph Ref. PH-1964-B</p>
           </div>
         </div>
@@ -48,14 +48,14 @@
       </div>
     </header>
     <section class="w-full border-b border-outline-variant bg-surface-container-high py-1 px-4 text-center" aria-labelledby="story-banner">
-      <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest" id="story-banner" data-i18n="story.banner">Vol. IV • Theory &amp; Story • Eight chapters, each with a live figure</p>
+      <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-[0.04em]" id="story-banner" data-i18n="story.banner">Vol. IV • Theory &amp; Story • Eight chapters, each with a live figure</p>
     </section>
 
     <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex-1">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <!-- contents -->
         <aside class="lg:col-span-3 lg:sticky lg:top-24 space-y-6" aria-label="Contents" data-i18n-aria="story.contents">
-          <div class="bg-surface-container-low border border-outline-variant p-4 shadow-hard-card">
+          <div class="clean-paper-low border border-on-surface p-5 shadow-hard-card">
             <div class="flex items-center justify-between pb-2 border-b border-outline-variant mb-3">
               <h2 class="font-label-md text-label-md font-bold text-primary" data-i18n="story.contentsHead">§ CONTENTS</h2>
               <span class="font-label-sm text-label-sm text-on-surface-variant uppercase" data-i18n="story.contentsSub">VOL. IV / EXP. NOTES</span>
@@ -64,15 +64,15 @@
               <span class="text-on-surface font-bold" id="reading-chapter"></span>
               <span class="text-on-surface-variant" id="reading-time"></span>
             </div>
-            <nav class="space-y-1 font-label-md text-label-md" id="toc" aria-label="Chapters" data-i18n-aria="story.chapters"></nav>
+            <nav class="space-y-1" id="toc" aria-label="Chapters" data-i18n-aria="story.chapters"></nav>
             <div class="mt-6 pt-3 border-t border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
               <p class="uppercase leading-tight font-bold" data-i18n="story.everyClaim">Every claim cites a source</p>
               <a class="italic font-body-sm text-[13px] underline hover:text-primary" href="/projects/bloch-sphere-simulator/sources" data-i18n="story.seeSources">See Notation &amp; Sources</a>
             </div>
           </div>
-          <div class="hidden lg:block bg-surface-container-high border-l-2 border-secondary p-3 text-body-sm font-body-sm text-on-surface-variant">
+          <div class="hidden lg:block clean-paper-low border-l-4 border-secondary p-4 font-body-md text-[16px] leading-[1.5] text-on-surface-variant">
             <p class="font-label-sm text-label-sm uppercase font-bold text-secondary mb-1" data-i18n="story.marginHead">§ Marginal note</p>
-            <em data-i18n="story.marginText">Every figure here is a small version of the laboratory. The lab has all the controls at once.</em>
+            <em class="block" data-i18n="story.marginText">Every figure here is a small version of the laboratory. The lab has all the controls at once.</em>
             <p class="font-label-sm text-label-sm mt-1"><a class="underline hover:text-primary" href="/projects/bloch-sphere-simulator" data-i18n="story.marginLink">Open the lab →</a></p>
           </div>
         </aside>
