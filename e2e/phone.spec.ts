@@ -8,7 +8,7 @@ const SHOTS = 'C:/Users/Mert/.claude/jobs/8f42b0fe/tmp/qa';
 test.skip(({ isMobile }) => !isMobile, 'phone only');
 test.afterEach(async ({ page }) => expectNoOverflow(page));
 
-const sphereSection = (page: Page) => page.locator('main > section').first();
+const sphereSection = (page: Page) => page.locator('#figure-top');
 
 async function openLab(page: Page) {
   await page.goto(LAB);
@@ -40,7 +40,7 @@ test('tapping a gate turns the arrow', async ({ page }) => {
   await expect(page.locator('#coord-x')).toHaveText('0.000');
   await page.locator('[data-gate="X"]').tap(); // |0⟩ → |1⟩
   await expect(page.locator('#coord-z')).toHaveText('−1.000');
-  await expect(page.locator('#bases [data-row="Z"] b')).toHaveText('0% / 100%');
+  await expect(page.locator('#bases [data-row="Z"] b')).toHaveText('0.0% / 100.0%');
 });
 
 test('a vertical swipe that starts on the sphere scrolls the page', async ({ page }) => {

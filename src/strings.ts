@@ -64,7 +64,7 @@ export const EN = {
   'r.pure': 'Pure',
   'r.mixed': 'Mixed',
   'formula.mixed': 'mixed: ρ = ½(I + r·σ), r = {r}; no single |ψ⟩',
-  'autorotate': 'Auto-Rotate: {state}',
+  'autorotate': 'Auto-rotate: {state}',
   'on': 'ON',
   'off': 'OFF',
   'share.copied': 'Link copied',

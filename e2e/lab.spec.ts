@@ -14,6 +14,17 @@ async function expectCoords(page: Page, x: string, y: string, z: string) {
   await expect(page.locator('#coord-z')).toHaveText(z);
 }
 
+// the control deck shows one tab at a time
+async function tab(page: Page, name: 'state' | 'gates' | 'measure') {
+  await page.locator(`#tab-${name}`).click();
+  await expect(page.locator(`#panel-${name}`)).toBeVisible();
+}
+
+async function openCustom(page: Page) {
+  const box = page.locator('details:has(#custom-rotation)');
+  if (!(await box.getAttribute('open') !== null)) await box.locator('summary').click();
+}
+
 async function resetToZero(page: Page) {
   await page.locator('[data-action="reset-zero"]').first().click();
   await expectCoords(page, '0.000', '0.000', '+1.000');
@@ -25,8 +36,8 @@ test.afterEach(async ({ page }) => expectNoOverflow(page));
 test('opens on |+⟩ with matching readouts', async ({ page }) => {
   await expectCoords(page, '+1.000', '0.000', '0.000');
   await expect(page.locator('#readout-theta')).toHaveText('0.50 π (90.0°)');
-  await expect(page.locator('#bases [data-row="Z"] b')).toHaveText('50% / 50%');
-  await expect(page.locator('#bases [data-row="X"] b')).toHaveText('100% / 0%');
+  await expect(page.locator('#bases [data-row="Z"] b')).toHaveText('50.0% / 50.0%');
+  await expect(page.locator('#bases [data-row="X"] b')).toHaveText('100.0% / 0.0%');
   await expect(page.locator('#narrative-text')).toHaveText(EN['story.initial']);
 });
 
@@ -34,7 +45,8 @@ test('H then S from |0⟩', async ({ page }) => {
   await resetToZero(page);
   await page.locator('[data-gate="H"]').click();
   await expectCoords(page, '+1.000', '0.000', '0.000');
-  await expect(page.locator('#last-action-tag')).toHaveText('ACTION: GATE [H]');
+  await expect(page.locator('#narrative-text')).toHaveText(EN['story.H']);
+  await expect(page.locator('#history button').last()).toHaveText('H');
   await page.locator('[data-gate="S"]').click();
   await expectCoords(page, '0.000', '+1.000', '0.000');
   await expect(page.locator('#matrix-label')).toHaveText(EN['label.S']);
@@ -42,6 +54,7 @@ test('H then S from |0⟩', async ({ page }) => {
 
 test('custom rotation: axis X by π/2 sends |0⟩ to −Y; bad input shows an error', async ({ page }) => {
   await resetToZero(page);
+  await openCustom(page);
   await page.locator('#cr-theta').fill('0.5π');
   await page.locator('#cr-phi').fill('0');
   await page.locator('#cr-angle').fill('π/2');
@@ -58,6 +71,7 @@ test('custom rotation: axis X by π/2 sends |0⟩ to −Y; bad input shows an er
 test('length slider: r = 0 hides the angles, r = 1 brings back the same direction', async ({ page }) => {
   await page.locator('[data-gate="S"]').click(); // |+⟩ → |i⟩, a direction that is not the default
   await expectCoords(page, '0.000', '+1.000', '0.000');
+  await tab(page, 'state');
   const r = page.locator('#slider-radius');
   await r.fill('0');
   await expect(page.locator('#readout-theta')).toHaveText('—');
@@ -71,8 +85,10 @@ test('length slider: r = 0 hides the angles, r = 1 brings back the same directio
 });
 
 test('Y basis: measuring |i⟩ 1000 times gives 1000/0', async ({ page }) => {
+  await tab(page, 'state');
   await page.locator('[data-preset="0.5,0.5"]').click();
   await expectCoords(page, '0.000', '+1.000', '0.000');
+  await tab(page, 'measure');
   await page.locator('[data-basis="Y"]').click();
   await expect(page.locator('[data-basis="Y"]')).toHaveAttribute('aria-pressed', 'true');
   await page.locator('[data-action="measure-many"]').click();
@@ -81,8 +97,10 @@ test('Y basis: measuring |i⟩ 1000 times gives 1000/0', async ({ page }) => {
 });
 
 test('a gate clears the measurement counts', async ({ page }) => {
+  await tab(page, 'measure');
   await page.locator('[data-action="measure-many"]').click();
   await expect(page.locator('#count-result-0')).not.toHaveText('|0⟩: 0 (0.0%)');
+  await tab(page, 'gates');
   await page.locator('[data-gate="X"]').click();
   await expect(page.locator('#count-result-0')).toHaveText('|0⟩: 0 (0.0%)');
   await expect(page.locator('#count-result-1')).toHaveText('|1⟩: 0 (0.0%)');
@@ -93,6 +111,7 @@ test('share writes #t=…&p=…&r=… and the link restores the state', async ({
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.locator('[data-gate="S"]').click(); // (0, 1, 0)
   await expectCoords(page, '0.000', '+1.000', '0.000');
+  await tab(page, 'state');
   await page.locator('#slider-radius').fill('0.5');
   await expectCoords(page, '0.000', '+0.500', '0.000');
   await page.locator('[data-action="share"]').click();
@@ -105,14 +124,14 @@ test('share writes #t=…&p=…&r=… and the link restores the state', async ({
   await open(other, url);
   await expectCoords(other, '0.000', '+0.500', '0.000');
   await expect(other.locator('#readout-r')).toHaveText(`0.50 (${EN['r.mixed']})`);
-  await expect(other.locator('#last-action-tag')).toHaveText(`ACTION: ${EN['action.shared']}`);
+  await expect(other.locator('#narrative-text')).toContainText(EN['story.shared'].split(':')[0]);
 });
 
 test('language switch to TR changes html[lang] and texts, and survives a reload', async ({ page }) => {
   await page.locator('[data-lang="tr"]').click();
   const check = async () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
-    await expect(page.locator('h1')).toHaveText(TR_STATIC['head.title']);
+    await expect(page.locator('#tab-gates')).toHaveText(TR_STATIC['tab.gates']);
     await expect(page.locator('[data-action="measure-many"] span')).toHaveText(TR_STATIC['measure.many']);
     await expect(page.locator('#narrative-text')).toHaveText(TR_STRINGS['story.initial']!);
     await expect(page.locator('[data-lang="tr"]')).toHaveAttribute('aria-pressed', 'true');
@@ -125,7 +144,7 @@ test('language switch to TR changes html[lang] and texts, and survives a reload'
   await check();
   await page.locator('[data-lang="en"]').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('h1')).toHaveText('VOL. IV — BLOCH STATE APPARATUS');
+  await expect(page.locator('#tab-gates')).toHaveText('Gates');
 });
 
 test('guide modal opens, Escape closes it and focus goes back', async ({ page }) => {
@@ -186,6 +205,7 @@ test('keyboard shortcuts: gates, S†, measure, undo, reset; ignored while typin
   await page.keyboard.press('m'); // |0⟩ in Z always gives |0⟩
   await expect(page.locator('#count-result-0')).toHaveText('|0⟩: 1 (100.0%)');
   await expect(page.locator('#history button').last()).toHaveText('M(Z)→|0⟩');
+  await openCustom(page);
   await page.locator('#cr-theta').fill('');
   await page.locator('#cr-theta').press('x'); // typing, not a gate
   await expectCoords(page, '0.000', '0.000', '+1.000');
@@ -197,4 +217,24 @@ test('H on |0⟩ reads φ = 0, not 2π, and names |+⟩', async ({ page }) => {
   await expectCoords(page, '+1.000', '0.000', '0.000');
   await expect(page.locator('#readout-phi')).toHaveText('0.00 π (0.0°)');
   await expect(page.locator('#formula-numeric')).toHaveText('0.707 |0⟩ + 0.707 |1⟩ = |+⟩');
+});
+
+test('control deck tabs: click and arrow keys switch panels', async ({ page }) => {
+  await expect(page.locator('#panel-gates')).toBeVisible();
+  await expect(page.locator('#panel-state')).toBeHidden();
+  await tab(page, 'measure');
+  await expect(page.locator('#tab-measure')).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('ArrowRight'); // wraps to State
+  await expect(page.locator('#panel-state')).toBeVisible();
+  await expect(page.locator('#tab-state')).toBeFocused();
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.locator('#panel-measure')).toBeVisible();
+});
+
+test('clear history keeps only the present step', async ({ page }) => {
+  await page.locator('[data-gate="H"]').click();
+  await expectCoords(page, '0.000', '0.000', '+1.000');
+  await page.locator('[data-action="clear-history"]').click();
+  await expect(page.locator('#history button')).toHaveText(['H']);
+  await expectCoords(page, '0.000', '0.000', '+1.000');
 });

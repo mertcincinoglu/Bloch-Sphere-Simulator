@@ -22,8 +22,7 @@ let basis: Basis = 'Z';
 let busy = false;
 let counts = { first: 0, second: 0 };
 
-const pct = (p: number) => `${(p * 100).toFixed(1)}%`;
-const whole = (p: number) => `${Math.round(p * 100)}%`;
+const pct = (p: number) => `${Math.max(0, p * 100).toFixed(1)}%`; // never “−0.0%” from rounding noise
 const signed = (x: number) => (Math.abs(x) < 0.0005 ? '0.000' : `${x > 0 ? '+' : ''}${x.toFixed(3)}`.replace('-', '−'));
 const deg = (rad: number) => `${((rad * 180) / Math.PI).toFixed(1)}°`;
 
@@ -40,7 +39,6 @@ function render() {
   $('#slider-radius').val(r);
   $('#readout-theta').text(centre ? '—' : `${thPi} π (${deg(theta)})`);
   $('#readout-phi').text(centre ? '—' : `${phPi} π (${deg(phi)})`);
-  $('#readout-half').text(centre ? '—' : deg(theta / 2));
   $('#readout-r').text(`${r.toFixed(2)} (${t(r >= 0.995 ? 'r.pure' : 'r.mixed')})`);
   $('#coord-x').text(signed(v.x));
   $('#coord-y').text(signed(v.y));
@@ -51,14 +49,15 @@ function render() {
   $('#bases [data-row]').each(function () {
     const [p0, p1] = all[this.dataset.row as Basis];
     $(this).find('i').first().css('width', pct(p0));
-    $(this).find('b').text(`${whole(p0)} / ${whole(p1)}`);
+    $(this).find('b').text(`${pct(p0)} / ${pct(p1)}`);
   });
   $('#theory-mark').css('left', pct(probFirst(v, basis)));
 
   // relative-phase dial: hand at φ, as long as |β|² = P(|1⟩)
   const p1 = all.Z[1];
-  const len = 6 + 24 * p1;
+  const len = 4 + 16 * p1;
   $('#dial-hand').attr({ x2: (len * Math.cos(phi)).toFixed(2), y2: (-len * Math.sin(phi)).toFixed(2), opacity: centre || Math.sin(theta) < 1e-6 ? 0.3 : 1 });
+  $('#readout-dial').text(centre ? 'φ = —' : `φ = ${phPi} π (${deg(phi)})`);
 
   const purity = ((1 + r * r) / 2).toFixed(3);
   if (r >= 0.995) {
@@ -87,7 +86,6 @@ function explain(text: Key, tag: Key, params: Record<string, string | number> = 
 
 function paintExplain() {
   $('#narrative-text').text(t(said.text, said.params));
-  $('#last-action-tag').text(`${t('action.prefix')}: ${t(said.tag, said.tagParams)}`);
   const { gate, label } = shownGate;
   $('#matrix-label').text(t(label));
   $('#matrix-prefix').text(gate.prefix);
@@ -113,14 +111,17 @@ function record(label: string, measureStep = false) {
 function paintHistory() {
   const ol = $('#history').empty();
   steps.forEach((s, i) => {
-    if (i) ol.append($('<li aria-hidden="true" class="text-on-surface-variant">').text('→'));
-    const chip = $('<button type="button" class="px-1.5 py-0.5 min-h-6 border">').text(s.label)
+    if (i) ol.append($('<li aria-hidden="true" class="text-outline-variant">').text('→'));
+    const chip = $('<button type="button" class="chip px-2 py-0.5 min-h-6 whitespace-nowrap">').text(s.label)
       .attr({ 'aria-current': i === cursor ? 'step' : null, title: t('history.goto', { n: i + 1 }) })
-      .addClass(s.measure ? 'bg-tertiary-fixed border-tertiary' : 'clean-paper border-outline')
-      .addClass(i === cursor ? 'outline-2 outline-primary font-bold' : i > cursor ? 'opacity-50' : '')
+      .addClass(i === cursor ? 'border-2 border-primary bg-white text-primary font-bold'
+        : s.measure ? 'border border-tertiary bg-tertiary-fixed text-tertiary font-bold' : 'border border-outline clean-paper text-on-surface')
+      .addClass(i > cursor ? 'opacity-50' : '')
       .on('click', () => goTo(i));
     ol.append($('<li>').append(chip));
   });
+  const strip = $('#history-scroll')[0];
+  strip.scrollLeft = strip.scrollWidth; // the newest step stays in view
 }
 
 function goTo(i: number) {
@@ -229,6 +230,15 @@ $('[data-preset]').on('click', function () {
 const reset = () => preset(0, 0, '|0⟩', false);
 const undo = () => goTo(cursor - 1);
 const clearTrail = () => scene.clearHistory();
+// a fresh start from here: the strip keeps only the present step
+function clearHistory() {
+  if (busy) return;
+  steps = [steps[cursor]];
+  cursor = 0;
+  clearTrail();
+  paintHistory();
+}
+$('[data-action="clear-history"]').on('click', clearHistory);
 $('[data-action="reset-zero"]').on('click', reset);
 $('[data-action="undo"]').on('click', undo);
 $('[data-action="clear-trail"]').on('click', clearTrail);
@@ -257,8 +267,8 @@ function paintBasis() {
   $('[data-basis]').each(function () {
     const on = $(this).data('basis') === basis;
     this.className = on
-      ? 'px-1.5 py-1 min-h-6 bg-primary text-on-primary font-bold border border-outline'
-      : 'px-1.5 py-1 min-h-6 bg-surface-container border border-outline text-on-surface hover:bg-surface';
+      ? 'py-1.5 min-h-6 bg-primary text-on-primary font-bold border border-outline'
+      : 'py-1.5 min-h-6 clean-paper border border-outline text-on-surface hover:bg-surface';
     this.setAttribute('aria-pressed', String(on));
   });
 }
@@ -324,8 +334,8 @@ function paintRotate() {
   btn.textContent = t('autorotate', { state: t(rotating ? 'on' : 'off') });
   btn.setAttribute('aria-pressed', String(rotating));
   btn.className = rotating
-    ? 'px-2 py-1 min-h-6 text-label-sm font-label-sm bg-primary text-on-primary border border-outline hard-shadow-sm font-bold'
-    : 'px-2 py-1 min-h-6 text-label-sm font-label-sm bg-surface-container hover:bg-surface-container-highest border border-outline hard-shadow-sm';
+    ? 'px-2.5 py-1 min-h-6 text-[13px] font-label-sm bg-primary text-on-primary border border-outline font-bold whitespace-nowrap'
+    : 'px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap';
 }
 $('#btn-autorotate').on('click', () => {
   rotating = !rotating;
@@ -365,6 +375,27 @@ $('[data-action="guide"]').on('click', function () {
 });
 $('[data-action="close-guide"]').on('click', closeGuide);
 modal.on('click', (e) => { if (e.target === modal[0]) closeGuide(); });
+
+// control deck tabs (WAI-ARIA tabs: arrows move between them)
+const tabs = $('[role="tab"]');
+function showTab(name: string, focus = false) {
+  tabs.each(function () {
+    const on = this.dataset.tab === name;
+    this.setAttribute('aria-selected', String(on));
+    this.tabIndex = on ? 0 : -1;
+    this.className = on ? 'py-2.5 border-b-2 border-primary text-primary font-bold' : 'py-2.5 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface';
+    $(`#panel-${this.dataset.tab}`).toggleClass('hidden', !on);
+    if (on && focus) this.focus();
+  });
+}
+tabs.on('click', function () { showTab(this.dataset.tab!); }).on('keydown', function (e) {
+  const names = tabs.toArray().map((el) => el.dataset.tab!);
+  const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+  if (!step) return;
+  e.preventDefault();
+  e.stopPropagation();
+  showTab(names[(names.indexOf(this.dataset.tab!) + step + names.length) % names.length], true);
+});
 
 // keyboard: a key per gate, as in Siddhant Singh's and Quantum Sandbox's simulators
 const KEYS: Record<string, () => void> = {

@@ -9,7 +9,7 @@ import './style.css';
 import { initI18n } from './i18n';
 
 // Material Symbols used by the design, inlined so nothing loads from another site
-const ICONS = import.meta.glob('/node_modules/@material-symbols/svg-400/outlined/{menu_book,restart_alt,psychology,lightbulb,keyboard_arrow_down,query_stats,flash_on,bar_chart,undo,rotate_right,share,warning,arrow_forward,arrow_back}.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const ICONS = import.meta.glob('/node_modules/@material-symbols/svg-400/outlined/{menu_book,restart_alt,psychology,lightbulb,keyboard_arrow_down,query_stats,flash_on,bar_chart,undo,rotate_right,share,warning,arrow_forward,arrow_back,info,delete_sweep}.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 
 export function fillIcons(root: ParentNode = document) {
   root.querySelectorAll<HTMLElement>('[data-icon]').forEach((el) => {
