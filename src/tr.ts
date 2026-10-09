@@ -23,7 +23,7 @@ export const TR_STATIC: Record<string, string> = {
   'tab.measure': 'Ölçüm',
   'gate.turn': 'dönüş',
   'gate.reset': 'Sıfırla',
-  'measure.choose': 'Taban seçimi',
+  'measure.choose': 'Ölçüm tabanı',
   'math.drawer': 'Matematik ve kaynaklar',
 
   'gates.pauli': 'Pauli',
@@ -145,8 +145,8 @@ export const TR_STATIC: Record<string, string> = {
   'measure.head': '§ 3. ÖLÇÜM & ÖRNEKLEME',
   'measure.basis': 'Taban:',
   'measure.once': 'Bir kez ölç',
-  'measure.many': '1.000× ölç',
-  'measure.status': 'Çöküş durumu:',
+  'measure.many': '1.000 kopyayı ölç',
+  'measure.status': 'Son ölçüm:',
   'measure.tick': 'Mevcut durum için öngörü',
   'measure.clear': 'Sayımı sil',
 
@@ -226,7 +226,7 @@ export const TR_STRINGS: Partial<Record<Key, string>> = {
   'action.length': 'UZUNLUK r',
   'action.custom': 'ÖZEL Rn(α)',
   'action.once': '1× ÖLÇ',
-  'action.many': '1.000× ÖLÇ',
+  'action.many': '1.000 KOPYAYI ÖLÇ',
   'action.shared': 'PAYLAŞILAN BAĞLANTI',
 
   'story.initial': 'Kübit ekvatorda, |+⟩ durumunda duruyor; burada doğrudan ayarlandı, H de |0⟩\'ı aynı yere getirirdi. Z tabanında ölçüm %50\'şer olasılıkla |0⟩ ya da |1⟩ verir; X tabanında ölçüm ise her seferinde |+⟩ verir.',
@@ -278,6 +278,8 @@ export const TR_STRINGS: Partial<Record<Key, string>> = {
   'r.mixed': 'Karışık',
   'r.maxMixed': 'Tam karışık',
   'action.typed': 'YAZILAN DEĞERLER',
+  'measure.expect': 'Siyah çizgi: {a} için beklenen {p}',
+  'measure.spread': ' · {n} kopyada yaklaşık ±{s} sapma normaldir',
   'story.typedAngles': 'Yazılan açılarla ayarlandı: θ = {theta}, φ = {phi}.',
   'story.typedAmps': 'α = {a}, β = {b} genlikleriyle ayarlandı.{norm} Global faz atılır: küre yalnız |0⟩ ile |1⟩ arasındaki bağıl fazı gösterir.',
   'exact.normalised': ' |α|² + |β|² = 1 olsun diye ikisi de {n} ile bölündü.',

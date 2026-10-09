@@ -337,3 +337,10 @@ test('history keeps the newest 6 steps in view and folds the rest', async ({ pag
   await expect(page.locator('#history button')).toHaveCount(6);
   await expect(page.locator('#history li').first()).toHaveText('… +9');
 });
+
+test('measurement: the line under the bar says what the black line is and the normal spread', async ({ page }) => {
+  await tab(page, 'measure');
+  await expect(page.locator('#measure-expect')).toHaveText('Black line: expected 50.0% for |0⟩');
+  await page.locator('[data-action="measure-many"]').click();
+  await expect(page.locator('#measure-expect')).toHaveText('Black line: expected 50.0% for |0⟩ · over 1,000 copies a spread of about ±1.6% is normal');
+});

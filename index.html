@@ -300,7 +300,7 @@
           <!-- MEASURE -->
           <div class="p-4 sm:p-5 space-y-4 hidden" id="panel-measure" role="tabpanel" aria-labelledby="tab-measure">
             <div>
-              <h2 class="font-label-sm text-[13px] font-bold text-primary uppercase mb-2" data-i18n="measure.choose">Basis selection</h2>
+              <h2 class="font-label-sm text-[13px] font-bold text-primary uppercase mb-2" data-i18n="measure.choose">Measurement basis</h2>
               <div class="grid grid-cols-3 gap-2 font-label-sm text-[13px]">
                 <button class="py-1.5 border border-outline" data-basis="Z">Z (|0⟩/|1⟩)</button>
                 <button class="py-1.5 border border-outline" data-basis="X">X (|+⟩/|−⟩)</button>
@@ -309,17 +309,18 @@
             </div>
             <div class="grid grid-cols-2 gap-3 pt-2">
               <button class="clean-paper hover:bg-surface-container-high border border-outline px-3 py-2.5 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="measure-once"><i class="icon size-[18px] text-primary" data-icon="flash_on"></i><span data-i18n="measure.once">Measure once</span></button>
-              <button class="clean-paper hover:bg-surface-container-high border border-outline px-3 py-2.5 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="measure-many"><i class="icon size-[18px] text-secondary" data-icon="bar_chart"></i><span data-i18n="measure.many">Measure 1,000×</span></button>
+              <button class="clean-paper hover:bg-surface-container-high border border-outline px-3 py-2.5 font-label-md text-[14px] font-bold hard-shadow active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5" data-action="measure-many"><i class="icon size-[18px] text-secondary" data-icon="bar_chart"></i><span data-i18n="measure.many">Measure 1,000 copies</span></button>
             </div>
             <div class="pt-3 border-t border-outline-variant space-y-2 font-label-sm text-[13px]" aria-live="polite">
-              <div class="flex justify-between items-center gap-2"><span class="text-on-surface-variant" data-i18n="measure.status">Collapse status:</span><span class="font-bold text-on-surface" id="collapse-status">Unmeasured</span></div>
+              <div class="flex justify-between items-center gap-2"><span class="text-on-surface-variant" data-i18n="measure.status">Last measurement:</span><span class="font-bold text-on-surface" id="collapse-status">Unmeasured</span></div>
               <div class="flex justify-between"><span id="count-result-0">|0⟩: 0 (0.0%)</span><span id="count-result-1">|1⟩: 0 (0.0%)</span></div>
               <div class="w-full h-3 bg-surface-container border border-outline flex relative">
                 <div class="h-full bg-primary transition-all duration-300" id="bar-measure-0" style="width: 50%"></div>
                 <div class="h-full bg-secondary transition-all duration-300" id="bar-measure-1" style="width: 50%"></div>
                 <div class="absolute top-0 bottom-0 w-0.5 bg-on-surface z-10" id="theory-mark" style="left: 50%" title="Prediction for the current state" data-i18n-title="measure.tick"></div>
               </div>
-              <div class="flex justify-end pt-1"><button class="text-on-surface-variant hover:text-on-surface hover:underline font-bold min-h-6 px-1" data-action="clear" data-i18n="measure.clear">Clear run</button></div>
+              <p class="font-label-sm text-[13px] text-on-surface-variant" id="measure-expect"></p>
+              <div class="flex justify-end pt-1"><button class="text-on-surface-variant hover:text-on-surface hover:underline font-bold min-h-6 px-1" data-action="clear" data-i18n="measure.clear">Clear counts</button></div>
             </div>
           </div>
         </div>

@@ -60,6 +60,7 @@ function render() {
     $(this).find('b').text(`${pct(p0)} / ${pct(p1)}`);
   });
   $('#theory-mark').css('left', pct(probFirst(v, basis)));
+  paintCounts();
 
   // relative-phase dial: hand at φ, as long as |β|² = P(|1⟩)
   const p1 = all.Z[1];
@@ -326,6 +327,10 @@ function paintCounts() {
   $('#count-result-1').text(`${b}: ${counts.second} (${pct(pb)})`);
   $('#bar-measure-0').css('width', pct(pa));
   $('#bar-measure-1').css('width', pct(pb));
+  // what the black line means, and how far a run may honestly stray from it (one standard deviation)
+  const p = probFirst(v, basis);
+  const spread = total >= 20 ? t('measure.spread', { n: total.toLocaleString(document.documentElement.lang), s: pct(Math.sqrt((p * (1 - p)) / total)) }) : '';
+  $('#measure-expect').text(t('measure.expect', { p: pct(p), a }) + spread);
 }
 
 $('[data-basis]').on('click', function () {
@@ -361,7 +366,7 @@ $('[data-action="measure-many"]').on('click', () => {
   const n = sample(v, basis, 1000);
   counts.first += n;
   counts.second += 1000 - n;
-  $('#collapse-status').empty().append($('<span class="text-secondary font-bold">').text(t('status.sampled', { n: (counts.first + counts.second).toLocaleString() })));
+  $('#collapse-status').empty().append($('<span class="text-secondary font-bold">').text(t('status.sampled', { n: (counts.first + counts.second).toLocaleString(document.documentElement.lang) })));
   explain('story.many', 'action.many', { basis });
   paintCounts();
 });

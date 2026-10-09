@@ -10,7 +10,7 @@ export const EN = {
   'action.length': 'LENGTH r',
   'action.custom': 'CUSTOM Rn(α)',
   'action.once': 'MEASURE 1×',
-  'action.many': 'MEASURE 1,000×',
+  'action.many': 'MEASURE 1,000 COPIES',
   'action.shared': 'SHARED LINK',
 
   'story.initial': 'The qubit rests on the equator in the |+⟩ state, set here directly; H would bring |0⟩ to the same place. A Z-basis measurement gives |0⟩ or |1⟩ with 50% each; an X-basis measurement gives |+⟩ every time.',
@@ -65,6 +65,8 @@ export const EN = {
   'r.mixed': 'Mixed',
   'r.maxMixed': 'Maximally mixed',
   'action.typed': 'TYPED VALUES',
+  'measure.expect': 'Black line: expected {p} for {a}',
+  'measure.spread': ' · over {n} copies a spread of about ±{s} is normal',
   'story.typedAngles': 'Set from typed angles: θ = {theta}, φ = {phi}.',
   'story.typedAmps': 'Set from the amplitudes α = {a}, β = {b}.{norm} The global phase is dropped: the sphere shows only the relative phase between |0⟩ and |1⟩.',
   'exact.normalised': ' They were divided by {n} so that |α|² + |β|² = 1.',
