@@ -293,3 +293,12 @@ test('notice: shows in the chosen language, closes, and stays closed after a rel
   await expect(page.locator('#narrative-text')).not.toBeEmpty();
   await expect(notice).toBeHidden();
 });
+
+test('at θ = 0 the θ label reads "θ = 0" and moves beside the arrow', async ({ page }) => {
+  await tab(page, 'state');
+  await page.locator('#slider-theta').fill('0');
+  const label = page.locator('#sphere .axis-label.guide', { hasText: 'θ' }).first();
+  await expect(label).toHaveText('θ = 0');
+  await page.locator('#slider-theta').fill('90');
+  await expect(label).toHaveText('θ');
+});

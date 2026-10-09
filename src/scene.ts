@@ -216,6 +216,10 @@ export class BlochScene {
       return toThree(B(k * Math.sin(a) * Math.cos(phi), k * Math.sin(a) * Math.sin(phi), k * Math.cos(a)));
     }));
     this.thetaLabel.position.copy(toThree(B(0.42 * Math.sin(theta / 2) * Math.cos(phi), 0.42 * Math.sin(theta / 2) * Math.sin(phi), 0.42 * Math.cos(theta / 2))));
+    // near |0⟩ the arc has no room and the label would sit on the arrow: move it beside it
+    const el = this.thetaLabel.element as HTMLElement;
+    el.textContent = theta < 1e-6 ? 'θ = 0' : 'θ';
+    el.style.marginLeft = theta < 0.2 ? '2.6em' : '';
     const hasPhi = s > 0.05 && phi > 0.02;
     this.phiArc.visible = this.phiLabel.visible = hasPhi;
     if (hasPhi) {

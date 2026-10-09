@@ -26,7 +26,7 @@
         <span class="text-outline-variant font-mono text-sm" aria-hidden="true">/</span>
         <a class="font-label-sm text-[13px] text-on-surface-variant hover:text-primary hover:underline whitespace-nowrap min-h-6 inline-flex items-center" href="https://www.mertcincinoglu.com" aria-label="mertcincinoglu.com">←<span class="max-sm:hidden">&nbsp;mertcincinoglu.com</span></a>
       </div>
-      <nav class="flex items-center gap-x-4 sm:gap-x-6 order-last md:order-none w-full md:w-auto overflow-x-auto" aria-label="Sections" data-i18n-aria="nav.aria">
+      <nav class="flex items-center gap-x-4 sm:gap-x-6 order-last md:order-none w-full md:w-auto flex-wrap gap-y-1" aria-label="Sections" data-i18n-aria="nav.aria">
         <a class="font-label-sm text-[13px] text-on-surface-variant hover:text-on-surface pb-0.5 tracking-tight whitespace-nowrap" href="/projects/bloch-sphere-simulator" data-i18n="tab.lab">Lab</a>
         <span class="text-outline-variant text-[13px]" aria-hidden="true">·</span>
         <a class="font-label-sm text-[13px] text-on-surface-variant hover:text-on-surface pb-0.5 tracking-tight whitespace-nowrap" href="/projects/bloch-sphere-simulator/story" data-i18n="tab.story">Theory &amp; Story</a>
@@ -43,12 +43,17 @@
     </header>
     <!-- under-construction notice; closing it is remembered in this browser -->
     <aside id="notice" class="hidden w-full bg-tertiary-fixed border-b border-tertiary px-4 sm:px-6 py-4" aria-labelledby="notice-title">
-      <div class="max-w-3xl mx-auto flex items-start gap-3 sm:gap-4 text-on-tertiary-fixed">
+      <div class="max-w-[1400px] mx-auto flex items-start gap-3 sm:gap-4 text-on-tertiary-fixed">
         <i class="icon size-[22px] shrink-0 mt-0.5 text-on-tertiary-fixed-variant" data-icon="warning"></i>
-        <div class="flex-1 space-y-2">
+        <div class="flex-1 min-w-0">
           <h2 id="notice-title" class="font-label-md text-[15px] font-bold text-on-tertiary-fixed-variant" data-i18n="notice.title">Important notice</h2>
-          <p class="font-body-md text-[17px] leading-relaxed" data-i18n-html="notice.text">This website is currently under construction, so some features may not be fully functional yet. If you encounter any issues or have suggestions, feel free to share them via <a class="underline font-semibold hover:text-primary" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/issues" target="_blank" rel="noopener">GitHub</a> or email me at <a class="underline font-semibold hover:text-primary" href="mailto:contact@mertcincinoglu.com">contact@mertcincinoglu.com</a>. Your feedback is invaluable in helping me improve the site.</p>
-          <p class="font-body-md text-[17px] leading-relaxed italic" data-i18n="notice.thanks">Thank you for your patience and support as I work to make this website better for everyone!</p>
+          <div class="mt-2 grid lg:grid-cols-2 gap-x-12 gap-y-2 font-body-md text-[17px] leading-relaxed">
+            <p data-i18n="notice.lead">This website is currently under construction, so some features may not be fully functional yet.</p>
+            <div class="space-y-2">
+              <p data-i18n-html="notice.text">If you encounter any issues or have suggestions, feel free to share them via <a class="underline font-semibold hover:text-primary" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/issues" target="_blank" rel="noopener">GitHub</a> or email me at <a class="underline font-semibold hover:text-primary" href="mailto:contact@mertcincinoglu.com">contact@mertcincinoglu.com</a>. Your feedback is invaluable in helping me improve the site.</p>
+              <p class="italic" data-i18n="notice.thanks">Thank you for your patience and support as I work to make this website better for everyone!</p>
+            </div>
+          </div>
         </div>
         <button class="shrink-0 w-8 h-8 flex items-center justify-center border border-tertiary hover:bg-surface font-label-md text-[15px] font-bold" data-action="close-notice" aria-label="Close notice" data-i18n-aria="notice.close">✕</button>
       </div>

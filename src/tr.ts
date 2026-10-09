@@ -38,7 +38,8 @@ export const TR_STATIC: Record<string, string> = {
   // notice under the header
   'notice.close': 'Duyuruyu kapat',
   'notice.title': 'Önemli not',
-  'notice.text': 'Bu site hâlâ yapım aşamasında, bu yüzden bazı özellikler henüz tam çalışmayabilir. Bir sorunla karşılaşırsan ya da bir önerin olursa <a class="underline font-semibold hover:text-primary" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/issues" target="_blank" rel="noopener">GitHub</a> üzerinden paylaşabilir ya da <a class="underline font-semibold hover:text-primary" href="mailto:contact@mertcincinoglu.com">contact@mertcincinoglu.com</a> adresine e-posta gönderebilirsin. Geri bildirimin siteyi geliştirmeme çok yardımcı oluyor.',
+  'notice.lead': 'Bu site hâlâ yapım aşamasında, bu yüzden bazı özellikler henüz tam çalışmayabilir.',
+  'notice.text': 'Bir sorunla karşılaşırsan ya da bir önerin olursa <a class="underline font-semibold hover:text-primary" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/issues" target="_blank" rel="noopener">GitHub</a> üzerinden paylaşabilir ya da <a class="underline font-semibold hover:text-primary" href="mailto:contact@mertcincinoglu.com">contact@mertcincinoglu.com</a> adresine e-posta gönderebilirsin. Geri bildirimin siteyi geliştirmeme çok yardımcı oluyor.',
   'notice.thanks': 'Siteyi herkes için daha iyi hâle getirirken gösterdiğin sabır ve destek için teşekkürler!',
 
   // top bar
