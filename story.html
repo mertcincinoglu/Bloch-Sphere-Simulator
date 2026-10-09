@@ -1,0 +1,99 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="canonical" href="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/story" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mert Çinçinoğlu" />
+    <meta property="og:title" content="Theory &amp; Story — Bloch Sphere Simulator" />
+    <meta property="og:description" content="Eight short chapters on one qubit, each with a live Bloch sphere: superposition, measurement, phase, gates, mixtures and the limits of the picture." />
+    <meta property="og:url" content="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/story" />
+    <meta property="og:image" content="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Bloch Sphere Simulator laboratory: state controls, a 3D Bloch sphere and the step-by-step guide." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title data-i18n="story.title">Theory &amp; Story — Bloch Sphere Simulator</title>
+    <meta name="description" content="Eight short chapters on one qubit, each with a live Bloch sphere: superposition, measurement, phase, gates, mixtures and the limits of the picture." />
+    <link rel="icon" href="/favicon-circle.svg" type="image/svg+xml" />
+  </head>
+  <body class="bg-surface text-on-surface halftone-paper-bg min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <!-- TOP BAR -->
+    <header class="w-full bg-surface-container-low border-b border-outline-variant lg:sticky lg:top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-4">
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 whitespace-nowrap" href="https://www.mertcincinoglu.com"><span>←</span> mertcincinoglu.com</a>
+          <div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
+          <div>
+            <p class="font-headline-sm text-headline-sm tracking-wider uppercase text-on-surface" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</p>
+            <p class="font-label-sm text-label-sm text-on-surface-variant tracking-normal" data-i18n="head.sub">Bloch Sphere Simulator — a free laboratory for one qubit • Monograph Ref. PH-1964-B</p>
+          </div>
+        </div>
+        <nav class="flex flex-wrap items-center gap-x-6 gap-y-1 font-label-md text-label-md" aria-label="Sections" data-i18n-aria="nav.aria">
+          <a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 whitespace-nowrap" href="/projects/bloch-sphere-simulator" data-i18n="nav.lab">LABORATORY</a>
+          <a class="text-primary font-bold border-b-2 border-primary pb-1 flex items-center gap-1 whitespace-nowrap" href="/projects/bloch-sphere-simulator/story" aria-current="page"><span class="inline-block w-1.5 h-1.5 bg-primary rounded-full"></span><span data-i18n="nav.story">THEORY &amp; STORY</span></a>
+          <a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 whitespace-nowrap" href="/projects/bloch-sphere-simulator/sources" data-i18n="nav.sources">NOTATION SOURCES</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <div class="border border-outline-variant bg-surface-container px-2 py-0.5 rounded font-label-sm text-label-sm" role="group" aria-label="Language" data-i18n-aria="lang.aria">
+            <button data-lang="en" lang="en">EN</button>
+            <span class="text-on-surface-variant" aria-hidden="true">|</span>
+            <button data-lang="tr" lang="tr">TR</button>
+          </div>
+          <a class="bg-primary text-on-primary font-headline-sm text-label-md uppercase px-3 py-1.5 rounded shadow-hard-press border border-on-surface flex items-center gap-1.5 hover:bg-primary-container transition-all" href="/projects/bloch-sphere-simulator">
+            <i class="icon size-[16px]" data-icon="menu_book"></i><span data-i18n="story.openLab">OPEN THE LAB</span>
+          </a>
+        </div>
+      </div>
+    </header>
+    <section class="w-full border-b border-outline-variant bg-surface-container-high py-1 px-4 text-center" aria-labelledby="story-banner">
+      <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest" id="story-banner" data-i18n="story.banner">Vol. IV • Theory &amp; Story • Eight chapters, each with a live figure</p>
+    </section>
+
+    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex-1">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <!-- contents -->
+        <aside class="lg:col-span-3 lg:sticky lg:top-24 space-y-6" aria-label="Contents" data-i18n-aria="story.contents">
+          <div class="bg-surface-container-low border border-outline-variant p-4 shadow-hard-card">
+            <div class="flex items-center justify-between pb-2 border-b border-outline-variant mb-3">
+              <h2 class="font-label-md text-label-md font-bold text-primary" data-i18n="story.contentsHead">§ CONTENTS</h2>
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase" data-i18n="story.contentsSub">VOL. IV / EXP. NOTES</span>
+            </div>
+            <div class="mb-4 bg-surface-container px-2.5 py-1.5 border border-outline-variant text-label-sm font-label-sm flex items-center justify-between">
+              <span class="text-on-surface font-bold" id="reading-chapter"></span>
+              <span class="text-on-surface-variant" id="reading-time"></span>
+            </div>
+            <nav class="space-y-1 font-label-md text-label-md" id="toc" aria-label="Chapters" data-i18n-aria="story.chapters"></nav>
+            <div class="mt-6 pt-3 border-t border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+              <p class="uppercase leading-tight font-bold" data-i18n="story.everyClaim">Every claim cites a source</p>
+              <a class="italic font-body-sm text-[13px] underline hover:text-primary" href="/projects/bloch-sphere-simulator/sources" data-i18n="story.seeSources">See Notation &amp; Sources</a>
+            </div>
+          </div>
+          <div class="hidden lg:block bg-surface-container-high border-l-2 border-secondary p-3 text-body-sm font-body-sm text-on-surface-variant">
+            <p class="font-label-sm text-label-sm uppercase font-bold text-secondary mb-1" data-i18n="story.marginHead">§ Marginal note</p>
+            <em data-i18n="story.marginText">Every figure here is a small version of the laboratory. The lab has all the controls at once.</em>
+            <p class="font-label-sm text-label-sm mt-1"><a class="underline hover:text-primary" href="/projects/bloch-sphere-simulator" data-i18n="story.marginLink">Open the lab →</a></p>
+          </div>
+        </aside>
+
+        <!-- chapter -->
+        <main class="lg:col-span-9 max-w-3xl space-y-8 min-w-0" id="chapter" aria-live="polite"></main>
+      </div>
+    </div>
+
+    <footer class="w-full bg-surface-container border-t border-outline-variant px-space-lg py-1.5 flex flex-col md:flex-row justify-between items-center text-label-sm font-label-sm text-on-surface-variant gap-1">
+      <div data-i18n="foot.build">FIRST EDITION • OCTOBER 2026</div>
+      <div class="flex flex-wrap justify-center items-center gap-x-space-md gap-y-1">
+        <a class="hover:text-primary underline" href="/projects/bloch-sphere-simulator/sources" data-i18n="foot.sources">SOURCES</a>
+        <span aria-hidden="true">•</span>
+        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator" target="_blank" rel="noopener" data-i18n="foot.code">SOURCE CODE</a>
+        <span aria-hidden="true">•</span>
+        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="foot.licence">MIT LICENCE</a>
+        <span aria-hidden="true">•</span>
+        <span class="font-bold text-on-surface">© 2026 Mert Çinçinoğlu</span>
+      </div>
+    </footer>
+    <script type="module" src="/src/story-page.ts"></script>
+  </body>
+</html>

@@ -3,183 +3,210 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta name="robots" content="noindex" />
-    <title>Bloch Sphere Simulator — Lab for One Qubit</title>
+    <link rel="canonical" href="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mert Çinçinoğlu" />
+    <meta property="og:title" content="Bloch Sphere Simulator — Lab for One Qubit" />
+    <meta property="og:description" content="A free laboratory for one qubit: set a state, turn it with gates, measure it, and see every step explained." />
+    <meta property="og:url" content="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator" />
+    <meta property="og:image" content="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Bloch Sphere Simulator laboratory: state controls, a 3D Bloch sphere and the step-by-step guide." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title data-i18n="lab.title">Bloch Sphere Simulator — Lab for One Qubit</title>
+    <meta name="description" content="A free laboratory for one qubit: set a state, turn it with gates, measure it, and see every step explained." />
+    <link rel="icon" href="/favicon-circle.svg" type="image/svg+xml" />
   </head>
-  <body class="min-h-screen flex flex-col font-body-md text-on-surface select-none">
+  <body class="min-h-screen flex flex-col font-body-md text-on-surface">
     <!-- TOP BAR -->
-    <header class="w-full bg-surface-container-low border-b border-outline-variant px-space-lg py-space-xs flex flex-wrap lg:flex-nowrap items-center justify-between gap-y-1 z-20">
+    <header class="w-full bg-surface-container-low border-b border-outline-variant px-space-lg py-space-xs flex flex-wrap lg:flex-nowrap items-center justify-between gap-x-space-md gap-y-1 z-20">
       <div class="flex items-center gap-space-lg">
-        <a class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-1 font-bold" href="https://www.mertcincinoglu.com"><span>←</span> mertcincinoglu.com</a>
-        <div class="h-4 w-px bg-outline-variant"></div>
+        <a class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-1 font-bold whitespace-nowrap" href="https://www.mertcincinoglu.com"><span>←</span> mertcincinoglu.com</a>
+        <div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
         <div class="flex flex-col">
-          <h1 class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface font-bold leading-none">VOL. IV — BLOCH STATE APPARATUS</h1>
-          <span class="font-label-sm text-label-sm text-on-surface-variant tracking-normal">A free educational laboratory for exploring one qubit • Monograph Ref. PH-1964-B</span>
+          <h1 class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface font-bold leading-none" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</h1>
+          <span class="font-label-sm text-label-sm text-on-surface-variant tracking-normal" data-i18n="head.sub">Bloch Sphere Simulator — a free laboratory for one qubit • Monograph Ref. PH-1964-B</span>
         </div>
       </div>
-      <!-- Center Nav Tabs -->
-      <nav class="hidden md:flex items-center gap-space-md">
-        <button class="font-label-md text-label-md text-primary font-bold border-b-2 border-primary pb-0.5" aria-current="page">LABORATORY</button>
-        <button class="font-label-md text-label-md text-on-surface-variant font-normal pb-0.5 hover:text-on-surface" disabled title="Coming soon">THEORY &amp; STORY</button>
-        <a class="font-label-md text-label-md text-on-surface-variant font-normal pb-0.5 hover:text-on-surface" href="#sources">NOTATION SOURCES</a>
+      <nav class="flex flex-wrap items-center gap-x-space-md gap-y-1 order-last lg:order-none w-full lg:w-auto" aria-label="Sections" data-i18n-aria="nav.aria">
+        <a class="font-label-md text-label-md text-primary font-bold border-b-2 border-primary pb-0.5 whitespace-nowrap" aria-current="page" href="/projects/bloch-sphere-simulator" data-i18n="nav.lab">LABORATORY</a>
+        <a class="font-label-md text-label-md text-on-surface-variant font-normal pb-0.5 hover:text-on-surface whitespace-nowrap" href="/projects/bloch-sphere-simulator/story" data-i18n="nav.story">THEORY &amp; STORY</a>
+        <a class="font-label-md text-label-md text-on-surface-variant font-normal pb-0.5 hover:text-on-surface whitespace-nowrap" href="/projects/bloch-sphere-simulator/sources" data-i18n="nav.sources">NOTATION SOURCES</a>
       </nav>
-      <!-- Right Controls -->
-      <div class="flex items-center gap-space-md">
-        <div class="flex items-center border border-outline bg-surface-container-lowest px-2 py-0.5 text-label-sm font-label-sm hard-shadow-sm">
-          <span class="font-bold text-primary">EN</span>
-          <span class="text-outline mx-1">|</span>
-          <span class="text-on-surface-variant opacity-50" title="Türkçe — coming soon">TR</span>
+      <div class="flex items-center gap-space-sm sm:gap-space-md">
+        <div class="flex items-center border border-outline bg-surface-container-lowest px-2 py-0.5 text-label-sm font-label-sm hard-shadow-sm" role="group" aria-label="Language" data-i18n-aria="lang.aria">
+          <button class="font-bold" data-lang="en" lang="en">EN</button>
+          <span class="text-on-surface-variant mx-1" aria-hidden="true">|</span>
+          <button class="font-bold" data-lang="tr" lang="tr">TR</button>
         </div>
         <button class="flex items-center gap-1 bg-surface-container hover:bg-surface-container-high border border-outline px-2.5 py-1 text-label-sm font-label-sm font-bold hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-action="guide">
-          <i class="icon size-[16px]" data-icon="menu_book"></i><span>LAB GUIDE</span>
+          <i class="icon size-[16px]" data-icon="menu_book"></i><span data-i18n="head.guide">LAB GUIDE</span>
         </button>
         <button class="bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm uppercase font-bold px-3 py-1.5 hard-shadow active:translate-x-0.5 active:translate-y-0.5 transition-transform flex items-center gap-1" data-action="reset-zero">
-          <i class="icon size-[15px]" data-icon="restart_alt"></i><span>RESET COORD</span>
+          <i class="icon size-[15px]" data-icon="restart_alt"></i><span data-i18n="head.reset">RESET COORD</span>
         </button>
       </div>
     </header>
 
     <!-- how to use, for a first-time visitor -->
-    <section class="bg-surface-container-low border-b border-outline-variant px-space-lg py-1.5 flex flex-wrap items-baseline gap-x-space-lg gap-y-1" aria-label="How to use">
-      <p class="font-body-md text-[16px] leading-snug text-on-surface">A <strong>qubit</strong> is the basic unit of a quantum computer. Its state is the arrow on the sphere: up is <strong>|0⟩</strong>, down is <strong>|1⟩</strong>, anywhere between is a mix of both.</p>
-      <p class="font-label-sm text-label-sm text-on-surface-variant"><b class="text-primary">§ 1</b> set a state · <b class="text-primary">§ 2</b> turn it with gates · <b class="text-primary">§ 3</b> measure it</p>
+    <section class="bg-surface-container-low border-b border-outline-variant px-space-lg py-1.5 flex flex-wrap items-baseline gap-x-space-lg gap-y-1" aria-label="How to use" data-i18n-aria="intro.aria">
+      <p class="font-body-md text-[16px] leading-snug text-on-surface" data-i18n-html="intro.text">A <strong>qubit</strong> is the basic unit of a quantum computer. Its state is the arrow: up is <strong>|0⟩</strong>, down is <strong>|1⟩</strong>, any other point on the surface is a superposition of the two; points inside are mixtures.</p>
+      <p class="font-label-sm text-label-sm text-on-surface-variant" data-i18n-html="intro.steps"><b class="text-primary">§ 1</b> set a state · <b class="text-primary">§ 2</b> turn it with gates · <b class="text-primary">§ 3</b> measure it</p>
     </section>
 
     <!-- MAIN THREE-COLUMN WORKBENCH -->
-    <main class="flex-1 grid grid-cols-12 gap-0 overflow-hidden min-h-[calc(100vh-125px)]">
+    <main class="flex-1 grid grid-cols-12 gap-0 overflow-hidden max-lg:overflow-clip lg:min-h-[calc(100vh-125px)]">
       <!-- LEFT COLUMN: Coordinates & Quantum Gates -->
-      <aside class="col-span-12 lg:col-span-3 bg-surface-container-low border-r border-outline-variant p-space-md flex flex-col justify-between overflow-y-auto">
+      <aside aria-label="State and gates" data-i18n-aria="aside.controls" class="order-2 lg:order-none col-span-12 lg:col-span-3 bg-surface-container-low border-r border-outline-variant p-space-md flex flex-col justify-between overflow-y-auto">
         <div class="space-y-space-md">
           <div class="flex justify-between items-baseline border-b border-outline pb-1">
-            <span class="font-label-sm text-label-sm font-bold tracking-widest text-primary">§ 1. STATE COORDINATES</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">FIG. 1-A</span>
+            <h2 class="font-label-sm text-label-sm font-bold tracking-widest text-primary" data-i18n="state.head">§ 1. STATE COORDINATES</h2>
+            <span class="font-label-sm text-label-sm text-on-surface-variant" data-i18n="state.fig">FIG. 1-A</span>
           </div>
           <div class="bg-surface-container p-space-sm border border-outline-variant hard-shadow-sm space-y-3">
             <div>
-              <div class="flex justify-between items-center mb-1 font-label-sm text-label-sm">
-                <label for="slider-theta" class="font-bold text-on-surface flex items-center gap-1"><span class="italic font-body-md text-base text-primary">θ</span> (Polar Angle / Z-axis)</label>
-                <span class="font-label-md text-label-md bg-surface-container-lowest px-1 border border-outline" id="readout-theta">0.50 π (90.0°)</span>
+              <div class="flex justify-between items-center gap-2 mb-1 font-label-sm text-label-sm">
+                <label for="slider-theta" class="font-bold text-on-surface flex items-center gap-1"><span class="italic font-body-md text-base text-primary">θ</span> <span data-i18n="state.theta">(Polar Angle / Z-axis)</span></label>
+                <span class="font-label-md text-label-md bg-surface-container-lowest px-1 border border-outline whitespace-nowrap" id="readout-theta">0.50 π (90.0°)</span>
               </div>
               <input class="w-full cursor-ew-resize" id="slider-theta" max="3.14159" min="0" step="0.01" type="range" value="1.57079" />
-              <div class="flex justify-between text-[9px] font-label-sm text-outline mt-0.5"><span>0 (|0⟩)</span><span>π/2 (Eq.)</span><span>π (|1⟩)</span></div>
+              <div class="flex justify-between text-[9px] font-label-sm text-on-surface-variant mt-0.5"><span>0 (|0⟩)</span><span data-i18n="state.eq">π/2 (Eq.)</span><span>π (|1⟩)</span></div>
+              <div class="text-[10px] font-label-sm text-on-surface-variant mt-0.5"><span data-i18n="state.half">Hilbert angle θ/2 =</span> <b id="readout-half">45.0°</b></div>
             </div>
             <div>
-              <div class="flex justify-between items-center mb-1 font-label-sm text-label-sm">
-                <label for="slider-phi" class="font-bold text-on-surface flex items-center gap-1"><span class="italic font-body-md text-base text-secondary">φ</span> (Azimuthal / X-Y Phase)</label>
-                <span class="font-label-md text-label-md bg-surface-container-lowest px-1 border border-outline" id="readout-phi">0.00 π (0.0°)</span>
+              <div class="flex justify-between items-center gap-2 mb-1 font-label-sm text-label-sm">
+                <label for="slider-phi" class="font-bold text-on-surface flex items-center gap-1"><span class="italic font-body-md text-base text-secondary">φ</span> <span data-i18n="state.phi">(Azimuthal / X-Y Phase)</span></label>
+                <span class="font-label-md text-label-md bg-surface-container-lowest px-1 border border-outline whitespace-nowrap" id="readout-phi">0.00 π (0.0°)</span>
               </div>
               <input class="w-full cursor-ew-resize" id="slider-phi" max="6.28318" min="0" step="0.01" type="range" value="0" />
-              <div class="flex justify-between text-[9px] font-label-sm text-outline mt-0.5"><span>0 (+X)</span><span>π/2 (+Y)</span><span>π (−X)</span><span>2π</span></div>
+              <div class="flex justify-between text-[9px] font-label-sm text-on-surface-variant mt-0.5"><span>0 (+X)</span><span>π/2 (+Y)</span><span>π (−X)</span><span>2π</span></div>
             </div>
-            <div class="pt-2 border-t border-outline-variant flex items-center justify-between font-label-sm text-label-sm">
-              <label for="slider-radius" class="text-on-surface-variant">Purity <span class="italic font-body-md">r</span> :</label>
+            <div class="pt-2 border-t border-outline-variant flex items-center justify-between gap-2 font-label-sm text-label-sm">
+              <label for="slider-radius" class="text-on-surface-variant"><span data-i18n="state.length">Length</span> <span class="italic font-body-md">r</span> <span data-i18n="state.lengthHint">(1 = pure) :</span></label>
               <div class="flex items-center gap-1">
                 <input class="w-20" id="slider-radius" max="1.0" min="0" step="0.05" type="range" value="1.0" />
-                <span class="bg-surface-container-lowest px-1 border border-outline text-[11px]" id="readout-r">1.00 (Pure)</span>
+                <span class="bg-surface-container-lowest px-1 border border-outline text-[11px] whitespace-nowrap" id="readout-r">1.00 (Pure)</span>
               </div>
             </div>
           </div>
           <div>
-            <div class="text-[11px] font-label-sm uppercase tracking-wide text-on-surface-variant mb-1 font-bold">Canonical Basis Presets</div>
+            <h3 class="text-[11px] font-label-sm uppercase tracking-wide text-on-surface-variant mb-1 font-bold" data-i18n="state.presets">Canonical Basis Presets</h3>
             <div class="grid grid-cols-3 gap-1.5">
-              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0,0" data-label="|0⟩ [North Pole]"><span class="font-bold text-primary">|0⟩</span> <span class="text-[9px] text-outline block">+Z pole</span></button>
-              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="1,0" data-label="|1⟩ [South Pole]"><span class="font-bold text-primary">|1⟩</span> <span class="text-[9px] text-outline block">−Z pole</span></button>
-              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,0" data-label="|+⟩ [Superposition X+]"><span class="font-bold text-secondary">|+⟩</span> <span class="text-[9px] text-outline block">+X axis</span></button>
-              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,1" data-label="|−⟩ [Superposition X−]"><span class="font-bold text-secondary">|−⟩</span> <span class="text-[9px] text-outline block">−X axis</span></button>
-              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,0.5" data-label="|i⟩ [Imaginary Y+]"><span class="font-bold text-tertiary">|i⟩</span> <span class="text-[9px] text-outline block">+Y axis</span></button>
-              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,1.5" data-label="|−i⟩ [Imaginary Y−]"><span class="font-bold text-tertiary">|−i⟩</span> <span class="text-[9px] text-outline block">−Y axis</span></button>
+              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0,0" data-label="|0⟩"><span class="font-bold text-secondary">|0⟩</span> <span class="text-[9px] text-on-surface-variant block" data-i18n="preset.pz">+Z pole</span></button>
+              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="1,0" data-label="|1⟩"><span class="font-bold text-secondary">|1⟩</span> <span class="text-[9px] text-on-surface-variant block" data-i18n="preset.mz">−Z pole</span></button>
+              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,0" data-label="|+⟩"><span class="font-bold text-primary">|+⟩</span> <span class="text-[9px] text-on-surface-variant block" data-i18n="preset.px">+X axis</span></button>
+              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,1" data-label="|−⟩"><span class="font-bold text-primary">|−⟩</span> <span class="text-[9px] text-on-surface-variant block" data-i18n="preset.mx">−X axis</span></button>
+              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,0.5" data-label="|i⟩"><span class="font-bold text-tertiary">|i⟩</span> <span class="text-[9px] text-on-surface-variant block" data-i18n="preset.py">+Y axis</span></button>
+              <button class="bg-surface hover:bg-surface-container-highest border border-outline py-1 px-1.5 text-center font-label-md text-label-md hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-preset="0.5,1.5" data-label="|−i⟩"><span class="font-bold text-tertiary">|−i⟩</span> <span class="text-[9px] text-on-surface-variant block" data-i18n="preset.my">−Y axis</span></button>
             </div>
           </div>
           <div class="pt-2">
             <div class="flex justify-between items-baseline border-b border-outline pb-1 mb-2">
-              <span class="font-label-sm text-label-sm font-bold tracking-widest text-primary">§ 2. QUANTUM GATES (ROTATIONS)</span>
-              <span class="font-label-sm text-label-sm text-on-surface-variant">UNITARY U</span>
+              <h2 class="font-label-sm text-label-sm font-bold tracking-widest text-primary" data-i18n="gates.head">§ 2. QUANTUM GATES (ROTATIONS)</h2>
+              <span class="font-label-sm text-label-sm text-on-surface-variant" data-i18n="gates.unitary">UNITARY U</span>
             </div>
             <div class="grid grid-cols-3 gap-1.5 font-label-sm">
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="X">
-                <div class="flex justify-between items-center"><span class="font-bold text-sm text-primary">Pauli X</span><span class="text-[9px] font-mono text-outline">π on X</span></div>
-                <span class="text-[10px] text-on-surface-variant block mt-0.5">Bit Flip</span>
+                <div class="flex justify-between items-center"><span class="font-bold text-sm text-primary">Pauli X</span><span class="text-[9px] font-mono text-on-surface-variant" data-i18n="gate.onX">π on X</span></div>
+                <span class="text-[10px] text-on-surface-variant block mt-0.5" data-i18n="gate.X">Bit Flip</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="Y">
-                <div class="flex justify-between items-center"><span class="font-bold text-sm text-tertiary">Pauli Y</span><span class="text-[9px] font-mono text-outline">π on Y</span></div>
-                <span class="text-[10px] text-on-surface-variant block mt-0.5">Bit+Phase</span>
+                <div class="flex justify-between items-center"><span class="font-bold text-sm text-tertiary">Pauli Y</span><span class="text-[9px] font-mono text-on-surface-variant" data-i18n="gate.onY">π on Y</span></div>
+                <span class="text-[10px] text-on-surface-variant block mt-0.5" data-i18n="gate.Y">Bit+Phase</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="Z">
-                <div class="flex justify-between items-center"><span class="font-bold text-sm text-secondary">Pauli Z</span><span class="text-[9px] font-mono text-outline">π on Z</span></div>
-                <span class="text-[10px] text-on-surface-variant block mt-0.5">Phase Flip</span>
+                <div class="flex justify-between items-center"><span class="font-bold text-sm text-secondary">Pauli Z</span><span class="text-[9px] font-mono text-on-surface-variant" data-i18n="gate.onZ">π on Z</span></div>
+                <span class="text-[10px] text-on-surface-variant block mt-0.5" data-i18n="gate.Z">Phase Flip</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5 col-span-2" data-gate="H">
-                <div class="flex justify-between items-center"><span class="font-bold text-sm text-primary">Hadamard (H)</span><span class="text-[9px] font-mono text-outline">X+Z diag</span></div>
-                <span class="text-[10px] text-on-surface-variant block mt-0.5">Creates pure superposition</span>
+                <div class="flex justify-between items-center"><span class="font-bold text-sm text-primary">Hadamard (H)</span><span class="text-[9px] font-mono text-on-surface-variant" data-i18n="gate.onH">X+Z diag</span></div>
+                <span class="text-[10px] text-on-surface-variant block mt-0.5" data-i18n="gate.H">Swaps Z ↔ X</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="S">
-                <div class="flex justify-between items-center"><span class="font-bold text-sm text-secondary">Phase S</span><span class="text-[9px] font-mono text-outline">π/2</span></div>
-                <span class="text-[10px] text-on-surface-variant block mt-0.5">Quarter turn</span>
+                <div class="flex justify-between items-center"><span class="font-bold text-sm text-secondary">Phase S</span><span class="text-[9px] font-mono text-on-surface-variant">π/2</span></div>
+                <span class="text-[10px] text-on-surface-variant block mt-0.5" data-i18n="gate.S">Quarter turn</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="T">
-                <div class="flex justify-between items-center"><span class="font-bold text-sm text-secondary">π/8 Gate T</span><span class="text-[9px] font-mono text-outline">π/4</span></div>
-                <span class="text-[10px] text-on-surface-variant block mt-0.5">Eighth turn</span>
+                <div class="flex justify-between items-center"><span class="font-bold text-sm text-secondary">π/8 Gate T</span><span class="text-[9px] font-mono text-on-surface-variant">π/4</span></div>
+                <span class="text-[10px] text-on-surface-variant block mt-0.5" data-i18n="gate.T">Eighth turn</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="Rx">
-                <span class="font-bold text-xs text-primary block">Rx(π/4)</span><span class="text-[9px] text-on-surface-variant">45° pitch</span>
+                <span class="font-bold text-xs text-primary block">Rx(π/4)</span><span class="text-[9px] text-on-surface-variant" data-i18n="gate.Rx">45° about X</span>
               </button>
               <button class="group relative bg-surface-container hover:bg-surface-container-high border border-outline p-1.5 text-left hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5" data-gate="Ry">
-                <span class="font-bold text-xs text-tertiary block">Ry(π/4)</span><span class="text-[9px] text-on-surface-variant">45° roll</span>
+                <span class="font-bold text-xs text-tertiary block">Ry(π/4)</span><span class="text-[9px] text-on-surface-variant" data-i18n="gate.Ry">45° about Y</span>
               </button>
             </div>
           </div>
+          <form class="pt-2 border-t border-outline-variant" id="custom-rotation">
+            <div class="flex justify-between items-baseline border-b border-outline pb-1 mb-1.5"><h3 class="font-label-sm text-label-sm font-bold tracking-widest text-primary" data-i18n="custom.head">CUSTOM ROTATION Rn(α)</h3><span class="font-label-sm text-[9px] text-on-surface-variant font-mono" data-i18n="custom.kind">AXIS-ANGLE</span></div>
+            <p class="font-body-sm text-[11px] text-on-surface-variant leading-tight mb-2" data-i18n="custom.hint">Turn the arrow about any axis n̂(θn, φn) by angle α. Write values in units of π.</p>
+            <div class="bg-surface-container border border-outline-variant p-2 hard-shadow-sm space-y-2">
+              <div class="grid grid-cols-3 gap-1.5 text-center">
+                <div class="flex flex-col"><label for="cr-theta" class="font-label-sm text-[9px] text-on-surface-variant font-bold mb-0.5" data-i18n="custom.theta">AXIS θn</label><input id="cr-theta" class="font-label-sm text-[11px] bg-surface-container-lowest border border-outline px-1 py-0.5 text-center font-bold text-on-surface" inputmode="decimal" type="text" value="0.50π" /></div>
+                <div class="flex flex-col"><label for="cr-phi" class="font-label-sm text-[9px] text-on-surface-variant font-bold mb-0.5" data-i18n="custom.phi">AXIS φn</label><input id="cr-phi" class="font-label-sm text-[11px] bg-surface-container-lowest border border-outline px-1 py-0.5 text-center font-bold text-on-surface" inputmode="decimal" type="text" value="0.00π" /></div>
+                <div class="flex flex-col"><label for="cr-angle" class="font-label-sm text-[9px] text-on-surface-variant font-bold mb-0.5" data-i18n="custom.angle">ANGLE α</label><input id="cr-angle" class="font-label-sm text-[11px] bg-surface-container-lowest border border-outline px-1 py-0.5 text-center font-bold text-primary" inputmode="decimal" type="text" value="0.25π" /></div>
+              </div>
+              <div class="flex items-center justify-between gap-2 pt-1 border-t border-outline-variant">
+                <span class="font-label-sm text-[9px] text-error" id="cr-error" aria-live="polite"></span>
+                <button type="submit" class="bg-primary hover:bg-primary-container text-on-primary font-label-sm text-[10px] font-bold uppercase px-2.5 py-0.5 min-h-6 hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5 transition-transform flex items-center gap-1"><i class="icon size-[13px]" data-icon="rotate_right"></i><span data-i18n="custom.apply">APPLY</span></button>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="pt-3 mt-space-md border-t border-outline-variant flex items-center justify-between text-label-sm font-label-sm">
-          <button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface hover:underline" data-action="undo"><i class="icon size-[14px]" data-icon="undo"></i> Undo Gate</button>
-          <span class="text-outline">|</span>
-          <button class="flex items-center gap-1 text-primary hover:underline font-bold" data-action="reset-zero"><i class="icon size-[14px]" data-icon="restart_alt"></i> Reset to |0⟩</button>
+          <button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface hover:underline min-h-6 py-1" data-action="undo"><i class="icon size-[14px]" data-icon="undo"></i> <span data-i18n="state.undo">Undo Gate</span></button>
+          <span class="text-on-surface-variant" aria-hidden="true">|</span>
+          <button class="flex items-center gap-1 text-primary hover:underline font-bold min-h-6 py-1" data-action="reset-zero"><i class="icon size-[14px]" data-icon="restart_alt"></i> <span data-i18n="state.reset">Reset to |0⟩</span></button>
         </div>
       </aside>
 
       <!-- CENTER STAGE: Bloch sphere and readout strip -->
-      <section class="col-span-12 lg:col-span-6 bg-surface flex flex-col justify-between border-r border-outline-variant relative">
+      <section class="order-1 lg:order-none col-span-12 lg:col-span-6 bg-surface flex flex-col justify-between lg:border-r border-b lg:border-b-0 border-outline-variant lg:relative max-lg:sticky max-lg:top-0 max-lg:z-30 max-lg:self-start max-lg:shadow-[0_3px_0_0_#dec0b6]" aria-label="Bloch sphere" data-i18n-aria="fig.region">
         <div class="px-space-md pt-space-sm flex flex-wrap gap-1 justify-between items-center z-10">
           <div class="flex items-center gap-2">
-            <div class="bg-surface-container px-2 py-0.5 border border-outline text-[11px] font-label-sm font-bold uppercase tracking-wider">FIG. 2 — STATE VECTOR TRAJECTORY ON S² MANIFOLD</div>
-            <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse" title="Engine Live"></span>
+            <div class="max-sm:hidden bg-surface-container px-2 py-0.5 border border-outline text-[11px] font-label-sm font-bold uppercase tracking-wider" data-i18n="fig.title">FIG. 2 — STATE VECTOR IN THE BLOCH BALL</div>
+            <span class="max-sm:hidden inline-block w-2 h-2 rounded-full bg-secondary animate-pulse" aria-hidden="true"></span>
           </div>
-          <div class="flex items-center gap-1">
-            <button class="px-2 py-0.5 text-label-sm font-label-sm bg-surface-container hover:bg-surface-container-highest border border-outline hard-shadow-sm" id="btn-autorotate">Auto-Rotate: OFF</button>
-            <button class="px-2 py-0.5 text-label-sm font-label-sm bg-surface-container hover:bg-surface-container-highest border border-outline hard-shadow-sm" data-action="reset-view">Reset View</button>
+          <div class="flex flex-wrap items-center gap-1">
+            <button class="px-2 py-1 min-h-6 text-label-sm font-label-sm bg-surface-container hover:bg-surface-container-highest border border-outline hard-shadow-sm" id="btn-autorotate" aria-pressed="false">Auto-Rotate: OFF</button>
+            <button class="px-2 py-1 min-h-6 text-label-sm font-label-sm bg-surface-container hover:bg-surface-container-highest border border-outline hard-shadow-sm" data-action="reset-view" data-i18n="fig.resetView">Reset View</button>
+            <button class="px-2 py-1 min-h-6 text-label-sm font-label-sm bg-surface-container hover:bg-surface-container-highest border border-outline hard-shadow-sm flex items-center gap-1 active:translate-x-0.5 active:translate-y-0.5" data-action="share"><i class="icon size-[14px] text-on-surface-variant" data-icon="share"></i><span data-i18n="fig.share">SHARE STATE</span></button>
           </div>
         </div>
-        <div class="relative flex-1 flex items-center justify-center p-2 overflow-hidden min-h-[380px]">
+        <div class="relative flex-1 flex items-center justify-center p-1 lg:p-2 overflow-hidden lg:min-h-[380px]">
           <div class="absolute inset-0 halftone-sphere-bg pointer-events-none"></div>
-          <div class="absolute top-4 left-4 pointer-events-none text-[10px] font-label-sm text-outline border-l border-t border-outline pl-1 pt-0.5">UNIT SPHERE: |r| ≤ 1<br />DRAG TO ROTATE</div>
-          <div class="absolute bottom-4 right-4 pointer-events-none text-[10px] font-label-sm text-outline text-right border-r border-b border-outline pr-1 pb-0.5">PROJECTION: ORTHOGRAPHIC<br />OCTANT: I (+X, +Y, +Z)</div>
-          <div id="sphere" class="relative cursor-grab active:cursor-grabbing w-full max-w-[560px] h-[400px]" aria-label="3D Bloch sphere. Drag to turn it."></div>
-          <div class="absolute bottom-4 left-4 bg-surface-container-lowest/90 backdrop-blur-xs border border-outline p-1.5 text-label-sm font-label-sm hard-shadow-sm">
-            <div class="text-[9px] text-outline uppercase font-mono">Current Rotation Matrix</div>
-            <div class="font-bold text-primary" id="quick-rotation-badge">R(z: 0.00π, y: 0.50π)</div>
+          <div class="absolute top-4 left-4 pointer-events-none text-[10px] font-label-sm text-on-surface-variant border-l hidden sm:block border-t border-outline pl-1 pt-0.5" data-i18n-html="fig.cornerA">BLOCH BALL: |r| ≤ 1<br />DRAG TO ROTATE</div>
+          <div class="absolute bottom-4 right-4 pointer-events-none text-[10px] font-label-sm text-on-surface-variant text-right border-r border-b border-outline pr-1 pb-0.5 hidden sm:block" data-i18n-html="fig.cornerB">PROJECTION: ORTHOGRAPHIC<br />INITIAL VIEW: OCTANT I</div>
+          <div id="sphere" class="relative cursor-grab active:cursor-grabbing w-full max-w-[560px] h-[max(170px,27svh)] lg:h-[400px]" tabindex="0" role="img" aria-label="3D Bloch sphere. Drag, or use the arrow keys, to turn the view." data-i18n-aria="fig.aria"></div>
+          <div class="absolute bottom-4 left-4 bg-surface-container-lowest/90 backdrop-blur-xs border border-outline p-1.5 text-label-sm font-label-sm hard-shadow-sm hidden sm:block">
+            <div class="text-[9px] text-on-surface-variant uppercase font-mono" data-i18n="fig.prepared">Prepared from |0⟩ by</div>
+            <div class="font-bold text-primary" id="quick-rotation-badge">Rz(0.00π)·Ry(0.50π)</div>
           </div>
         </div>
-        <div class="bg-surface-container-low border-t border-outline-variant p-space-sm space-y-2">
-          <div class="flex flex-col sm:flex-row items-center justify-between bg-surface-container-lowest border border-outline p-2 hard-shadow-sm">
-            <div class="font-body-lg text-lg text-on-surface">
+        <div class="bg-surface-container-low border-t border-outline-variant p-1.5 lg:p-space-sm space-y-1 lg:space-y-2">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-1 bg-surface-container-lowest border border-outline p-1 lg:p-2 hard-shadow-sm">
+            <div class="font-body-lg text-base lg:text-lg text-on-surface text-center sm:text-left">
               <span class="font-bold text-primary">|ψ⟩</span> =
-              <span class="font-serif" id="formula-expanded">cos(θ/2)|0⟩ + e<sup>iφ</sup>sin(θ/2)|1⟩</span>
-              <span class="text-outline mx-2">≈</span>
+              <span class="font-serif max-sm:hidden" id="formula-expanded">cos(θ/2)|0⟩ + e<sup>iφ</sup>sin(θ/2)|1⟩</span>
+              <span class="text-on-surface-variant mx-2 max-sm:hidden">≈</span>
               <span class="font-label-md text-label-md font-bold text-secondary" id="formula-numeric">0.707 |0⟩ + 0.707 |1⟩</span>
             </div>
-            <div class="flex items-center gap-1 mt-1 sm:mt-0">
-              <span class="text-[10px] font-label-sm text-outline uppercase">Norm:</span>
-              <span class="text-label-sm font-label-sm font-bold bg-surface-container px-1 border border-outline-variant" id="norm">⟨ψ|ψ⟩ = 1.000</span>
+            <div class="flex items-center gap-1 max-lg:hidden">
+              <span class="text-[10px] font-label-sm text-on-surface-variant uppercase" data-i18n="fig.norm">Norm · Purity:</span>
+              <span class="text-label-sm font-label-sm font-bold bg-surface-container px-1 border border-outline-variant whitespace-nowrap" id="norm">⟨ψ|ψ⟩ = 1 · Tr ρ² = 1.000</span>
             </div>
           </div>
           <div class="grid grid-cols-12 gap-2">
-            <div class="col-span-12 sm:col-span-6 bg-surface-container border border-outline-variant p-2 flex items-center justify-around font-label-sm text-label-sm">
-              <div class="text-center"><span class="text-outline block text-[9px]">COORD X</span><span class="font-bold text-xs text-primary" id="coord-x">+1.000</span></div>
+            <div class="max-lg:hidden col-span-12 sm:col-span-6 bg-surface-container border border-outline-variant p-2 flex items-center justify-around font-label-sm text-label-sm">
+              <div class="text-center"><span class="text-on-surface-variant block text-[9px]"><span data-i18n="coord">COORD</span> X = ⟨X⟩</span><span class="font-bold text-xs text-primary" id="coord-x">+1.000</span></div>
               <div class="h-5 w-px bg-outline-variant"></div>
-              <div class="text-center"><span class="text-outline block text-[9px]">COORD Y</span><span class="font-bold text-xs text-tertiary" id="coord-y">0.000</span></div>
+              <div class="text-center"><span class="text-on-surface-variant block text-[9px]"><span data-i18n="coord">COORD</span> Y = ⟨Y⟩</span><span class="font-bold text-xs text-tertiary" id="coord-y">0.000</span></div>
               <div class="h-5 w-px bg-outline-variant"></div>
-              <div class="text-center"><span class="text-outline block text-[9px]">COORD Z</span><span class="font-bold text-xs text-secondary" id="coord-z">0.000</span></div>
+              <div class="text-center"><span class="text-on-surface-variant block text-[9px]"><span data-i18n="coord">COORD</span> Z = ⟨Z⟩</span><span class="font-bold text-xs text-secondary" id="coord-z">0.000</span></div>
             </div>
-            <div class="col-span-12 sm:col-span-6 bg-surface-container border border-outline-variant p-2 flex flex-col justify-center">
+            <div class="col-span-12 lg:col-span-6 bg-surface-container border border-outline-variant p-2 flex flex-col justify-center">
               <div class="flex justify-between text-label-sm text-[11px] mb-1 font-bold">
                 <span>P(|0⟩): <span class="text-primary font-mono" id="prob-0-text">50.0%</span></span>
                 <span>P(|1⟩): <span class="text-secondary font-mono" id="prob-1-text">50.0%</span></span>
@@ -194,123 +221,128 @@
       </section>
 
       <!-- RIGHT COLUMN: what just happened, guide -->
-      <aside class="col-span-12 lg:col-span-3 bg-surface-container-low p-space-md flex flex-col justify-between overflow-y-auto space-y-space-md">
+      <aside aria-label="Guide and interpretation" data-i18n-aria="aside.guide" class="order-4 lg:order-none col-span-12 lg:col-span-3 bg-surface-container-low p-space-md flex flex-col justify-between overflow-y-auto space-y-space-md border-t lg:border-t-0 border-outline-variant">
         <div class="space-y-3">
           <div class="flex justify-between items-baseline border-b border-outline pb-1">
-            <span class="font-label-sm text-label-sm font-bold tracking-widest text-primary">§ GUIDE &amp; INTERPRETATION</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">EXEGESIS</span>
+            <h2 class="font-label-sm text-label-sm font-bold tracking-widest text-primary" data-i18n="guide.head">§ GUIDE &amp; INTERPRETATION</h2>
+            <span class="font-label-sm text-label-sm text-on-surface-variant" data-i18n="guide.exegesis">EXEGESIS</span>
           </div>
           <div class="bg-surface-container border border-outline p-space-sm hard-shadow-sm space-y-2">
-            <div class="flex items-center gap-1 text-label-sm text-primary font-bold"><i class="icon size-[16px]" data-icon="psychology"></i><span>WHAT JUST HAPPENED?</span></div>
+            <div class="flex items-center gap-1 text-label-sm text-primary font-bold"><i class="icon size-[16px]" data-icon="psychology"></i><span data-i18n="guide.what">WHAT JUST HAPPENED?</span></div>
             <p class="font-body-md text-sm text-on-surface leading-snug" id="narrative-text" aria-live="polite"></p>
-            <div class="pt-1 border-t border-outline-variant flex items-center justify-between text-[10px] font-label-sm text-outline">
+            <div class="pt-1 border-t border-outline-variant flex items-center justify-between gap-2 text-[10px] font-label-sm text-on-surface-variant">
               <span id="last-action-tag">ACTION: INITIAL SUPERPOSITION</span>
-              <span class="italic">Unitary Trace: det(U)=1</span>
+              <span class="italic text-right">U†U = I</span>
             </div>
           </div>
           <div class="bg-surface-container-lowest border border-outline p-2 hard-shadow-sm">
             <div class="flex justify-between items-center text-label-sm text-[11px] font-bold text-on-surface-variant mb-1">
-              <span>OPERATOR MATRIX [ U ]</span>
+              <span data-i18n="guide.matrix">OPERATOR MATRIX [ U ]</span>
               <span class="text-primary font-mono font-bold" id="matrix-label">H (HADAMARD)</span>
             </div>
             <div class="flex items-center justify-center gap-2 font-mono text-xs py-1">
-              <div class="text-outline text-[11px]" id="matrix-prefix">1/√2</div>
+              <div class="text-on-surface-variant text-[11px]" id="matrix-prefix">1/√2</div>
               <div class="border-l-2 border-r-2 border-on-surface px-2 py-0.5 grid grid-cols-2 gap-x-4 justify-items-center whitespace-nowrap" id="matrix-cells"></div>
             </div>
+            <div class="pt-1 mt-1 border-t border-outline-variant text-[10px] font-label-sm text-on-surface-variant text-center" id="matrix-axis">U = e^(iγ)·Rn(α) · n = (0.71, 0, 0.71) · α = π</div>
           </div>
           <div class="bg-tertiary-fixed border border-tertiary p-2.5 hard-shadow-sm space-y-1">
-            <div class="flex items-center gap-1 font-label-sm text-[11px] text-tertiary font-bold uppercase tracking-wider"><i class="icon size-[15px]" data-icon="lightbulb"></i><span>PHYSICIST'S NOTE: THE ANGLE DOUBLING</span></div>
-            <p class="font-body-sm text-xs text-on-tertiary-fixed leading-tight">Why are orthogonal states opposite each other? In textbook Hilbert space, perpendicular states meet at 90°. On the Bloch sphere, angles are doubled (<strong class="font-serif">θ/2</strong>). Hence, mutually exclusive states <span class="font-mono">|0⟩</span> and <span class="font-mono">|1⟩</span> sit 180° antipodal across the diameter!</p>
+            <div class="flex items-center gap-1 font-label-sm text-[11px] text-tertiary font-bold uppercase tracking-wider"><i class="icon size-[15px]" data-icon="lightbulb"></i><span data-i18n="note.head">PHYSICIST'S NOTE: THE ANGLE DOUBLING</span></div>
+            <p class="font-body-sm text-xs text-on-tertiary-fixed leading-tight" data-i18n-html="note.text">In Hilbert space orthogonal states meet at 90°. The sphere doubles every angle: a state at Hilbert angle <strong class="font-serif">θ/2</strong> from <span class="font-mono">|0⟩</span> sits at <strong class="font-serif">θ</strong> on the sphere. Hence orthogonal states, <span class="font-mono">|0⟩</span> and <span class="font-mono">|1⟩</span> among them, sit at opposite ends of a diameter.</p>
           </div>
           <details class="bg-surface-container border border-outline p-2 hard-shadow-sm text-xs font-label-sm cursor-pointer group">
-            <summary class="font-bold text-on-surface flex justify-between items-center select-none list-none">
-              <span>SHOW THE MATHEMATICS</span>
+            <summary class="font-bold text-on-surface flex justify-between items-center list-none min-h-6">
+              <span data-i18n="math.head">SHOW THE MATHEMATICS</span>
               <i class="icon size-[14px] group-open:rotate-180 transition-transform" data-icon="keyboard_arrow_down"></i>
             </summary>
             <div class="pt-2 mt-2 border-t border-outline-variant font-body-sm text-xs text-on-surface-variant space-y-1">
-              <p><strong>Spherical coordinates map:</strong></p>
+              <p><strong data-i18n="math.map">Spherical coordinates map:</strong></p>
               <p class="font-mono text-[11px] bg-surface-container-highest p-1 border border-outline-variant">x = r · sin θ · cos φ<br />y = r · sin θ · sin φ<br />z = r · cos θ</p>
-              <p class="italic pt-1">Density Matrix: ρ = ½ ( I + r · σ ) where σ = (σ_x, σ_y, σ_z) are Pauli spin operators.</p>
+              <p class="italic pt-1" data-i18n="math.rho">Density matrix: ρ = ½ (I + x σx + y σy + z σz), where (x, y, z) is the Bloch vector and r = √(x² + y² + z²) its length.</p>
+              <p class="italic" data-i18n="math.prob">Outcome probability along a unit axis n: P = (1 + x nx + y ny + z nz) / 2.</p>
             </div>
           </details>
         </div>
-        <div class="pt-2 border-t border-outline-variant text-[10px] font-label-sm text-outline space-y-0.5" id="sources">
-          <div>[1] Nielsen &amp; Chuang. <a class="hover:text-primary underline" href="https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE" target="_blank" rel="noopener"><em>Quantum Computation &amp; Quantum Information</em></a>, §1.2.</div>
-          <div>[2] Watrous, J. <a class="hover:text-primary underline" href="https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information/density-matrices/bloch-sphere" target="_blank" rel="noopener"><em>The Bloch sphere</em></a>, IBM Quantum Learning.</div>
-          <div>[3] Hu, Li, Mong &amp; Singh. <a class="hover:text-primary underline" href="https://arxiv.org/abs/2403.01047" target="_blank" rel="noopener"><em>Student understanding of the Bloch sphere</em></a>, 2024.</div>
+        <div class="pt-2 border-t border-outline-variant text-[10px] font-label-sm text-on-surface-variant space-y-0.5" id="sources">
+          <div><a class="hover:text-primary" href="/projects/bloch-sphere-simulator/sources#src-nielsen-chuang" data-src="nielsen-chuang">[1]</a> Nielsen &amp; Chuang. <a class="hover:text-primary underline" href="https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE" target="_blank" rel="noopener"><em>Quantum Computation &amp; Quantum Information</em></a>, §1.2.</div>
+          <div><a class="hover:text-primary" href="/projects/bloch-sphere-simulator/sources#src-ibm-learning" data-src="ibm-learning">[2]</a> Watrous, J. <a class="hover:text-primary underline" href="https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information/density-matrices/bloch-sphere" target="_blank" rel="noopener"><em>The Bloch sphere</em></a>, IBM Quantum Learning.</div>
+          <div><a class="hover:text-primary" href="/projects/bloch-sphere-simulator/sources#src-hu-2024" data-src="hu-2024">[3]</a> Hu, Li, Mong &amp; Singh. <a class="hover:text-primary underline" href="https://arxiv.org/abs/2403.01047" target="_blank" rel="noopener"><em>Student understanding of the Bloch sphere</em></a>, 2024.</div>
+          <div><a class="hover:text-primary underline" href="/projects/bloch-sphere-simulator/sources" data-i18n="guide.allSources">All sources and conventions →</a></div>
         </div>
       </aside>
-    </main>
 
     <!-- BOTTOM STRIP: Section 3 Measurement & Sampling -->
-    <section class="bg-surface-container-high border-t border-outline-variant px-space-lg py-2 z-10">
+    <section class="order-3 lg:order-none col-span-12 bg-surface-container-high border-t border-outline-variant px-space-md sm:px-space-lg py-2 z-10" aria-labelledby="h-measure">
       <div class="grid grid-cols-12 gap-3 items-center">
         <div class="col-span-12 md:col-span-3 flex flex-col gap-1">
-          <div class="flex items-center gap-1 font-label-sm text-label-sm font-bold text-primary"><i class="icon size-[16px]" data-icon="query_stats"></i><span>§ 3. MEASUREMENT &amp; SAMPLING</span></div>
+          <div class="flex items-center gap-1 font-label-sm text-label-sm font-bold text-primary"><i class="icon size-[16px]" data-icon="query_stats"></i><h2 id="h-measure" data-i18n="measure.head">§ 3. MEASUREMENT &amp; SAMPLING</h2></div>
           <div class="flex items-center gap-1 text-[11px] font-label-sm">
-            <span class="text-on-surface-variant">Basis:</span>
-            <button class="px-1.5 py-0.5 bg-primary text-on-primary font-bold border border-outline" data-basis="Z">Z (|0⟩/|1⟩)</button>
-            <button class="px-1.5 py-0.5 bg-surface-container border border-outline text-on-surface hover:bg-surface" data-basis="X">X (|+⟩/|−⟩)</button>
-            <button class="px-1.5 py-0.5 bg-surface-container border border-outline text-on-surface hover:bg-surface" data-basis="Y">Y (|i⟩/|−i⟩)</button>
+            <span class="text-on-surface-variant" data-i18n="measure.basis">Basis:</span>
+            <button class="px-1.5 py-1 min-h-6 border border-outline" data-basis="Z">Z (|0⟩/|1⟩)</button>
+            <button class="px-1.5 py-1 min-h-6 border border-outline" data-basis="X">X (|+⟩/|−⟩)</button>
+            <button class="px-1.5 py-1 min-h-6 border border-outline" data-basis="Y">Y (|i⟩/|−i⟩)</button>
           </div>
         </div>
         <div class="col-span-12 md:col-span-3 flex items-center gap-2">
-          <button class="flex-1 bg-surface-container-lowest hover:bg-surface hover:border-primary border border-outline px-2 py-1.5 font-label-sm text-label-sm font-bold hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1" data-action="measure-once"><i class="icon size-[16px] text-primary" data-icon="flash_on"></i><span>MEASURE 1×</span></button>
-          <button class="flex-1 bg-surface-container-lowest hover:bg-surface hover:border-secondary border border-outline px-2 py-1.5 font-label-sm text-label-sm font-bold hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1" data-action="measure-many"><i class="icon size-[16px] text-secondary" data-icon="bar_chart"></i><span>MEASURE 1,000×</span></button>
+          <button class="flex-1 bg-surface-container-lowest hover:bg-surface hover:border-primary border border-outline px-2 py-1.5 font-label-sm text-label-sm font-bold hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1" data-action="measure-once"><i class="icon size-[16px] text-primary" data-icon="flash_on"></i><span data-i18n="measure.once">MEASURE 1×</span></button>
+          <button class="flex-1 bg-surface-container-lowest hover:bg-surface hover:border-secondary border border-outline px-2 py-1.5 font-label-sm text-label-sm font-bold hard-shadow-sm active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1" data-action="measure-many"><i class="icon size-[16px] text-secondary" data-icon="bar_chart"></i><span data-i18n="measure.many">MEASURE 1,000×</span></button>
         </div>
         <div class="col-span-12 md:col-span-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-surface-container-lowest border border-outline px-3 py-1.5 hard-shadow-sm">
           <div class="font-label-sm text-label-sm min-w-[140px]" aria-live="polite">
-            <span class="text-[9px] text-outline block">STATE COLLAPSE STATUS:</span>
-            <span class="font-bold text-on-surface" id="collapse-status">Unmeasured (Coherent)</span>
+            <span class="text-[9px] text-on-surface-variant block" data-i18n="measure.status">STATE COLLAPSE STATUS:</span>
+            <span class="font-bold text-on-surface" id="collapse-status">Unmeasured</span>
           </div>
           <div class="flex-1 max-w-xs min-w-[10rem]">
             <div class="flex justify-between text-[10px] font-label-sm font-mono mb-0.5"><span id="count-result-0">|0⟩: 0 (0.0%)</span><span id="count-result-1">|1⟩: 0 (0.0%)</span></div>
             <div class="w-full h-2.5 bg-surface-container border border-outline flex relative">
               <div class="h-full bg-primary transition-all duration-300" id="bar-measure-0" style="width: 50%"></div>
               <div class="h-full bg-secondary transition-all duration-300" id="bar-measure-1" style="width: 50%"></div>
-              <div class="absolute top-0 bottom-0 w-0.5 bg-on-surface z-10" id="theory-mark" style="left: 50%" title="Theoretical Prediction"></div>
+              <div class="absolute top-0 bottom-0 w-0.5 bg-on-surface z-10" id="theory-mark" style="left: 50%" title="Prediction for the current state" data-i18n-title="measure.tick"></div>
             </div>
           </div>
-          <button class="text-[10px] font-label-sm text-outline hover:text-on-surface hover:underline" data-action="clear">CLEAR RUN</button>
+          <button class="text-[10px] font-label-sm text-on-surface-variant hover:text-on-surface hover:underline min-h-6 px-1" data-action="clear" data-i18n="measure.clear">CLEAR RUN</button>
         </div>
       </div>
     </section>
+    </main>
 
     <footer class="w-full bg-surface-container border-t border-outline-variant px-space-lg py-1.5 flex flex-col md:flex-row justify-between items-center text-label-sm font-label-sm text-on-surface-variant gap-1">
-      <div>PREVIEW BUILD • THE SIMULATOR IS BEING WRITTEN</div>
-      <div class="flex flex-wrap justify-center items-center gap-space-md">
-        <a class="hover:text-primary underline" href="#sources">SOURCES</a>
-        <span>•</span>
-        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator" target="_blank" rel="noopener">SOURCE CODE</a>
-        <span>•</span>
-        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/blob/main/LICENSE" target="_blank" rel="noopener">MIT LICENCE</a>
-        <span>•</span>
+      <div data-i18n="foot.build">FIRST EDITION • OCTOBER 2026</div>
+      <div class="flex flex-wrap justify-center items-center gap-x-space-md gap-y-1">
+        <a class="hover:text-primary underline" href="/projects/bloch-sphere-simulator/sources" data-i18n="foot.sources">SOURCES</a>
+        <span aria-hidden="true">•</span>
+        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator" target="_blank" rel="noopener" data-i18n="foot.code">SOURCE CODE</a>
+        <span aria-hidden="true">•</span>
+        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="foot.licence">MIT LICENCE</a>
+        <span aria-hidden="true">•</span>
         <span class="font-bold text-on-surface">© 2026 Mert Çinçinoğlu</span>
       </div>
     </footer>
 
     <!-- MODAL: Lab guide -->
     <div class="fixed inset-0 bg-inverse-surface/50 backdrop-blur-xs hidden items-center justify-center z-50 p-4" id="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title">
-      <div class="bg-surface-container-low max-w-lg w-full border-2 border-on-surface p-space-lg hard-shadow-primary space-y-3 relative">
-        <button class="absolute top-3 right-3 text-on-surface hover:text-primary font-bold font-mono text-sm" data-action="close-guide" aria-label="Close">✕</button>
+      <div class="bg-surface-container-low max-w-lg w-full max-h-[90vh] overflow-y-auto border-2 border-on-surface p-space-lg hard-shadow-primary space-y-3 relative">
+        <button class="absolute top-3 right-3 text-on-surface hover:text-primary font-bold font-mono text-sm" data-action="close-guide" aria-label="Close" data-i18n-aria="guide.close">✕</button>
         <div class="border-b border-outline pb-1">
-          <span class="font-label-sm text-label-sm text-primary font-bold">MONOGRAPH MANUAL REF. 1964</span>
-          <h2 class="font-headline-md text-headline-md font-bold text-on-surface" id="guide-title">The Geometry of One Qubit</h2>
+          <span class="font-label-sm text-label-sm text-primary font-bold" data-i18n="modal.ref">MONOGRAPH MANUAL REF. 1964</span>
+          <h2 class="font-headline-md text-headline-md font-bold text-on-surface" id="guide-title" data-i18n="modal.title">The Geometry of One Qubit</h2>
         </div>
         <div class="font-body-md text-sm text-on-surface space-y-2">
-          <p>Unlike classical bits which are strictly <strong>0</strong> or <strong>1</strong>, a quantum bit exists in any linear superposition: <span class="font-serif italic text-primary">|ψ⟩ = α|0⟩ + β|1⟩</span>.</p>
-          <p>Because global phase is physically imperceptible, any single pure qubit can be mapped directly to the surface of a unit sphere (The Bloch Sphere) using two geometric angles:</p>
+          <p data-i18n-html="modal.p1">Unlike classical bits, which are strictly <strong>0</strong> or <strong>1</strong>, a quantum bit can be in any normalised superposition: <span class="font-serif italic text-primary">|ψ⟩ = α|0⟩ + β|1⟩</span>, with <span class="font-serif italic">|α|² + |β|² = 1</span>.</p>
+          <p data-i18n="modal.p2">Because normalisation fixes the length and the global phase cannot be observed, any single pure qubit maps to a point on the surface of a unit sphere (the Bloch sphere), given by two angles:</p>
           <ul class="list-disc pl-5 font-mono text-xs space-y-1">
-            <li><strong>θ (0 to π):</strong> Polar angle, the tilt away from |0⟩. Controls the probability balance between |0⟩ and |1⟩.</li>
-            <li><strong>φ (0 to 2π):</strong> Longitude. Represents the relative quantum phase angle.</li>
+            <li data-i18n-html="modal.li1"><strong>θ (0 to π):</strong> polar angle, the tilt away from |0⟩. Controls the balance between |0⟩ and |1⟩.</li>
+            <li data-i18n-html="modal.li2"><strong>φ (0 to 2π):</strong> longitude, measured from +X toward +Y. The relative phase between |0⟩ and |1⟩.</li>
           </ul>
-          <p>Quantum logic gates are rotations of this sphere. For instance, the <strong>Hadamard (H)</strong> gate turns the North pole |0⟩ into the balanced equatorial superposition |+⟩.</p>
+          <p data-i18n-html="modal.p3">Quantum logic gates are rotations of this sphere. For instance, the <strong>Hadamard (H)</strong> gate turns the North pole |0⟩ into the equatorial superposition |+⟩.</p>
+          <p data-i18n="modal.p4">Points inside the sphere are mixed states: uncertainty about which state was prepared, not a superposition. The arrow is a picture of the state, not a direction in the room.</p>
         </div>
         <div class="pt-2 border-t border-outline flex justify-end">
-          <button class="bg-primary text-on-primary font-label-sm text-label-sm font-bold px-4 py-1 hard-shadow active:translate-x-0.5 active:translate-y-0.5" data-action="close-guide">RETURN TO APPARATUS</button>
+          <button class="bg-primary text-on-primary font-label-sm text-label-sm font-bold px-4 py-1 hard-shadow active:translate-x-0.5 active:translate-y-0.5" data-action="close-guide" data-i18n="modal.back">RETURN TO APPARATUS</button>
         </div>
       </div>
     </div>
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-3 py-1.5 hard-shadow-sm hidden z-50" role="status" aria-live="polite"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

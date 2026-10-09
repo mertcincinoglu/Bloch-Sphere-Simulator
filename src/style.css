@@ -98,6 +98,15 @@
   --text-label-md--line-height: 18px;
   --text-label-md--letter-spacing: 0.06em;
   --text-label-md--font-weight: 400;
+  --font-display-lg: 'Space Grotesk Variable', sans-serif;
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+  --text-display-lg-mobile: 32px;
+  --text-display-lg-mobile--line-height: 40px;
+  --text-display-lg-mobile--letter-spacing: -0.01em;
+  --text-display-lg-mobile--font-weight: 700;
   --text-headline-md: 24px;
   --text-headline-md--line-height: 32px;
   --text-headline-md--font-weight: 600;
@@ -130,22 +139,23 @@ input[type='range'] {
   appearance: none;
   background: #ede6d8;
   border: 1px solid #8a7269;
-  height: 6px;
+  height: 8px;
   border-radius: 0;
   outline: none;
+  touch-action: pan-y;
 }
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 22px;
   background: #9f3c0d;
   border: 1px solid #1f1b17;
   box-shadow: 1px 1px 0 #1f1b17;
   cursor: pointer;
 }
 input[type='range']::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 22px;
   background: #9f3c0d;
   border: 1px solid #1f1b17;
   border-radius: 0;
@@ -163,6 +173,27 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 
 /* labels drawn next to the 3D sphere */
 .axis-label { font: 700 11px/1 'Space Mono', monospace; white-space: nowrap; pointer-events: none; }
-.axis-label.neg { font-weight: 400; font-size: 10px; color: #8a7269; }
-#sphere .labels { position: absolute !important; inset: 0; }
-#sphere canvas { position: absolute; inset: 0; }
+.axis-label.neg { font-weight: 400; font-size: 10px; color: #57423a; }
+#sphere .labels, .mini-sphere .labels { position: absolute !important; inset: 0; }
+#sphere canvas, .mini-sphere canvas { position: absolute; inset: 0; }
+
+/* Story and Sources pages (Stitch "Theory & Story", "Notation & Sources") */
+.halftone-paper-bg {
+  background-color: #fff8f5;
+  background-image: radial-gradient(#1f1b17 0.75px, transparent 0.75px);
+  background-size: 16px 16px;
+}
+.technical-grid-bg {
+  background-color: #fff8f5;
+  background-image:
+    linear-gradient(to right, rgba(138, 114, 105, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(138, 114, 105, 0.12) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+.shadow-hard-card { box-shadow: 2px 2px 0 0 #1f1b17; }
+.ink-shadow-sm { box-shadow: 2px 2px 0 0 #1f1b17; }
+.ink-shadow-md { box-shadow: 3px 3px 0 0 #1f1b17; }
+.shadow-hard-press { box-shadow: 3px 3px 0 0 #1f1b17; }
+.shadow-hard-press:active { transform: translate(2px, 2px); box-shadow: 0 0 0 0 #1f1b17; }
+.mini-sphere .axis-label { font-size: 10px; }
+.mini-sphere .axis-label.neg { font-size: 9px; }

@@ -11,7 +11,8 @@ const B = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 
 const C = {
   paper: 0xfdfaf3, rim: 0x8a7269, rim2: 0xdec0b6, ring: 0xdec0b6,
-  x: 0x9f3c0d, y: 0x785600, z: 0x006972, state: 0x006972, trail: 0x9f3c0d, shadow: 0x57423a, pivot: 0x1f1b17,
+  // the state arrow is ink, not the Z-axis teal, so it never reads as "the Z component"
+  x: 0x9f3c0d, y: 0x785600, z: 0x006972, state: 0x1f1b17, trail: 0x9f3c0d, shadow: 0x57423a, pivot: 0x1f1b17,
 };
 const hex = (c: number) => `#${c.toString(16).padStart(6, '0')}`;
 
@@ -23,13 +24,15 @@ export class BlochScene {
   private camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
   private controls: OrbitControls;
   private billboard = new THREE.Group(); // disc and rims always face the camera, like a drawn outline
-  private arrowMat = new THREE.MeshBasicMaterial({ color: C.state });
+  private arrowMat = new THREE.MeshBasicMaterial({ color: C.state, transparent: true });
+  private tip = new THREE.Vector3(0, 0, 1);
   private arrowLine = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1, 12), this.arrowMat);
   private arrowHead = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.14, 20), this.arrowMat);
   private psi: CSS2DObject;
   private shadowA: THREE.Line;
   private shadowB: THREE.Line;
   private trail: THREE.Line;
+  private observer = new ResizeObserver(() => this.resize());
 
   constructor(host: HTMLElement) {
     this.host = host;
@@ -47,6 +50,9 @@ export class BlochScene {
     this.controls.enableZoom = false;
     this.controls.autoRotateSpeed = 1.2;
     this.controls.saveState();
+    // a finger moving up or down scrolls the page; sideways it turns the sphere
+    this.labels.domElement.style.touchAction = 'pan-y';
+    host.addEventListener('keydown', (e) => this.key(e));
 
     this.build();
     this.psi = this.label('|ψ⟩', B(0, 0, 0), hex(C.state));
@@ -54,11 +60,15 @@ export class BlochScene {
     this.shadowB = this.dashedLine(C.shadow, 0.25);
     this.trail = this.dashedLine(C.trail, 1);
 
-    new ResizeObserver(() => this.resize()).observe(host);
+    this.observer.observe(host);
     this.resize();
     this.renderer.setAnimationLoop(() => {
       this.controls.update();
       this.billboard.quaternion.copy(this.camera.quaternion);
+      // depth cue: an arrow pointing into the far hemisphere is drawn fainter
+      const away = this.tip.dot(this.camera.position) < -0.05;
+      this.arrowMat.opacity = away ? 0.45 : 1;
+      (this.psi.element as HTMLElement).style.opacity = away ? '0.55' : '1';
       this.renderer.render(this.scene, this.camera);
       this.labels.render(this.scene, this.camera);
     });
@@ -105,7 +115,7 @@ export class BlochScene {
 
   private negAxis(dir: THREE.Vector3, length: number, text: string) {
     this.line([new THREE.Vector3(), toThree(dir.clone().multiplyScalar(length))], C.ring, true);
-    this.label(text, dir.clone().multiplyScalar(length + 0.14), hex(C.rim), 'neg');
+    this.label(text, dir.clone().multiplyScalar(length + 0.14), '#57423a', 'neg'); // 10 px text needs the darker ink for contrast
   }
 
   private build() {
@@ -135,6 +145,7 @@ export class BlochScene {
 
   setVector(v: THREE.Vector3) {
     const t = toThree(v);
+    this.tip.copy(t);
     const len = t.length();
     const visible = len > 0.02;
     this.arrowLine.visible = this.arrowHead.visible = this.psi.visible = visible;
@@ -146,7 +157,9 @@ export class BlochScene {
       this.arrowLine.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
       this.arrowHead.position.copy(dir.clone().multiplyScalar(len - 0.07));
       this.arrowHead.quaternion.copy(this.arrowLine.quaternion);
-      this.psi.position.copy(dir.clone().multiplyScalar(len + 0.16));
+      // |ψ⟩ sits beside the tip, off the axis line, so it never covers an axis label
+      const side = new THREE.Vector3().crossVectors(dir, this.camera.position).normalize().multiplyScalar(0.12);
+      this.psi.position.copy(dir.clone().multiplyScalar(len * 0.82).add(side));
     }
     // shadow on the equator, then up to the tip
     const foot = toThree(B(v.x, v.y, 0));
@@ -162,6 +175,33 @@ export class BlochScene {
     line.geometry.dispose();
     line.geometry = new THREE.BufferGeometry().setFromPoints(pts);
     line.computeLineDistances();
+  }
+
+  /** Arrow keys turn the view: left/right around the vertical, up/down over the top. */
+  private key(e: KeyboardEvent) {
+    const step = Math.PI / 24;
+    const pos = this.camera.position;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), e.key === 'ArrowLeft' ? -step : step);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const right = new THREE.Vector3().crossVectors(this.camera.up, pos).normalize();
+      const next = pos.clone().applyAxisAngle(right, e.key === 'ArrowUp' ? -step : step);
+      if (Math.abs(next.clone().normalize().y) < 0.97) pos.copy(next); // stop short of the poles
+    } else return;
+    e.preventDefault();
+    this.camera.lookAt(0, 0, 0);
+    this.controls.update();
+  }
+
+  /** Free the WebGL context; used when a story chapter is swapped out. */
+  dispose() {
+    this.renderer.setAnimationLoop(null);
+    this.observer.disconnect();
+    this.controls.dispose();
+    this.renderer.dispose();
+    this.renderer.forceContextLoss(); // dispose() alone keeps the context alive until GC; browsers cap live contexts (~16)
+    this.renderer.domElement.remove();
+    this.labels.domElement.remove();
   }
 
   setAutoRotate(on: boolean) {

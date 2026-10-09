@@ -1,0 +1,152 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="canonical" href="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/sources" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mert Çinçinoğlu" />
+    <meta property="og:title" content="Notation &amp; Sources — Bloch Sphere Simulator" />
+    <meta property="og:description" content="The conventions the Bloch Sphere Simulator uses, and the references behind every claim it makes." />
+    <meta property="og:url" content="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/sources" />
+    <meta property="og:image" content="https://www.mertcincinoglu.com/projects/bloch-sphere-simulator/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Bloch Sphere Simulator laboratory: state controls, a 3D Bloch sphere and the step-by-step guide." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title data-i18n="src.title">Notation &amp; Sources — Bloch Sphere Simulator</title>
+    <meta name="description" content="The conventions the Bloch Sphere Simulator uses, and the references behind every claim it makes." />
+    <link rel="icon" href="/favicon-circle.svg" type="image/svg+xml" />
+  </head>
+  <body class="bg-surface text-on-surface technical-grid-bg min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <!-- TOP BAR -->
+    <header class="w-full bg-surface-container-low border-b border-outline-variant lg:sticky lg:top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-4">
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 whitespace-nowrap" href="https://www.mertcincinoglu.com"><span>←</span> mertcincinoglu.com</a>
+          <div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
+          <div>
+            <p class="font-headline-sm text-headline-sm tracking-wider uppercase text-on-surface" data-i18n="head.title">VOL. IV — BLOCH STATE APPARATUS</p>
+            <p class="font-label-sm text-label-sm text-on-surface-variant tracking-normal" data-i18n="head.sub">Bloch Sphere Simulator — a free laboratory for one qubit • Monograph Ref. PH-1964-B</p>
+          </div>
+        </div>
+        <nav class="flex flex-wrap items-center gap-x-6 gap-y-1 font-label-md text-label-md" aria-label="Sections" data-i18n-aria="nav.aria">
+          <a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 whitespace-nowrap" href="/projects/bloch-sphere-simulator" data-i18n="nav.lab">LABORATORY</a>
+          <a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 whitespace-nowrap" href="/projects/bloch-sphere-simulator/story" data-i18n="nav.story">THEORY &amp; STORY</a>
+          <a class="text-primary font-bold border-b-2 border-primary pb-1 flex items-center gap-1 whitespace-nowrap" href="/projects/bloch-sphere-simulator/sources" aria-current="page"><span class="inline-block w-1.5 h-1.5 bg-primary rounded-full"></span><span data-i18n="nav.sources">NOTATION SOURCES</span></a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <div class="border border-outline-variant bg-surface-container px-2 py-0.5 rounded font-label-sm text-label-sm" role="group" aria-label="Language" data-i18n-aria="lang.aria">
+            <button data-lang="en" lang="en">EN</button>
+            <span class="text-on-surface-variant" aria-hidden="true">|</span>
+            <button data-lang="tr" lang="tr">TR</button>
+          </div>
+          <a class="bg-primary text-on-primary font-headline-sm text-label-md uppercase px-3 py-1.5 rounded shadow-hard-press border border-on-surface flex items-center gap-1.5 hover:bg-primary-container transition-all" href="/projects/bloch-sphere-simulator">
+            <i class="icon size-[16px]" data-icon="arrow_back"></i><span data-i18n="story.openLab">OPEN THE LAB</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8">
+      <!-- page head -->
+      <header class="space-y-2 border-b-2 border-on-surface pb-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-label-sm text-label-sm px-1.5 py-0.5 border border-on-surface bg-surface-container font-bold" data-i18n="src.appendix">§ APPENDIX</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase" data-i18n="src.section">Vol. IV • Section IV-F</span>
+        </div>
+        <h1 class="font-display-lg-mobile text-display-lg-mobile sm:font-display-lg sm:text-display-lg text-on-surface" data-i18n="src.head">Notation &amp; Sources</h1>
+        <p class="font-body-lg text-body-lg italic text-on-surface-variant" data-i18n="src.lead">The conventions this apparatus uses, and where every claim comes from.</p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-8 space-y-8 min-w-0">
+          <!-- A. conventions -->
+          <section class="bg-surface border border-on-surface shadow-hard-card p-4 sm:p-6 space-y-4" aria-labelledby="h-conv">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="h-conv" class="font-headline-sm text-label-lg uppercase tracking-wider text-on-surface flex items-center gap-2"><span class="text-primary">§ A.</span> <span data-i18n="src.convHead">CONVENTIONS &amp; GEOMETRIC RULES</span></h2>
+              <span class="font-label-sm text-label-sm px-1.5 py-0.5 border border-outline text-on-surface-variant">CANONICAL MAP S² → ℂP¹</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface" data-i18n="src.convLead">Every coordinate, state vector and gate in this simulator follows the conventions below, the same ones used by the references in § B.</p>
+            <div class="overflow-x-auto border border-on-surface" tabindex="0">
+              <table class="w-full text-left border-collapse min-w-[34rem]">
+                <thead>
+                  <tr class="bg-surface-container border-b-2 border-on-surface font-label-sm text-label-sm text-on-surface">
+                    <th scope="col" class="py-2.5 px-4 font-bold border-r border-outline-variant w-1/3" data-i18n="src.colSymbol">SYMBOL / FORMULATION</th>
+                    <th scope="col" class="py-2.5 px-4 font-bold" data-i18n="src.colMeaning">MEANING &amp; CONVENTION</th>
+                  </tr>
+                </thead>
+                <tbody class="font-body-sm text-body-sm divide-y divide-outline-variant">
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">|ψ⟩ = cos(θ/2)|0⟩ + e^{iφ} sin(θ/2)|1⟩</td><td class="py-3 px-4" data-i18n-html="src.row1"><strong>Pure state:</strong> any normalised qubit state, up to an unobservable global phase, is a point on the unit sphere.</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">θ ∈ [0, π]</td><td class="py-3 px-4" data-i18n-html="src.row2"><strong>Polar angle:</strong> measured from the North pole +Z (|0⟩) toward the South pole −Z (|1⟩). The Hilbert-space angle is θ/2.</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">φ ∈ [0, 2π)</td><td class="py-3 px-4" data-i18n-html="src.row3"><strong>Azimuth:</strong> measured counter-clockwise in the equatorial plane, starting at +X (|+⟩) and passing +Y (|i⟩). It is the relative phase between |0⟩ and |1⟩.</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">+X = |+⟩, +Y = |i⟩, +Z = |0⟩</td><td class="py-3 px-4" data-i18n-html="src.row4"><strong>Axis states:</strong> |±⟩ = (|0⟩ ± |1⟩)/√2, |±i⟩ = (|0⟩ ± i|1⟩)/√2. Each pair sits at opposite ends of its axis.</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">r = (⟨X⟩, ⟨Y⟩, ⟨Z⟩)</td><td class="py-3 px-4" data-i18n-html="src.row5"><strong>Bloch vector:</strong> its components are the expectation values of the Pauli matrices. |r| = 1 for pure states, |r| &lt; 1 inside the ball for mixed ones.</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">Rn(α) = exp(−iα n·σ/2)</td><td class="py-3 px-4" data-i18n-html="src.row6"><strong>Gates are turns:</strong> a rotation of the sphere by α about the unit axis n, right-handed. Named gates equal such a turn up to a global phase (e.g. X = i·Rx(π)).</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">P(±n) = (1 ± r·n) / 2</td><td class="py-3 px-4" data-i18n-html="src.row7"><strong>Measurement:</strong> the chance of each outcome along an axis. After one shot the state is the pole that was found.</td></tr>
+                  <tr><td class="py-3 px-4 font-label-md text-label-md text-primary font-bold border-r border-outline-variant">Tr ρ² = (1 + |r|²) / 2</td><td class="py-3 px-4" data-i18n-html="src.row8"><strong>Purity:</strong> 1 for pure states on the surface, ½ for the fully mixed state ½I at the centre.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- B. references -->
+          <section class="space-y-6" aria-labelledby="h-refs">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-on-surface pb-2">
+              <h2 id="h-refs" class="font-headline-sm text-label-lg uppercase tracking-wider text-on-surface flex items-center gap-2"><span class="text-primary">§ B.</span> <span data-i18n="src.refHead">REFERENCES</span></h2>
+              <span class="font-label-sm text-label-sm text-on-surface-variant" id="ref-count"></span>
+            </div>
+            <div id="refs" class="space-y-6"></div>
+          </section>
+        </div>
+
+        <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24" aria-label="How to read these" data-i18n-aria="src.cardHead">
+          <div class="bg-tertiary-fixed border-2 border-on-surface p-5 ink-shadow-md relative">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-6 bg-surface border-2 border-on-surface rounded-b-md flex items-center justify-center" aria-hidden="true"><div class="w-3 h-3 rounded-full bg-on-surface"></div></div>
+            <div class="border-b-2 border-on-surface pb-3 mb-4 mt-2">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="font-label-sm text-label-sm font-bold tracking-widest uppercase" data-i18n="src.guideNo">§ GUIDE 04</span>
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-tertiary-fixed-dim/40 border border-on-surface" data-i18n="src.indexCard">INDEX CARD</span>
+              </div>
+              <h2 class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface mt-1" data-i18n="src.cardHead">HOW TO READ THESE</h2>
+            </div>
+            <div class="space-y-4 font-body-sm text-body-sm text-on-surface leading-relaxed">
+              <p data-i18n-html="src.card1">Numbers in square brackets, such as <strong class="font-label-sm text-label-sm bg-surface px-1 py-0.5 border border-on-surface">[1]</strong>, in the lab and in the story point to the references listed on this page.</p>
+              <div class="border-t border-dashed border-on-surface pt-3 space-y-2">
+                <div class="flex items-center gap-1.5 font-label-sm text-label-sm uppercase font-bold text-primary"><i class="icon size-[14px]" data-icon="warning"></i><span data-i18n="src.cautionHead">GEOMETRIC ANGLE CAUTION</span></div>
+                <p class="italic text-on-surface-variant" data-i18n-html="src.caution">Orthogonal states (<span class="font-label-sm">⟨0|1⟩ = 0</span>) are <strong class="font-semibold text-on-surface">180°</strong> apart on the sphere, because the sphere doubles the Hilbert-space angle θ/2.</p>
+              </div>
+              <div class="border-t border-dashed border-on-surface pt-3 space-y-2">
+                <span class="font-label-sm text-label-sm uppercase font-bold text-on-surface" data-i18n="src.measHead">MEASUREMENT INTERPRETATION</span>
+                <p data-i18n="src.meas">A measurement along any unit axis n asks "+n or −n?". For a spin-½ particle this is a Stern–Gerlach magnet turned toward n; for other qubits the axis is abstract.</p>
+              </div>
+            </div>
+            <div class="mt-6 pt-3 border-t-2 border-on-surface flex flex-col gap-1 font-label-sm text-label-sm text-on-surface">
+              <div class="flex justify-between"><span data-i18n="src.cardNo">CARD NO:</span><span class="font-bold">04-B / REVISION 2</span></div>
+              <div class="flex justify-between"><span data-i18n="src.checked">SOURCES CHECKED:</span><span class="font-bold">2026-10-09</span></div>
+            </div>
+          </div>
+          <div class="bg-surface-container border border-outline p-4 ink-shadow-sm space-y-2">
+            <div class="flex items-center justify-between gap-2 font-label-sm text-label-sm"><span class="text-on-surface-variant uppercase" data-i18n="src.errataHead">FOUND AN ERROR?</span></div>
+            <p class="font-body-sm text-body-sm text-on-surface" data-i18n="src.errata">Corrections to the physics, the wording or a reference are welcome.</p>
+            <a class="font-label-sm text-label-sm text-primary font-bold underline flex items-center gap-1" href="https://www.mertcincinoglu.com/contact"><span data-i18n="src.errataLink">Send a correction</span> <i class="icon size-[14px]" data-icon="arrow_forward"></i></a>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="w-full bg-surface-container border-t border-outline-variant px-space-lg py-1.5 flex flex-col md:flex-row justify-between items-center text-label-sm font-label-sm text-on-surface-variant gap-1">
+      <div data-i18n="foot.build">FIRST EDITION • OCTOBER 2026</div>
+      <div class="flex flex-wrap justify-center items-center gap-x-space-md gap-y-1">
+        <a class="hover:text-primary underline" href="/projects/bloch-sphere-simulator/sources" data-i18n="foot.sources">SOURCES</a>
+        <span aria-hidden="true">•</span>
+        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator" target="_blank" rel="noopener" data-i18n="foot.code">SOURCE CODE</a>
+        <span aria-hidden="true">•</span>
+        <a class="hover:text-primary underline" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="foot.licence">MIT LICENCE</a>
+        <span aria-hidden="true">•</span>
+        <span class="font-bold text-on-surface">© 2026 Mert Çinçinoğlu</span>
+      </div>
+    </footer>
+    <script type="module" src="/src/sources-page.ts"></script>
+  </body>
+</html>

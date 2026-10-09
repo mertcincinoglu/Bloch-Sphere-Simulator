@@ -6,33 +6,40 @@ export type Basis = 'Z' | 'X' | 'Y';
 
 export interface Gate {
   axis: Vector3; // rotation axis in Bloch coordinates
-  angle: number; // radians
-  label: string; // shown above the matrix
+  angle: number; // radians, the turn on the sphere
   prefix: string; // scalar in front of the matrix
   cells: [string, string, string, string]; // matrix entries, row by row
-  story: string;
 }
 
 const s2 = Math.SQRT1_2;
 
 export const GATES: Record<string, Gate> = {
-  X: { axis: new Vector3(1, 0, 0), angle: Math.PI, label: 'X (BIT FLIP)', prefix: '', cells: ['0', '1', '1', '0'],
-    story: 'Applied Pauli X (Bit Flip): Rotates 180° around the X-axis. Inverts the North pole (|0⟩) into South pole (|1⟩) while keeping equatorial points on X static.' },
-  Y: { axis: new Vector3(0, 1, 0), angle: Math.PI, label: 'Y (PAULI-Y)', prefix: '', cells: ['0', '−i', 'i', '0'],
-    story: 'Applied Pauli Y: 180° rotation around the Y-axis. Flips both the bit value and phase angle simultaneously.' },
-  Z: { axis: new Vector3(0, 0, 1), angle: Math.PI, label: 'Z (PHASE FLIP)', prefix: '', cells: ['1', '0', '0', '−1'],
-    story: 'Applied Pauli Z (Phase Flip): Rotates 180° around the vertical Z-axis. Leaves the probability of |0⟩ and |1⟩ unchanged, but flips relative quantum phase.' },
-  H: { axis: new Vector3(s2, 0, s2), angle: Math.PI, label: 'H (HADAMARD)', prefix: '1/√2', cells: ['1', '1', '1', '−1'],
-    story: 'Applied Hadamard (H): Rotates 180° around the diagonal axis halfway between X and Z. Creates an equal 50/50 superposition from standard basis states.' },
-  S: { axis: new Vector3(0, 0, 1), angle: Math.PI / 2, label: 'S (PHASE π/2)', prefix: '', cells: ['1', '0', '0', 'i'],
-    story: 'Applied Phase S: 90° counter-clockwise rotation around Z. Advances quantum phase angle by π/2 without perturbing pole probability.' },
-  T: { axis: new Vector3(0, 0, 1), angle: Math.PI / 4, label: 'T (π/8 ROTATION)', prefix: '', cells: ['1', '0', '0', 'e^(iπ/4)'],
-    story: "Applied Gate T: 45° rotation around Z (the 'π/8 gate'). Fundamental building block for fault-tolerant universal quantum computation." },
-  Rx: { axis: new Vector3(1, 0, 0), angle: Math.PI / 4, label: 'Rx(π/4)', prefix: '', cells: ['cos(π/8)', '−i·sin(π/8)', '−i·sin(π/8)', 'cos(π/8)'],
-    story: 'Rotated 45° (π/4) around X-axis. Tilts the superposition angle in the Y-Z vertical plane.' },
-  Ry: { axis: new Vector3(0, 1, 0), angle: Math.PI / 4, label: 'Ry(π/4)', prefix: '', cells: ['cos(π/8)', '−sin(π/8)', 'sin(π/8)', 'cos(π/8)'],
-    story: 'Rotated 45° (π/4) around Y-axis. Shifts the latitude coordinate directly toward or away from the North pole.' },
+  X: { axis: new Vector3(1, 0, 0), angle: Math.PI, prefix: '', cells: ['0', '1', '1', '0'] },
+  Y: { axis: new Vector3(0, 1, 0), angle: Math.PI, prefix: '', cells: ['0', '−i', 'i', '0'] },
+  Z: { axis: new Vector3(0, 0, 1), angle: Math.PI, prefix: '', cells: ['1', '0', '0', '−1'] },
+  H: { axis: new Vector3(s2, 0, s2), angle: Math.PI, prefix: '1/√2', cells: ['1', '1', '1', '−1'] },
+  S: { axis: new Vector3(0, 0, 1), angle: Math.PI / 2, prefix: '', cells: ['1', '0', '0', 'i'] },
+  T: { axis: new Vector3(0, 0, 1), angle: Math.PI / 4, prefix: '', cells: ['1', '0', '0', 'e^(iπ/4)'] },
+  Rx: { axis: new Vector3(1, 0, 0), angle: Math.PI / 4, prefix: '', cells: ['cos(π/8)', '−i·sin(π/8)', '−i·sin(π/8)', 'cos(π/8)'] },
+  Ry: { axis: new Vector3(0, 1, 0), angle: Math.PI / 4, prefix: '', cells: ['cos(π/8)', '−sin(π/8)', 'sin(π/8)', 'cos(π/8)'] },
 };
+
+/** Rn(α) = exp(−iα n·σ/2) for the axis n(θn, φn); entries rounded for display. */
+export function customGate(axisTheta: number, axisPhi: number, alpha: number): Gate {
+  const n = fromAngles(axisTheta, axisPhi);
+  const c = Math.cos(alpha / 2), s = Math.sin(alpha / 2);
+  const f = (x: number) => (Math.abs(x) < 5e-4 ? '0' : x.toFixed(3).replace(/\.?0+$/, '').replace('-', '−'));
+  const cplx = (re: number, im: number) => {
+    if (Math.abs(im) < 5e-4) return f(re);
+    if (Math.abs(re) < 5e-4) return `${f(im)}i`;
+    return `${f(re)}${im < 0 ? '−' : '+'}${f(Math.abs(im))}i`;
+  };
+  return {
+    axis: n, angle: alpha, prefix: '',
+    // [[c − i s nz, −i s nx − s ny], [−i s nx + s ny, c + i s nz]]
+    cells: [cplx(c, -s * n.z), cplx(-s * n.y, -s * n.x), cplx(s * n.y, -s * n.x), cplx(c, s * n.z)],
+  };
+}
 
 export const BASIS_AXIS: Record<Basis, Vector3> = {
   Z: new Vector3(0, 0, 1),
