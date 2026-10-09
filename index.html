@@ -42,6 +42,18 @@
         <button class="w-8 h-8 rounded-full border border-outline clean-paper hover:bg-surface-container-high flex items-center justify-center text-[15px] font-label-sm font-bold active:translate-x-0.5 active:translate-y-0.5" data-action="guide" aria-label="Lab guide" data-i18n-aria="head.guideAria" title="Lab guide" data-i18n-title="head.guideAria">?</button>
       </div>
     </header>
+    <!-- under-construction notice; closing it is remembered in this browser -->
+    <aside id="notice" class="hidden w-full bg-tertiary-fixed border-b border-tertiary px-4 sm:px-6 py-4" aria-labelledby="notice-title">
+      <div class="max-w-3xl mx-auto flex items-start gap-3 sm:gap-4 text-on-tertiary-fixed">
+        <i class="icon size-[22px] shrink-0 mt-0.5 text-on-tertiary-fixed-variant" data-icon="warning"></i>
+        <div class="flex-1 space-y-2">
+          <h2 id="notice-title" class="font-label-md text-[15px] font-bold text-on-tertiary-fixed-variant" data-i18n="notice.title">Important notice</h2>
+          <p class="font-body-md text-[17px] leading-relaxed" data-i18n-html="notice.text">This website is currently under construction, so some features may not be fully functional yet. If you encounter any issues or have suggestions, feel free to share them via <a class="underline font-semibold hover:text-primary" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/issues" target="_blank" rel="noopener">GitHub</a> or email me at <a class="underline font-semibold hover:text-primary" href="mailto:contact@mertcincinoglu.com">contact@mertcincinoglu.com</a>. Your feedback is invaluable in helping me improve the site.</p>
+          <p class="font-body-md text-[17px] leading-relaxed italic" data-i18n="notice.thanks">Thank you for your patience and support as I work to make this website better for everyone!</p>
+        </div>
+        <button class="shrink-0 w-8 h-8 flex items-center justify-center border border-tertiary hover:bg-surface font-label-md text-[15px] font-bold" data-action="close-notice" aria-label="Close notice" data-i18n-aria="notice.close">✕</button>
+      </div>
+    </aside>
 
     <!-- one short intro sentence -->
     <section class="w-full border-b border-outline-variant/60 clean-paper-low px-4 sm:px-6 py-2 text-center" aria-label="How to use" data-i18n-aria="intro.aria">
@@ -64,13 +76,15 @@
               <div class="flex items-center gap-2 max-sm:w-full max-sm:justify-end">
                 <button class="px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap" id="btn-autorotate" aria-pressed="false">Auto-rotate: OFF</button>
                 <button class="px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap" data-action="reset-view" data-i18n="fig.resetView">Reset view</button>
+                <button class="w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high font-label-md text-[16px] font-bold" data-action="zoom-out" aria-label="Zoom out" data-i18n-aria="fig.zoomOut" title="Zoom out (−, scroll, pinch)" data-i18n-title="fig.zoomOutTip">−</button>
+                <button class="w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high font-label-md text-[16px] font-bold" data-action="zoom-in" aria-label="Zoom in" data-i18n-aria="fig.zoomIn" title="Zoom in (+, scroll, pinch)" data-i18n-title="fig.zoomInTip">+</button>
                 <button class="max-sm:hidden px-2.5 py-1 min-h-6 text-[13px] font-label-sm clean-paper border border-outline hover:bg-surface-container-high whitespace-nowrap" data-action="clear-trail" data-i18n="fig.clearTrail">Clear trail</button>
-                <button class="w-7 h-7 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high text-on-surface-variant" data-action="share" title="Share state" data-i18n-title="fig.share"><i class="icon size-[16px]" data-icon="share"></i><span class="sr-only" data-i18n="fig.share">Share state</span></button>
+                <button class="w-7 h-7 shrink-0 flex items-center justify-center clean-paper border border-outline hover:bg-surface-container-high text-on-surface-variant" data-action="share" title="Share state" data-i18n-title="fig.share"><i class="icon size-[16px]" data-icon="share"></i><span class="sr-only" data-i18n="fig.share">Share state</span></button>
               </div>
             </div>
             <!-- the sphere -->
             <div class="relative w-full flex items-center justify-center clean-paper overflow-hidden sm:pb-10">
-              <div id="sphere" class="relative cursor-grab active:cursor-grabbing w-full max-w-[620px] h-[max(170px,27svh)] lg:h-[410px]" tabindex="0" role="img" aria-label="3D Bloch sphere. Drag, or use the arrow keys, to turn the view." data-i18n-aria="fig.aria"></div>
+              <div id="sphere" class="relative cursor-grab active:cursor-grabbing w-full max-w-[620px] h-[max(170px,27svh)] lg:h-[410px]" tabindex="0" role="img" aria-label="3D Bloch sphere. Drag, or use the arrow keys, to turn the view; scroll or pinch to zoom." data-i18n-aria="fig.aria"></div>
               <div class="max-sm:hidden absolute bottom-3 left-4 font-label-sm text-[13px] text-on-surface-variant clean-paper px-2 py-1 border border-outline-variant pointer-events-none">
                 <span data-i18n="fig.prepared">Prepared from |0⟩ by</span> <b class="text-primary" id="quick-rotation-badge">Rz(0.00π)·Ry(0.50π)</b>
               </div>
@@ -157,19 +171,34 @@
                 <h2 class="font-label-sm text-[13px] font-bold text-primary uppercase" data-i18n="gates.head">Unitary operators</h2>
                 <span class="font-label-sm text-[13px] text-on-surface-variant">U†U = I</span>
               </div>
-              <div class="grid grid-cols-4 gap-2">
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="X"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">X</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.X">Bit flip</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Y"><span class="font-label-md font-bold text-base text-tertiary block leading-none mb-1">Y</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Y">Bit+phase</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Z"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">Z</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Z">Phase flip</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="H"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">H</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.H">Swaps Z ↔ X</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="S"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">S</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">π/2 <span data-i18n="gate.turn">turn</span></span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="T"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">T</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">π/4 <span data-i18n="gate.turn">turn</span></span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Sdg"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">S†</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">−π/2 <span data-i18n="gate.turn">turn</span></span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Tdg"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">T†</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">−π/4 <span data-i18n="gate.turn">turn</span></span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rx"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">Rx</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Rx">45° about X</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Ry"><span class="font-label-md font-bold text-base text-tertiary block leading-none mb-1">Ry</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Ry">45° about Y</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rz"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">Rz</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Rz">45° about Z</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline-variant p-2 text-center active:translate-y-0.5" data-action="reset-zero"><span class="font-label-md font-bold text-base text-on-surface-variant block leading-none mb-1">|0⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.reset">Reset</span></button>
+              <div class="grid grid-cols-4 gap-x-2 gap-y-3">
+                <div class="col-span-3"><h3 class="font-label-sm text-[13px] text-on-surface-variant mb-1" data-i18n="gates.pauli">Pauli</h3>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="X"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">X</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.X">Bit flip</span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Y"><span class="font-label-md font-bold text-base text-tertiary block leading-none mb-1">Y</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Y">Bit+phase</span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Z"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">Z</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Z">Phase flip</span></button>
+                  </div>
+                </div>
+                <div><h3 class="font-label-sm text-[13px] text-on-surface-variant mb-1" data-i18n="gates.hadamard">Hadamard</h3>
+                  <div class="grid grid-cols-1 gap-2">
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="H"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">H</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.H">Swaps Z ↔ X</span></button>
+                  </div>
+                </div>
+                <div class="col-span-4"><h3 class="font-label-sm text-[13px] text-on-surface-variant mb-1" data-i18n="gates.phase">Phase turns about Z</h3>
+                  <div class="grid grid-cols-4 gap-2">
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="S"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">S</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">π/2 <span data-i18n="gate.turn">turn</span></span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Sdg"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">S†</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">−π/2 <span data-i18n="gate.turn">turn</span></span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="T"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">T</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">π/4 <span data-i18n="gate.turn">turn</span></span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Tdg"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">T†</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight">−π/4 <span data-i18n="gate.turn">turn</span></span></button>
+                  </div>
+                </div>
+                <div class="col-span-4"><h3 class="font-label-sm text-[13px] text-on-surface-variant mb-1" data-i18n="gates.rot">Rotations by π/4</h3>
+                  <div class="grid grid-cols-4 gap-2">
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rx"><span class="font-label-md font-bold text-base text-primary block leading-none mb-1">Rx</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Rx">45° about X</span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Ry"><span class="font-label-md font-bold text-base text-tertiary block leading-none mb-1">Ry</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Ry">45° about Y</span></button>
+                    <button class="clean-paper hover:bg-surface-container-high border border-outline p-2 text-center active:translate-y-0.5" data-gate="Rz"><span class="font-label-md font-bold text-base text-secondary block leading-none mb-1">Rz</span><span class="font-body-md text-[13px] text-on-surface-variant block leading-tight" data-i18n="gate.Rz">45° about Z</span></button>
+                  </div>
+                </div>
               </div>
             </div>
             <details class="clean-paper border border-outline-variant p-3 group rounded-sm">
@@ -190,7 +219,7 @@
                 </div>
               </form>
             </details>
-            <p class="max-sm:hidden font-label-sm text-[13px] text-on-surface-variant border-t border-outline-variant pt-2" data-i18n-html="gates.keys"><b class="text-primary">Keys:</b> X Y Z H S T · Shift+S S† · Shift+T T† · M measure · U undo · C clear trail · R reset · ? all keys</p>
+            <p class="max-sm:hidden font-label-sm text-[13px] text-on-surface-variant border-t border-outline-variant pt-2" data-i18n-html="gates.keys"><b class="text-primary">Keys:</b> X Y Z H S T · Shift+S S† · Shift+T T† · M measure · U undo · C clear trail · R reset · + − zoom · ? all keys</p>
           </div>
 
           <!-- STATE -->
@@ -203,16 +232,16 @@
                     <label for="slider-theta" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-primary">θ</span> <span data-i18n="state.theta">Polar angle (Z-axis)</span></label>
                     <span class="font-label-md text-[15px] font-bold text-on-surface whitespace-nowrap" id="readout-theta">0.50 π (90.0°)</span>
                   </div>
-                  <input class="w-full cursor-ew-resize" id="slider-theta" max="3.14159" min="0" step="0.01" type="range" value="1.57079" />
-                  <div class="flex justify-between text-[13px] font-label-sm text-on-surface-variant mt-1"><span>0 (|0⟩)</span><span data-i18n="state.eq">π/2 (Eq.)</span><span>π (|1⟩)</span></div>
+                  <input class="w-full cursor-ew-resize" id="slider-theta" max="180" min="0" step="1" type="range" value="90" />
+                  <div class="scale mt-1" aria-hidden="true"><span style="--p: 0">0<br />|0⟩</span><span style="--p: 0.5">π/2<br /><span data-i18n="state.eq">equator</span></span><span style="--p: 1">π<br />|1⟩</span></div>
                 </div>
                 <div class="pt-2 border-t border-outline-variant/60">
                   <div class="flex justify-between items-center gap-2 mb-1">
                     <label for="slider-phi" class="font-body-md text-[15px] font-medium text-on-surface flex items-center gap-1"><span class="italic font-bold text-secondary">φ</span> <span data-i18n="state.phi">Azimuthal phase (X-Y)</span></label>
                     <span class="font-label-md text-[15px] font-bold text-on-surface whitespace-nowrap" id="readout-phi">0.00 π (0.0°)</span>
                   </div>
-                  <input class="w-full cursor-ew-resize" id="slider-phi" max="6.28318" min="0" step="0.01" type="range" value="0" />
-                  <div class="flex justify-between text-[13px] font-label-sm text-on-surface-variant mt-1"><span>0 (+X)</span><span>π/2 (+Y)</span><span>π (−X)</span><span>2π</span></div>
+                  <input class="w-full cursor-ew-resize" id="slider-phi" max="360" min="0" step="1" type="range" value="0" />
+                  <div class="scale mt-1" aria-hidden="true"><span style="--p: 0">0<br />+X</span><span style="--p: 0.25">π/2<br />+Y</span><span style="--p: 0.5">π<br />−X</span><span style="--p: 0.75">3π/2<br />−Y</span><span style="--p: 1">2π<br />+X</span></div>
                 </div>
                 <div class="pt-2 border-t border-outline-variant/60 flex items-center justify-between gap-2 font-body-md text-[15px]">
                   <label for="slider-radius" class="text-on-surface-variant"><span data-i18n="state.length">Length</span> <span class="italic">r</span> <span data-i18n="state.lengthHint">(1 = pure) :</span></label>
@@ -227,10 +256,10 @@
               <h3 class="font-label-sm text-[13px] font-bold text-on-surface-variant uppercase mb-2" data-i18n="state.presets">Canonical basis presets</h3>
               <div class="grid grid-cols-3 gap-2 font-label-sm text-[13px]">
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0,0" data-label="|0⟩"><span class="font-bold text-secondary block text-sm">|0⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.pz">+Z pole</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="1,0" data-label="|1⟩"><span class="font-bold text-secondary block text-sm">|1⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.mz">−Z pole</span></button>
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,0" data-label="|+⟩"><span class="font-bold text-primary block text-sm">|+⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.px">+X axis</span></button>
-                <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,1" data-label="|−⟩"><span class="font-bold text-primary block text-sm">|−⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.mx">−X axis</span></button>
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,0.5" data-label="|i⟩"><span class="font-bold text-tertiary block text-sm">|i⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.py">+Y axis</span></button>
+                <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="1,0" data-label="|1⟩"><span class="font-bold text-secondary block text-sm">|1⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.mz">−Z pole</span></button>
+                <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,1" data-label="|−⟩"><span class="font-bold text-primary block text-sm">|−⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.mx">−X axis</span></button>
                 <button class="clean-paper hover:bg-surface-container-high border border-outline py-2 px-2 text-center active:translate-y-0.5" data-preset="0.5,1.5" data-label="|−i⟩"><span class="font-bold text-tertiary block text-sm">|−i⟩</span><span class="font-body-md text-[13px] text-on-surface-variant block" data-i18n="preset.my">−Y axis</span></button>
               </div>
             </div>

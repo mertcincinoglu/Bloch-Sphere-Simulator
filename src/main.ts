@@ -15,7 +15,7 @@ $('[data-src]').each(function () {
 });
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const scene = new BlochScene($('#sphere')[0], { guides: true });
+const scene = new BlochScene($('#sphere')[0], { guides: true, zoom: true });
 let v = fromAngles(Math.PI / 2, 0); // the design opens on |+⟩
 let dir = v.clone(); // last direction, kept when the arrow shrinks to the centre
 let basis: Basis = 'Z';
@@ -32,13 +32,18 @@ function render() {
   if (!centre) dir = v.clone().normalize();
   const { theta, phi } = toAngles(dir);
   const thPi = (theta / Math.PI).toFixed(2), phPi = (phi / Math.PI).toFixed(2);
+  // the sliders count whole degrees, so their ends are exactly π and 2π. φ = 2π is the same
+  // point as 0, and at a pole φ means nothing: there the slider keeps what the user set.
+  const atPole = Math.sin(theta) < 1e-9;
+  const phiDeg = Math.round((phi * 180) / Math.PI) % 360, phiSlider = Number($('#slider-phi').val());
+  const phiShown = atPole ? (phiSlider * Math.PI) / 180 : phiSlider === 360 && phiDeg === 0 ? 2 * Math.PI : phi;
   if (!centre) {
-    $('#slider-theta').val(theta);
-    $('#slider-phi').val(phi);
+    $('#slider-theta').val(Math.round((theta * 180) / Math.PI));
+    if (!atPole && phiDeg !== phiSlider % 360) $('#slider-phi').val(phiDeg);
   }
   $('#slider-radius').val(r);
   $('#readout-theta').text(centre ? '—' : `${thPi} π (${deg(theta)})`);
-  $('#readout-phi').text(centre ? '—' : `${phPi} π (${deg(phi)})`);
+  $('#readout-phi').text(centre ? '—' : `${(phiShown / Math.PI).toFixed(2)} π (${deg(phiShown)})`);
   $('#readout-r').text(`${r.toFixed(2)} (${t(r >= 0.995 ? 'r.pure' : 'r.mixed')})`);
   $('#coord-x').text(signed(v.x));
   $('#coord-y').text(signed(v.y));
@@ -245,8 +250,9 @@ $('[data-action="clear-trail"]').on('click', clearTrail);
 
 $('#slider-theta, #slider-phi').on('input', () => {
   const r = Number($('#slider-radius').val());
-  v = fromAngles(Number($('#slider-theta').val()), Number($('#slider-phi').val())).multiplyScalar(r);
-  if (r < 1e-6) dir = fromAngles(Number($('#slider-theta').val()), Number($('#slider-phi').val()));
+  const rad = (id: string) => (Number($(id).val()) * Math.PI) / 180;
+  v = fromAngles(rad('#slider-theta'), rad('#slider-phi')).multiplyScalar(r);
+  if (r < 1e-6) dir = fromAngles(rad('#slider-theta'), rad('#slider-phi'));
   scene.addHistory([v.clone()]);
   newState();
   explain('story.angles', 'action.angles');
@@ -279,8 +285,8 @@ function paintCounts() {
   const pa = total ? counts.first / total : 0, pb = total ? counts.second / total : 0;
   $('#count-result-0').text(`${a}: ${counts.first} (${pct(pa)})`);
   $('#count-result-1').text(`${b}: ${counts.second} (${pct(pb)})`);
-  $('#bar-measure-0').css('width', total ? pct(pa) : '50%');
-  $('#bar-measure-1').css('width', total ? pct(pb) : '50%');
+  $('#bar-measure-0').css('width', pct(pa));
+  $('#bar-measure-1').css('width', pct(pb));
 }
 
 $('[data-basis]').on('click', function () {
@@ -316,7 +322,7 @@ $('[data-action="measure-many"]').on('click', () => {
   const n = sample(v, basis, 1000);
   counts.first += n;
   counts.second += 1000 - n;
-  $('#collapse-status').empty().append($('<span class="text-secondary font-bold">').text(t('status.sampled')));
+  $('#collapse-status').empty().append($('<span class="text-secondary font-bold">').text(t('status.sampled', { n: (counts.first + counts.second).toLocaleString() })));
   explain('story.many', 'action.many', { basis });
   paintCounts();
 });
@@ -343,6 +349,9 @@ $('#btn-autorotate').on('click', () => {
   paintRotate();
 });
 $('[data-action="reset-view"]').on('click', () => scene.resetView());
+const zoomIn = () => scene.zoomBy(1.25), zoomOut = () => scene.zoomBy(0.8);
+$('[data-action="zoom-in"]').on('click', zoomIn);
+$('[data-action="zoom-out"]').on('click', zoomOut);
 
 let toastTimer = 0;
 function toast(text: string, ms = 2200) {
@@ -402,6 +411,7 @@ const KEYS: Record<string, () => void> = {
   x: () => gateByName('X'), y: () => gateByName('Y'), z: () => gateByName('Z'), h: () => gateByName('H'),
   s: () => gateByName('S'), S: () => gateByName('Sdg'), t: () => gateByName('T'), T: () => gateByName('Tdg'),
   m: measureOnce, u: undo, c: clearTrail, r: reset, '?': () => toast(t('keys.list'), 6000),
+  '+': zoomIn, '=': zoomIn, '-': zoomOut,
 };
 $(document).on('keydown', (e) => {
   if (e.key === 'Escape') { closeGuide(); return; }

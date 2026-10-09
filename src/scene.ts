@@ -49,7 +49,7 @@ export class BlochScene {
   private thetaLabel: CSS2DObject;
   private phiLabel: CSS2DObject;
 
-  constructor(host: HTMLElement, opts: { guides?: boolean } = {}) {
+  constructor(host: HTMLElement, opts: { guides?: boolean; zoom?: boolean } = {}) {
     this.host = host;
     this.guides = opts.guides ?? false;
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -60,10 +60,13 @@ export class BlochScene {
     // starting view: looking down about 20°, turned so the X and Y axes both read clearly
     this.camera.position.copy(toThree(B(Math.cos(0.9), Math.sin(0.9), 0.38).normalize().multiplyScalar(10)));
     this.camera.lookAt(0, 0, 0);
+    // zoom (lab only): wheel, pinch, or zoomBy()
     this.controls = new OrbitControls(this.camera, this.labels.domElement);
     this.controls.enableDamping = true;
     this.controls.enablePan = false;
-    this.controls.enableZoom = false;
+    this.controls.enableZoom = !!opts.zoom;
+    this.controls.minZoom = 0.6;
+    this.controls.maxZoom = 3;
     this.controls.autoRotateSpeed = 1.2;
     this.controls.saveState();
     // a finger moving up or down scrolls the page; sideways it turns the sphere
@@ -306,7 +309,13 @@ export class BlochScene {
   }
 
   resetView() {
-    this.controls.reset();
+    this.controls.reset(); // also brings the zoom back to 1
+  }
+
+  zoomBy(factor: number) {
+    this.camera.zoom = Math.min(this.controls.maxZoom, Math.max(this.controls.minZoom, this.camera.zoom * factor));
+    this.camera.updateProjectionMatrix();
+    this.controls.update();
   }
 
   private resize() {

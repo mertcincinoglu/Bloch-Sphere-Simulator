@@ -26,6 +26,21 @@ export const TR_STATIC: Record<string, string> = {
   'measure.choose': 'Taban seçimi',
   'math.drawer': 'Matematik ve kaynaklar',
 
+  'gates.pauli': 'Pauli',
+  'gates.hadamard': 'Hadamard',
+  'gates.phase': 'Z etrafında faz dönüşleri',
+  'gates.rot': 'π/4 dönmeler',
+  'fig.zoomIn': 'Yakınlaştır',
+  'fig.zoomOut': 'Uzaklaştır',
+  'fig.zoomInTip': 'Yakınlaştır (+, tekerlek, iki parmak)',
+  'fig.zoomOutTip': 'Uzaklaştır (−, tekerlek, iki parmak)',
+
+  // notice under the header
+  'notice.close': 'Duyuruyu kapat',
+  'notice.title': 'Önemli not',
+  'notice.text': 'Bu site hâlâ yapım aşamasında, bu yüzden bazı özellikler henüz tam çalışmayabilir. Bir sorunla karşılaşırsan ya da bir önerin olursa <a class="underline font-semibold hover:text-primary" href="https://github.com/mertcincinoglu/Bloch-Sphere-Simulator/issues" target="_blank" rel="noopener">GitHub</a> üzerinden paylaşabilir ya da <a class="underline font-semibold hover:text-primary" href="mailto:contact@mertcincinoglu.com">contact@mertcincinoglu.com</a> adresine e-posta gönderebilirsin. Geri bildirimin siteyi geliştirmeme çok yardımcı oluyor.',
+  'notice.thanks': 'Siteyi herkes için daha iyi hâle getirirken gösterdiğin sabır ve destek için teşekkürler!',
+
   // top bar
   'head.title': 'CİLT IV — BLOCH DURUM APARATI',
   'head.sub': 'Bloch Küresi Simülatörü — tek kübit için ücretsiz bir laboratuvar • Monografi Ref. PH-1964-B',
@@ -53,7 +68,7 @@ export const TR_STATIC: Record<string, string> = {
   // § 1 state
   'state.head': 'Açılar ve uzunluk',
   'state.theta': 'Kutupsal açı (Z ekseni)',
-  'state.eq': 'π/2 (Ekv.)',
+  'state.eq': 'ekvator',
   'state.half': 'Hilbert açısı θ/2 =',
   'state.phi': 'Azimut fazı (X-Y)',
   'state.length': 'Uzunluk',
@@ -84,7 +99,7 @@ export const TR_STATIC: Record<string, string> = {
   'gate.Rz': 'Z etrafında 45°',
   'gate.Sdg': 'Çeyrek tur geri',
   'gate.Tdg': 'Sekizde bir tur geri',
-  'gates.keys': '<b class="text-primary">Tuşlar:</b> X Y Z H S T · Shift+S S† · Shift+T T† · M ölç · U geri al · C izi sil · R sıfırla · ? tüm tuşlar',
+  'gates.keys': '<b class="text-primary">Tuşlar:</b> X Y Z H S T · Shift+S S† · Shift+T T† · M ölç · U geri al · C izi sil · R sıfırla · + − yakınlaştır · ? tüm tuşlar',
   'custom.head': 'Özel dönme Rn(α)',
   'custom.hint': 'Oku herhangi bir n̂(θn, φn) ekseni etrafında α açısı kadar döndür. Değerleri π cinsinden yaz.',
   'custom.theta': 'Eksen θn',
@@ -102,7 +117,7 @@ export const TR_STATIC: Record<string, string> = {
   'fig.dial': 'Göreli faz',
   'fig.cornerA': 'BLOCH TOPU: |r| ≤ 1<br />DÖNDÜRMEK İÇİN SÜRÜKLE',
   'fig.cornerB': 'İZDÜŞÜM: ORTOGRAFİK<br />İLK GÖRÜNÜM: OKTANT I',
-  'fig.aria': '3B Bloch küresi. Görünümü çevirmek için sürükle ya da ok tuşlarını kullan.',
+  'fig.aria': '3B Bloch küresi. Görünümü çevirmek için sürükle ya da ok tuşlarını kullan; yakınlaştırmak için tekerleği çevir ya da iki parmakla sıkıştır.',
   'fig.prepared': '|0⟩\'dan hazırlayan:',
   'fig.norm': 'Norm · Saflık:',
 
@@ -242,12 +257,12 @@ export const TR_STRINGS: Partial<Record<Key, string>> = {
   'label.Tdg': 'T† (−π/4 DÖNÜŞ)',
   'history.goto': '{n}. adıma dön',
   'turn.label': '{axis} etrafında {angle}',
-  'keys.list': 'Tuşlar: X Y Z H S T kapı uygular · Shift+S S† · Shift+T T† · M bir kez ölç · U geri al · C izi sil · R |0⟩\'a sıfırla · oklar görünümü çevirir (küre seçiliyken) · Esc rehberi kapatır',
+  'keys.list': 'Tuşlar: X Y Z H S T kapı uygular · Shift+S S† · Shift+T T† · M bir kez ölç · U geri al · C izi sil · R |0⟩\'a sıfırla · + ve − yakınlaştırır · oklar görünümü çevirir (küre seçiliyken) · Esc rehberi kapatır',
 
   'status.unmeasured': 'Ölçülmedi',
   'status.ready': '{basis} tabanında hazır',
   'status.collapsed': '{result} durumuna çöktü',
-  'status.sampled': '1000 ölçüm örneklendi',
+  'status.sampled': '{n} ölçüm örneklendi',
   'status.cleared': 'Histogram temizlendi',
 
   'r.pure': 'Saf',

@@ -52,13 +52,13 @@ export const EN = {
   'label.Tdg': 'T† (−π/4 TURN)',
   'history.goto': 'Return to step {n}',
   'turn.label': '{angle} about {axis}',
-  'keys.list': 'Keys: X Y Z H S T apply gates · Shift+S S† · Shift+T T† · M measure once · U undo · C clear trail · R reset to |0⟩ · arrows turn the view (sphere focused) · Esc closes the guide',
+  'keys.list': 'Keys: X Y Z H S T apply gates · Shift+S S† · Shift+T T† · M measure once · U undo · C clear trail · R reset to |0⟩ · + and − zoom · arrows turn the view (sphere focused) · Esc closes the guide',
   'label.custom': 'Rn(α)',
 
   'status.unmeasured': 'Unmeasured',
   'status.ready': 'Ready in {basis}-basis',
   'status.collapsed': 'Collapsed to {result}',
-  'status.sampled': 'Sampled 1000 runs',
+  'status.sampled': 'Sampled {n} runs',
   'status.cleared': 'Histogram cleared',
 
   'r.pure': 'Pure',

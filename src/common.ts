@@ -22,3 +22,15 @@ export function fillIcons(root: ParentNode = document) {
 
 fillIcons();
 initI18n();
+
+// the notice stays closed once closed (storage may be blocked: then it simply shows again)
+const notice = document.getElementById('notice');
+if (notice) {
+  let closed = false;
+  try { closed = localStorage.getItem('bloch-notice-closed') === '1'; } catch { /* private mode */ }
+  notice.classList.toggle('hidden', closed);
+  notice.querySelector('[data-action="close-notice"]')?.addEventListener('click', () => {
+    notice.classList.add('hidden');
+    try { localStorage.setItem('bloch-notice-closed', '1'); } catch { /* private mode */ }
+  });
+}

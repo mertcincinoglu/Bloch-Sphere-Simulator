@@ -208,3 +208,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 /* history chips read as a printed sequence: [ H ] (Stitch eebad484) */
 #history .chip::before { content: "[ "; }
 #history .chip::after { content: " ]"; }
+
+/* slider scale: a mark sits under the thumb centre for its value (thumb 18 px wide) */
+.scale { position: relative; height: 2.6em; font: 13px/1.25 'Space Mono', monospace; color: var(--color-on-surface-variant); }
+.scale > span { position: absolute; top: 0; white-space: nowrap; text-align: center; left: calc(9px + var(--p) * (100% - 18px)); transform: translateX(-50%); }

@@ -238,3 +238,58 @@ test('clear history keeps only the present step', async ({ page }) => {
   await expect(page.locator('#history button')).toHaveText(['H']);
   await expectCoords(page, '0.000', '0.000', '+1.000');
 });
+
+test('slider marks sit under the thumb: φ = 3π/2 lands exactly on −Y', async ({ page }) => {
+  await tab(page, 'state');
+  const phi = page.locator('#slider-phi');
+  await phi.fill('270');
+  await expect(page.locator('#readout-phi')).toHaveText('1.50 π (270.0°)');
+  await expectCoords(page, '0.000', '−1.000', '0.000');
+  const box = (await phi.boundingBox())!;
+  const mark = (await page.locator('#panel-state .scale').nth(1).locator(':scope > span').nth(3).boundingBox())!;
+  expect(Math.abs(mark.x + mark.width / 2 - (box.x + 9 + (box.width - 18) * 0.75))).toBeLessThan(1.5);
+  // the ends are exactly π and 2π
+  await page.locator('#slider-theta').fill('180');
+  await expect(page.locator('#readout-theta')).toHaveText('1.00 π (180.0°)');
+  await expectCoords(page, '0.000', '0.000', '−1.000');
+  await page.locator('#slider-theta').fill('90');
+  await phi.fill('360');
+  await expect(page.locator('#readout-phi')).toHaveText('2.00 π (360.0°)');
+  await expect(phi).toHaveValue('360'); // the thumb stays at the end
+  await expectCoords(page, '+1.000', '0.000', '0.000');
+});
+
+test('zoom: buttons and the wheel change the zoom; reset view brings it back', async ({ page }) => {
+  const label = page.locator('#sphere .axis-label', { hasText: '+X (|+⟩)' });
+  const where = () => label.evaluate((el) => (el as HTMLElement).style.transform);
+  const before = await where();
+  await page.locator('[data-action="zoom-in"]').click();
+  await expect.poll(where).not.toBe(before);
+  await page.locator('[data-action="reset-view"]').click();
+  await expect.poll(where).toBe(before);
+  const box = (await page.locator('#sphere').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.wheel(0, -300);
+  await expect.poll(where).not.toBe(before);
+});
+
+test('measurement: an empty run shows an empty bar, and the status counts every run', async ({ page }) => {
+  await tab(page, 'measure');
+  await expect(page.locator('#bar-measure-0')).toHaveAttribute('style', /width: 0(\.0)?%/);
+  await page.locator('[data-action="measure-many"]').click();
+  await page.locator('[data-action="measure-many"]').click();
+  await expect(page.locator('#collapse-status')).toHaveText(EN['status.sampled'].replace('{n}', '2,000'));
+});
+
+test('notice: shows in the chosen language, closes, and stays closed after a reload', async ({ page }) => {
+  const notice = page.locator('#notice');
+  await expect(notice).toBeVisible();
+  await expect(notice).toContainText('under construction');
+  await page.locator('[data-lang="tr"]').click();
+  await expect(notice).toContainText('yapım aşamasında');
+  await page.locator('[data-action="close-notice"]').click();
+  await expect(notice).toBeHidden();
+  await page.reload();
+  await expect(page.locator('#narrative-text')).not.toBeEmpty();
+  await expect(notice).toBeHidden();
+});
